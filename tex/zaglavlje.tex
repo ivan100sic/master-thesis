@@ -1,0 +1,35 @@
+% Templejt .tex fajl nesebicno dao na koriscenje Nikola Milosavljevic
+% Ovom prilikom mu se zahvaljujem!
+
+\RequirePackage[hyphens]{url}
+
+\documentclass[a4paper,12pt]{article}
+\usepackage[british]{babel}
+\usepackage[]{verbatim}
+\usepackage{graphicx}
+\usepackage{latexsym}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage[hyphens]{url}
+\usepackage[superscript]{cite}
+
+\newcommand{\razmak}{\vspace{0.2cm}}
+
+% Floor i ceil
+% \providecommand{\ceil}[1]{\left \lceil #1 \right \rceil }
+% \providecommand{\floor}[1]{\left \lfloor #1 \right \rfloor }
+
+% Brojanje jednacina
+\numberwithin{equation}{subsection}
+
+\newtheorem{dfn}{Definicija}[section]
+\newtheorem{thm}[dfn]{Teorema}
+\newtheorem{lm}[dfn]{Lema}
+\newtheorem{pos}[dfn]{Posledica}
+\newtheorem{prim}{Primer}
+
+\renewcommand{\abstractname}{Apstrakt}
+\renewcommand{\refname}{Reference}
+\renewcommand{\contentsname}{Sadr\v zaj}
