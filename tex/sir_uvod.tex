@@ -1,0 +1,61 @@
+\section{Uvod}
+\subsection{Uvodne definicije}
+
+Neformalno, string je niz simbola iz nekog alfabeta. U op\v stem slu\v caju, alfabet mo\v ze biti bilo koji kona\v can skup. Me\dj utim, za potrebe pojedinih algoritama, potrebno je da alfabet bude totalno ure\dj en skup. Kod implementacije algoritama, dodatno mo\v zemo pretpostaviti da je alfabet jednak nekom kona\v cnom skupu uzastopnih celih brojeva, naj\v ce\v s\' ce $\{ 0, 1, \ldots, k-1\}$ ili $1, 2, \ldots, $k za neko $k \in \mathbb{N}$. Tradicionalno, ovaj alfabet se ozna\v cava gr\v ckim slovom $\Sigma$.
+
+\begin{dfn}
+Ako je $\Sigma$ alfabet a $n$ prirodan broj, $\Sigma^n$ ozna\v cava skup svih ure\dj enih $n$-torki $(s_0, s_1, \ldots, s_{n-1})$, gde je $s_i \in \Sigma$ za svako $i \in \{0, \ldots, n-1\}$.
+\end{dfn}
+
+Ovakvu $n$-torku mo\v zemo kra\' ce zapisati sa $s$, a njenu du\v zinu (broj elemenata) sa $|s|$. Koristi se i kra\' ci zapis $n$-torke: $s_0s_1\ldots s_{n-1}$.
+
+\begin{dfn}
+Ako je $\Sigma$ alfabet, onda je
+
+$$
+    \Sigma^+ = \bigcup_{n=1}^{\infty} \Sigma^n
+$$
+
+skup svih nepraznih re\v ci nad alfabetom $\Sigma$.
+\end{dfn}
+
+Ovom skupu mo\v zemo dodati i praznu re\v c, koju ozna\v cavamo sa $e$ ili $\epsilon$.
+
+\begin{dfn}
+Skup svih re\v ci nad alfabetom $\Sigma$ je skup $\Sigma^* = \Sigma^+ \cup \{e\}$.
+\end{dfn}
+
+Za string mo\v zemo definisati i njegove podstringove na slede\' ci na\v cin.
+
+\begin{dfn}
+Podstring po\v cev od pozicije $l$, do pozicije $r$ ne uklju\v cuju\' ci $r$, nekog stringa $s$, gde va\v zi $0 \leq l \leq r \leq |s|$ je string $s_ls_{l+1}\ldots s_{r-1}$. Ovaj podstring kra\' ce zapisujemo i $s_{[l,r)}$.
+\end{dfn}
+
+Podstringove stringa $s$ kod kojih je $l=0$ nazivamo prefiksima tog stringa, dok podstringove kod kojih je $r=|s|$ nazivamo sufiksima tog stringa. Ukoliko je $l=r$ radi se o praznom podstringu. Ukoliko je podstring razli\v cit od celog stringa, onda se radi o pravom podstringu, sufiksu odnosno prefiksu. Izbor notacije sa indeksiranjem od nule i poluotvorenim intervalom olak\v sava implementaciju ve\' cine algoritama sa stringovima.
+
+Ukoliko je skup $\Sigma$ totalno ure\dj en, defini\v semo leksikografsko pore\dj enje stringova kao ure\dj enje skupa $\Sigma^*$, na slede\' ci na\v cin.
+
+\begin{dfn}
+Za string $s$ ka\v zemo da je leksikografski manji od stringa $p$ ukoliko postoji ceo broj $k \geq 0$ takav da je $k < \min \{|s|, |p|\}, s_{[0, k)} = p_{[0, k)}$ i $s_k < p_k$ ili ako je $s$ pravi prefiks stringa $p$.
+\end{dfn}
+
+\begin{thm}
+Leksikografsko pore\dj enje je totalno ure\dj enje skupa $\Sigma^*$. \hfill $\square$
+\end{thm}
+
+\subsection{Slo\v zenost algoritama}
+
+Vreme, odnosno broj koraka i koli\v cina utro\v sene memorije tokom izvr\v senja nekog algoritma zavisi od ulaznih parametara. \textit{Veliko O} notacija nam olak\v sava opisivanje i izra\v cunavanje ovih funkcionalnih zavisnosti. Neka je u narednim definicijama domen funkcija $f, g$ skup $\mathbb{N}_0$ a kodomen $\mathbb{R}^{+} \cup \{ 0 \}$.
+
+\begin{dfn}
+Skup $O(g)$ defini\v semo kao skup svih funkcija $f$ za koje va\v zi da postoje konstante $c$ i $n_0$ takve da je $f(n) \leq c g(n)$ za svako $n \geq n_0$.
+\end{dfn}
+
+Ovu notaciju koristimo kada \v zelimo da opi\v semo gornju granicu neke funkcije, do na proizvod sa konstantom. \v Cesto umesto $f \in O(g)$ pi\v semo i $f = O(g)$. Problem ove notacije je upravo u tome \v sto samo daje gornju granicu pona\v sanja neke funkcije. Zato se uvodi $\Theta$-notacija.
+
+\begin{dfn}
+Skup $\Theta(g)$ defini\v semo kao skup svih funkcija $f$ za koje va\v zi da postoje pozitivne konstante $c_1, c_2$ i $n_0$ takve da je $c_1 g(n) \leq f(n) \leq c_2 g(n)$ za svako $n \geq n_0$.
+\end{dfn}
+
+Za algoritam \v ciji je ulazni parametar $n$, \v sto mo\v ze biti broj elemenata niza, broj vrsta matrice, broj \v cvorova grafa, itd. ka\v zemo da ima vremensku slo\v zenost $\Theta(g(n))$ ako je $f$, gde je $f(n)$ broj elementarnih koraka tokom izvr\v senja algoritma, u skupu $\Theta(g)$. Sli\v cno defini\v semo memorijsku slo\v zenost preko broja iskori\v s\' cenih elementarnih memorijskih lokacija npr. bajtova ili bitova.
+

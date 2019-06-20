@@ -14,6 +14,9 @@
 \usepackage{hyperref}
 \usepackage[hyphens]{url}
 \usepackage[superscript]{cite}
+\usepackage{parskip}
+\usepackage{listings}
+\usepackage{xcolor}
 
 \newcommand{\razmak}{\vspace{0.2cm}}
 
@@ -33,3 +36,23 @@
 \renewcommand{\abstractname}{Apstrakt}
 \renewcommand{\refname}{Reference}
 \renewcommand{\contentsname}{Sadr\v zaj}
+
+% Za oblik pasusa
+\parskip 1em
+\parindent 2em
+
+\lstdefinestyle{customcpp}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  frame=tbL,
+  tabsize=2,
+  numbers=left,
+  % xleftmargin=\parindent,
+  language=C++,
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  identifierstyle=\color{black},
+  stringstyle=\color{orange},
+}

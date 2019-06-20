@@ -1,0 +1,53 @@
+\section{Sufiks niz}
+
+Sufiks niz je struktura podataka koja omogu\' cava brzu tra\v zenje pojavljivanja stringa unutar stringa za koji se konstrui\v se sufiks niz, ta\v cnije, vremenska slo\v zenost pretrage je sublinearna funkcija du\v zine stringa unutar kojeg se vr\v si pretraga. Pored ovoga, pomo\' cu sufiks niza se mogu brzo vr\v siti pore\dj enja podstringova unutar samog stringa.
+
+\subsection{Definicija}
+Sufiks niz za string $s$ je niz sortiranih nepraznih sufiksa tog stringa. Formalno,
+
+\begin{dfn}
+Sufiks niz za string $s$ du\v zine $|s| = n$ je niz $p$ koji se sastoji od $n$ razli\v citih celih brojeva iz skupa $\{0,\ldots,n-1\}$ takav da je niz sufiksa \v cije su po\v cetne pozicije $p_0, p_1, \ldots, p_{n-1}$ leksikografski rastu\' ci niz.
+\end{dfn}
+
+Za svaki string postoji jedinstven sufiks niz, zato \v sto je leksikografsko ure\dj enje totalno a ne postoje dva jednaka sufiksa. Primera radi, na\dj imo sufiks niz za string \texttt{banana}. Ozna\v cimo sa $u_i$ string $s_{[i,n)}$. Svi sufiksi ovog stringa su:
+
+\begin{center}
+\begin{tabular}{cl}
+    $u_0$ & \texttt{banana} \\
+    $u_1$ & \texttt{anana} \\
+    $u_2$ & \texttt{nana} \\
+    $u_3$ & \texttt{ana} \\
+    $u_4$ & \texttt{na} \\
+    $u_5$ & \texttt{a} \\
+\end{tabular}
+\end{center}
+
+Sortiranjem dobijamo niz sufiksa:
+
+\begin{center}
+\begin{tabular}{cl}
+    $u_5$ & \texttt{a} \\
+    $u_3$ & \texttt{ana} \\
+    $u_1$ & \texttt{anana} \\
+    $u_0$ & \texttt{banana} \\
+    $u_4$ & \texttt{na} \\
+    $u_2$ & \texttt{nana} \\
+\end{tabular}
+\end{center}
+
+Sortirani niz sufiksa je $u_5, u_3, u_1, u_0, u_4, u_2$, pa je sufiks niz $p = (5,3,1,0,4,2)$.
+
+\subsection{Konstrukcija}
+
+Kao i kod mnogih algoritamskih problema, i za problem nala\v zenja sufiks niza postoje algoritmi razli\v citih vremenskih slo\v zenosti. Svi brzi algoritmi se oslanjaju na \v cinjenicu da se radi o me\dj usobno zavisnim stringovima, po\v sto su svi stringovi sufiksi jednog te istog stringa.
+
+\subsection{Algoritam slo\v zenosti $O(n^2 \log n)$}
+
+Sufiks niz se mo\v ze konstruisati prostim sortiranjem svih sufiksa u vremenskoj slo\v zenosti $O(n^2 \log n)$, ukoliko je dostupan algoritam za sortiranje op\v ste namene koji radi u slo\v zenosti $O(n \log n)$. Primer takvog algoritam je \textit{mergesort}. Radi u\v stede memorijskog prostora sortira\' cemo samo niz celih brojeva $0,1,\ldots,n-1$, dok \' cemo kao funkciju za pore\dj enje koristiti funkciju koja je "svesna" stringa $s$ i koja za data dva sufiksa odre\dj uje koji je manji. Vremenska slo\v zenost pore\dj enja dva sufiksa je $O(n)$, a kako \textit{mergesort} sortira niz sa $O(n \log n)$ poziva funkcije za pore\dj enje, ukupna vremenska slo\v zenost je $O(n^2 \log n)$.
+
+Ozna\v cimo sa $k$ du\v zinu najdu\v zeg stringa koji se javlja vi\v se od jednom u stringu $s$. Nije te\v sko pokazati da, ako se pa\v zljivo implementira, funkcija pore\dj enja dva sufiksa radi u vremenskoj slo\v zenosti $O(k)$, pa se slo\v zenost konstrukcije sufiks niza mo\v ze i bolje proceniti sa $O(kn \log n)$. Kod pojedinih stringova, ovaj algoritam ima jako dobre performanse, u \v sta \' cemo se uveriti pore\dj enjem implementacija.
+
+U dodatku 1 funkcija \texttt{sufiks\_niz\_n2logn} implementira glavni algoritam, dok klasa \texttt{uporedi\_sufikse} implementira pore\dj enje sufiksa i koristi se kao klju\v c za bibliote\v cku funkciju \texttt{sort}.
+
+\subsection{Zaklju\v cak}
+Sufiks niz je kul!
