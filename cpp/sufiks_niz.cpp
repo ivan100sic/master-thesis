@@ -6,6 +6,7 @@
 #include <chrono>
 #include <random>
 #include <iomanip>
+#include <bitset>
 using namespace std;
 using namespace chrono;
 
@@ -20,8 +21,8 @@ struct stoperica {
 
 	~stoperica() {
 		duration<double> dur = high_resolution_clock::now() - pocetak;
-		cerr << fixed << setprecision(9);
-		cerr << "Vreme (s): " << dur.count() << '\n';
+		cout << fixed << setprecision(9);
+		cout << "Vreme (s): " << dur.count() << '\n';
 	}
 };
 
@@ -229,6 +230,17 @@ string test_primer(int tip, int n) {
 			str[i] = 'a';
 		for (int i=0; i*i<n; i++)
 			str[i*i] = 'b';
+	} else if (tip == 5) {
+		for (int i=0; i<n; i++)
+			str[i] = 'a' + bitset<32>(i).count() % 2;
+	} else if (tip == 6) {
+		string f0 = "a", f1 = "b";
+		while ((int)f1.size() < n) {
+			string f2 = f0 + f1;
+			swap(f0, f1);
+			swap(f1, f2);
+		}
+		str = f1.substr(0, n);
 	}
 
 	return str;
@@ -270,13 +282,15 @@ int main(int argc, char** argv) {
 	const int n = stoi(argv[2]);
 	const int sufiks_niz_algoritam = stoi(argv[3]);
 
+	cout << tip << ' ' << n << ' ' << sufiks_niz_algoritam << '\n';
+
 	string str = test_primer(tip, n);
 
 	vector<int> sufiks_niz;
 	vector<int> lcp_niz;
 
 	{
-		cerr << "Konstrukcija sufiks niza...\n";
+		cout << "Konstrukcija sufiks niza...\n";
 		stoperica st;
 		if (sufiks_niz_algoritam == 0) {
 			sufiks_niz = sufiks_niz_n2logn(str);
@@ -290,13 +304,13 @@ int main(int argc, char** argv) {
 	}
 
 	{
-		cerr << "Konstrukcija LCP niza...\n";
+		cout << "Konstrukcija LCP niza...\n";
 		stoperica st;
 		lcp_niz = nadji_lcp_niz(str, sufiks_niz);
 	}
 
 	{
-		cerr << "Pretraga nasumicnih podstringova...\n";
+		cout << "Pretraga nasumicnih podstringova...\n";
 		stoperica st;
 
 		const int DUZINA = 100;
@@ -308,4 +322,6 @@ int main(int argc, char** argv) {
 			trazi(str, sufiks_niz, lcp_niz, podstr);
 		}
 	}
+
+	cout << '\n';
 }
