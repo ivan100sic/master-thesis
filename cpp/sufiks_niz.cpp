@@ -4,45 +4,24 @@
 #include <iostream>
 #include <tuple>
 #include <chrono>
+#include <random>
+#include <iomanip>
 using namespace std;
 using namespace chrono;
 
-/*
-Prvi rad (?) gde se spominje sufiks niz
-https://karczmarczuk.users.greyc.fr/TEACH/TAL/Doc/BK_search/suffixAr.pdf
+mt19937 random_gen;
 
-Za brzu i laku konstrukciju LCP niza:
-http://web.cs.iastate.edu/~cs548/references/linear_lcp.pdf
-*/
+struct stoperica {
+	time_point<high_resolution_clock> pocetak;
 
-struct stopwatch {
-	typedef time_point<high_resolution_clock> tp;
-
-	tp last_tick;
-	bool notock = false;
-
-	void tick() {
-		last_tick = high_resolution_clock::now();
+	stoperica() {
+		pocetak = high_resolution_clock::now();
 	}
 
-	void tock() const {
-		duration<double> dur = high_resolution_clock::now() - last_tick;
-		cerr << "Time: " << dur.count() << '\n';
-	}
-
-	stopwatch() {
-		tick();
-	}
-
-	stopwatch(int) {
-		tick();
-		notock = true;
-	}
-
-	~stopwatch() {
-		if (!notock) {
-			tock();
-		}
+	~stoperica() {
+		duration<double> dur = high_resolution_clock::now() - pocetak;
+		cerr << fixed << setprecision(9);
+		cerr << "Vreme (s): " << dur.count() << '\n';
 	}
 };
 
@@ -105,7 +84,7 @@ vector<int> sortiraj_ciklicne_pomeraje_nlog2n(const string& str) {
 				get<1>(parovi[i]) == get<1>(parovi[i-1]))
 			{
 				nova_klasa[get<2>(parovi[i])] = broj_klasa-1;
-			} else{
+			} else {
 				nova_klasa[get<2>(parovi[i])] = broj_klasa++;
 			}
 		}
@@ -200,9 +179,12 @@ vector<int> sufiks_niz_brzi(
 	return sortiran;
 }
 
-vector<int> nadji_lcp_niz(const string& str, const vector<int>& sufiks_niz) {
+vector<int> nadji_lcp_niz(
+	const string& str,
+	const vector<int>& sufiks_niz
+) {
 	const int n = str.size();
-	vector<int> lcp(n);
+	vector<int> lcp(n-1);
 	vector<int> rang(n);
 	
 	for (int i=0; i<n; i++) {
@@ -211,55 +193,119 @@ vector<int> nadji_lcp_niz(const string& str, const vector<int>& sufiks_niz) {
 
 	int k = 0;
 	for (int i=0; i<n; i++) {
-		if (rang[i] > 0) {
-			int j = sufiks_niz[rang[i] - 1];
+		if (rang[i] != n-1) {
+			int j = sufiks_niz[rang[i] + 1];
 			while (i+k < n && j+k < n && str[i+k] == str[j+k])
 				k++;
 			lcp[rang[i]] = k;
 			k = max(0, k-1);
 		} else {
 			k = 0;
-			lcp[0] = 0;
 		}
 	}
 
 	return lcp;
 }
 
-int main() {
-	ios_base::sync_with_stdio(false);
-	cin.tie(nullptr);
+string test_primer(int tip, int n) {
+	string str(n, 0);
 
-	string str;
-	cin >> str;
+	if (tip == 0) {
+		for (int i=0; i<n; i++)
+			str[i] = 'a';
+	} else if (tip == 1) {
+		uniform_int_distribution<char> slovo('a', 'z');
+		for (int i=0; i<n; i++)
+			str[i] = slovo(random_gen);
+	} else if (tip == 2) {
+		uniform_int_distribution<char> slovo('a', 'b');
+		for (int i=0; i<n; i++)
+			str[i] = slovo(random_gen);
+	} else if (tip == 3) {
+		for (int i=0; i<n; i++)
+			str[i] = 'a' + i%2;
+	} else if (tip == 4) {
+		for (int i=0; i<n; i++)
+			str[i] = 'a';
+		for (int i=0; i*i<n; i++)
+			str[i*i] = 'b';
+	}
 
-	cerr << str.size() << '\n';
+	return str;
+}
+
+int trazi(
+	const string& str,
+	const vector<int>& sufiks_niz,
+	const vector<int>& lcp_niz,
+	const string& podstr
+) {
+	const int n = str.size();
+	const int m = podstr.size();
+	int l = 0, r = n-1, o = n;
+
+	while (l < r) {
+		const int sred = (l+r) >> 1;
+		const int j = sufiks_niz[sred];
+		int k = 0;
+
+		while (j+k < n && k < m && str[j+k] == podstr[k])
+			k++;
+		
+		if (k == m || (j+k < n && str[j+k] > podstr[k])) {
+			o = sred;
+			r = sred - 1;
+		} else {
+			l = sred + 1;
+		}
+	}
+
+	return o;
+}
+
+int main(int argc, char** argv) {
+	if (argc < 4)
+		return 0;
+	const int tip = stoi(argv[1]);
+	const int n = stoi(argv[2]);
+	const int sufiks_niz_algoritam = stoi(argv[3]);
+
+	string str = test_primer(tip, n);
 
 	vector<int> sufiks_niz;
 	vector<int> lcp_niz;
 
 	{
-		stopwatch sw;
-		sufiks_niz = sufiks_niz_brzi(str,
-			sortiraj_ciklicne_pomeraje_nlogn);
+		cerr << "Konstrukcija sufiks niza...\n";
+		stoperica st;
+		if (sufiks_niz_algoritam == 0) {
+			sufiks_niz = sufiks_niz_n2logn(str);
+		} else if (sufiks_niz_algoritam == 1) {
+			sufiks_niz = sufiks_niz_brzi(str,
+				sortiraj_ciklicne_pomeraje_nlog2n);
+		} else if (sufiks_niz_algoritam == 2) {
+			sufiks_niz = sufiks_niz_brzi(str,
+				sortiraj_ciklicne_pomeraje_nlogn);
+		}
 	}
 
 	{
-		stopwatch sw;
+		cerr << "Konstrukcija LCP niza...\n";
+		stoperica st;
 		lcp_niz = nadji_lcp_niz(str, sufiks_niz);
 	}
 
-	cout << "Sufiks niz:\n";
+	{
+		cerr << "Pretraga nasumicnih podstringova...\n";
+		stoperica st;
 
-	for (int x : sufiks_niz)
-		cout << x << '\n';
+		const int DUZINA = 100;
+		uniform_int_distribution<int> pozicija(0, n-DUZINA);
 
-	cout << "LCP niz:\n";
-
-	for (int x : lcp_niz)
-		cout << x << '\n';
-
-	cout << "Svi sufiksi sortirani:\n";
-	for (int x : sufiks_niz)
-		cout << str.substr(x) << '\n';
+		for (int i=0; i<n; i++) {
+			const int j = pozicija(random_gen);
+			const string podstr = str.substr(j, DUZINA);
+			trazi(str, sufiks_niz, lcp_niz, podstr);
+		}
+	}
 }

@@ -1,0 +1,7 @@
+Da bismo algoritam ubrzali, iskoristimo slede\' ce tvr\dj enje.
+
+\begin{thm}
+Neka je $s$ string du\v zine $n$, $p$ njegov sufiks niz, $t$ string koji se tra\v zi u $s$. Neka je $c, 0 \leq c < n$ najmanji ceo broj takav da je $s_{[p_c, n)} \geq t$, ili $n$ ako takav broj ne postoji. Neka je $q_i = LCP(s_{[p_i, n)}, t)$. Tada je $q_0 \leq q_1 \leq \ldots \leq q_c \geq q_{c+1} \geq \ldots \geq q_{n-1}$. \hfill $\square$
+\end{thm}
+
+Binarna pretraga odr\v zava pozicije $l,r$ za koje u svakom trenutku va\v zi da je $l \leq c \leq r$.

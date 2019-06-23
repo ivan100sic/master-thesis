@@ -33,6 +33,12 @@ Podstring po\v cev od pozicije $l$, do pozicije $r$ ne uklju\v cuju\' ci $r$, ne
 
 Podstringove stringa $s$ kod kojih je $l=0$ nazivamo prefiksima tog stringa, dok podstringove kod kojih je $r=|s|$ nazivamo sufiksima tog stringa. Ukoliko je $l=r$ radi se o praznom podstringu. Ukoliko je podstring razli\v cit od celog stringa, onda se radi o pravom podstringu, sufiksu odnosno prefiksu. Izbor notacije sa indeksiranjem od nule i poluotvorenim intervalom olak\v sava implementaciju ve\' cine algoritama sa stringovima.
 
+Stringovi se mogu i nadovezivati odnosno konkatenirati.
+
+\begin{dfn}
+Ako su $s,p$ stringovi, tada je njihova konkatenacija string $sp = s_0s_1\ldots s_{|s|-1}p_0p_1\ldots p_{|p|-1}$.
+\end{dfn}
+
 Ukoliko je skup $\Sigma$ totalno ure\dj en, defini\v semo leksikografsko pore\dj enje stringova kao ure\dj enje skupa $\Sigma^*$, na slede\' ci na\v cin.
 
 \begin{dfn}
@@ -43,6 +49,10 @@ Za string $s$ ka\v zemo da je leksikografski manji od stringa $p$ ukoliko postoj
 Leksikografsko pore\dj enje je totalno ure\dj enje skupa $\Sigma^*$. \hfill $\square$
 \end{thm}
 
+\begin{dfn}
+Za svako $x \in \Sigma$, $Ord(x)$ je broj elemenata skupa $\Sigma$ koji su strogo manji od $x$.
+\end{dfn}
+ 
 \subsection{Slo\v zenost algoritama}
 
 Vreme, odnosno broj koraka i koli\v cina utro\v sene memorije tokom izvr\v senja nekog algoritma zavisi od ulaznih parametara. \textit{Veliko O} notacija nam olak\v sava opisivanje i izra\v cunavanje ovih funkcionalnih zavisnosti. Neka je u narednim definicijama domen funkcija $f, g$ skup $\mathbb{N}_0$ a kodomen $\mathbb{R}^{+} \cup \{ 0 \}$.
