@@ -2,14 +2,13 @@
 \begin{document}
 
 \renewcommand{\abstractname}{Apstrakt}
-\renewcommand{\refname}{Reference}
+\renewcommand{\refname}{Literatura}
 \renewcommand{\contentsname}{Sadr\v zaj}
+\renewcommand{\appendixname}{Dodatak}
 
 \newcommand{\sirsection}{\section}
 \newcommand{\sirsubsection}{\subsection}
 \newcommand{\sirsubsubsection}{\subsubsection}
-\newcommand{\sirdodataktabele}{1}
-\newcommand{\sirdodatakkod}{2}
 
 \input{sir_prva_strana.tex}
 
@@ -19,7 +18,10 @@
 
 \pagestyle{headings}
 \input{sir_uvod.tex}
+\newpage
 \input{sir_sufiks_niz.tex}
+\newpage
 \input{sir_dodatak.tex}
+\newpage
 \input{sir_reference.tex}
 \end{document}

@@ -1,6 +1,6 @@
 \sirsection{Sufiks niz}
 
-Sufiks niz je struktura podataka koja omogu\' cava brzu tra\v zenje pojavljivanja stringa unutar stringa za koji se konstrui\v se sufiks niz, ta\v cnije, vremenska slo\v zenost pretrage je sublinearna funkcija du\v zine stringa unutar kojeg se vr\v si pretraga. Pored ovoga, pomo\' cu sufiks niza se mogu brzo vr\v siti pore\dj enja podstringova unutar samog stringa.
+Sufiks niz je struktura podataka koja omogu\' cava brzo tra\v zenje pojavljivanja stringa unutar stringa za koji se konstrui\v se sufiks niz, ta\v cnije, vremenska slo\v zenost pretrage je sublinearna funkcija du\v zine stringa unutar kojeg se vr\v si pretraga. Pored ovoga, pomo\' cu sufiks niza se mogu brzo vr\v siti pore\dj enja podstringova unutar samog stringa.
 
 \sirsubsection{Definicija}
 Sufiks niz za string $s$ je niz sortiranih nepraznih sufiksa tog stringa. Formalno,
@@ -47,7 +47,7 @@ Sufiks niz se mo\v ze konstruisati prostim sortiranjem svih sufiksa u vremenskoj
 
 Ozna\v cimo sa $k$ du\v zinu najdu\v zeg stringa koji se javlja vi\v se od jednom u stringu $s$. Nije te\v sko pokazati da, ako se pa\v zljivo implementira, funkcija pore\dj enja dva sufiksa radi u vremenskoj slo\v zenosti $O(k)$, pa se slo\v zenost konstrukcije sufiks niza mo\v ze i bolje proceniti sa $O(kn \log n)$. Kod pojedinih stringova, ovaj algoritam ima jako dobre performanse, u \v sta \' cemo se uveriti pore\dj enjem implementacija.
 
-U dodatku \sirdodatakkod{} funkcija \texttt{sufiks\_niz\_n2logn} implementira glavni algoritam, dok klasa \texttt{uporedi\_sufikse} implementira pore\dj enje sufiksa i koristi se kao klju\v c za bibliote\v cku funkciju \texttt{sort}.
+U dodatku \ref{sirkod} funkcija \texttt{sufiks\_niz\_n2logn} implementira glavni algoritam, dok klasa \texttt{uporedi\_sufikse} implementira pore\dj enje sufiksa i koristi se kao klju\v c za bibliote\v cku funkciju \texttt{sort}.
 
 \sirsubsection{Algoritam slo\v zenosti $O(n \log^2 n)$}
 
@@ -79,7 +79,7 @@ Za kraj, neka je $k = \ceil{\log_2(n)}$. Odavde je $2^k \geq n$. U kontekstu kon
 
 Kako ovaj algoritam ima $O(\log n)$ faza, a svaka faza radi u slo\v zenosti $O(n \log n)$, ukupna vremenska slo\v zenost je $O(n \log^2 n)$. Memorijska slo\v zenost je $O(n \log n)$, ali se mo\v ze smanjiti na $O(n)$ pam\' cenjem samo nizova $C^{(k)}$ prethodne i trenutne faze.
 
-U dodatku \sirdodatakkod{}, \texttt{sortiraj\_ciklicne\_pomeraje\_nlog2n} je funkcija koja implementira ovaj algoritam za nala\v zenje redosleda cikli\v cnih pomeraja.
+U dodatku \ref{sirkod}, \texttt{sortiraj\_ciklicne\_pomeraje\_nlog2n} je funkcija koja implementira ovaj algoritam za nala\v zenje redosleda cikli\v cnih pomeraja.
 
 \sirsubsection{Algoritam slo\v zenosti $O(n \log n)$}
 
@@ -89,7 +89,7 @@ Mogu\' ce je pojednostaviti prethodni algoritam, odnosno, svesti ga na samo jedn
 
 Kona\v cno re\v senje, odnosno sortiran niz cikli\v cnih pomeraja je upravo niz $p^{(k)}$ za $k = \ceil{\log_2(n)}$.
 
-U dodatku \sirdodatakkod{}, \texttt{sortiraj\_ciklicne\_pomeraje\_nlogn} je funkcija koja implementira ovaj algoritam za nala\v zenje redosleda cikli\v cnih pomeraja. Funkcija koja nalazi sufiks niz je \texttt{sufiks\_niz\_brzi}. Ona kao parametar prima i funkciju koju \' ce zvati za sortiranje cikli\v cnih pomeraja stringa.
+U dodatku \ref{sirkod}, \texttt{sortiraj\_ciklicne\_pomeraje\_nlogn} je funkcija koja implementira ovaj algoritam za nala\v zenje redosleda cikli\v cnih pomeraja. Funkcija koja nalazi sufiks niz je \texttt{sufiks\_niz\_brzi}. Ona kao parametar prima i funkciju koju \' ce zvati za sortiranje cikli\v cnih pomeraja stringa.
 
 \sirsubsection{LCP niz}
 
@@ -121,11 +121,11 @@ Vremenska slo\v zenost ovog algoritma je $O(n)$ za ra\v cunanje inverza i petlju
 
 \sirsubsubsection{Tra\v zenje jednog stringa u drugom}
 
-Ukoliko je potrebno tra\v ziti veliki broj stringova, recimo njih $m$ unutar jednog istog stringa $s$ du\v zine $m$, pritom, za svaki od tih stringova je neophodno odmah na\' ci odgovor pre nego \v sto se po\v cne sa obradom slede\' ceg, bez preprocesiranja stringa $s$ bi\' ce nam potrebno bar $O(nm)$ vremena. Ukoliko su stringovi koji se tra\v ze mnogo manje du\v zine od $n$, recimo, svaki je du\v zine $d$, onda bi algoritam slo\v zenosti $O(md\log n)$ radio mnogo br\v ze.
+Ukoliko je potrebno tra\v ziti veliki broj stringova, recimo njih $m$ unutar jednog istog stringa $s$ du\v zine $n$, pritom, za svaki od tih stringova je neophodno odmah na\' ci odgovor pre nego \v sto se po\v cne sa obradom slede\' ceg, bez preprocesiranja stringa $s$ bi\' ce nam potrebno bar $O(nm)$ vremena. Ukoliko su stringovi koji se tra\v ze mnogo manje du\v zine od $n$, recimo, svaki je du\v zine $d$, onda bi algoritam slo\v zenosti $O(md\log n)$ radio mnogo br\v ze.
 
 Pomo\' cu sufiks niza realizacija algoritma koji tra\v zi string $t$ du\v zine $d$ u stringu $s$ je krajnje jednostavna. Binarnom pretragom po sufiks nizu tra\v zimo prvu poziciju takvu da je odgovaraju\' ci sufiks leksikografski ve\' ci ili jednak tra\v zenom stringu. Kako se pore\dj enje bilo kog sufiksa i stringa $p$ mo\v ze izvr\v siti u vremenu $O(d)$, slo\v zenost pretrage je $O(d \log n)$.
 
-Funkcija \texttt{trazi} u Dodatku \sirdodatakkod{} implementira tra\v zenje ove pozicije u sufiks nizu. Uz minimalne izmene mogu\' ce je podr\v zati tra\v zenje opsega koji sadr\v zi sve sufikse \v ciji je prafiks string $p$, ukoliko postoji.
+Funkcija \texttt{trazi} u Dodatku \ref{sirkod} implementira tra\v zenje ove pozicije u sufiks nizu. Uz minimalne izmene mogu\' ce je podr\v zati tra\v zenje opsega koji sadr\v zi sve sufikse \v ciji je prefiks string $p$, ukoliko postoji.
 
 \sirsubsubsection{Leksikografski najmanji cikli\v cni pomeraj}
 
@@ -144,11 +144,11 @@ Jasno je da ovaj algoritam radi u slo\v zenosti $O(1)$ ali zato koristi $O(n \lo
 Svi algoritmi su implementirani u programskom jeziku C++. Konfiguracija sistema na kojem je ova implementacija testirana je slede\' ca:
 
 \begin{itemize}
-    \item Procesor: AMD FX-8320,
-    \item RAM: DDR3, 1333 MHz, 2 modula od po 4 GiB,
+    \item Procesor: AMD Ryzen 7 2700X,
+    \item RAM: DDR4, 2666 MHz, 2 modula od po 8 GiB,
     \item OS: Ubuntu 16.04 LTS,
-    \item Linux kernel verzija: \texttt{4.15.0-52-generic},
-    \item Kompajler: \texttt{GCC}, verzija \texttt{8.3.0},
+    \item Linux kernel verzija: \texttt{4.15.0-54-generic},
+    \item Kompajler: \texttt{GCC}, verzija \texttt{9.1.0},
     \item Komanda za kompajliranje: \texttt{g++ -std=c++2a -O2 kod.cpp}.
 \end{itemize}
 
@@ -166,12 +166,12 @@ Pri pokretanju, program sa komandne linije o\v cekuje tri parametra. Prvi je tip
     \item Prvi string du\v zine bar $n$ iz beskona\v cnog niza stringova koji je definisan na slede\' ci na\v cin: $s_0 = a, s_1 = b, s_i = s_{i-2}s_{i-1}$. Ta\v cnije, uzima se prefiks tog stringa du\v zine $n$.
 \end{enumerate}
 
-Testira se vreme potrebno da se konstrui\v se sufiks niz, zatim vreme da se konstrui\v se LCP niz, i kona\v cno, $n$ puta se bira pseudoslu\v cajan podstring du\v zine ta\v cno $100$, pravi se njegova kopija u memoriji, zatim se taj podstring tra\v zi pomo\' cu sufiks niza u glavnom stringu i meri se ukupno vreme. Testirane su sve kombinacije tipa stringa, algoritma za nala\v zenje sufiks niza i du\v zine koja je uzeta iz skupa $\{30000, 100000, 300000\}$. Svaki test je ponovljen tri puta i uzeto je najmanje vreme.
+Testira se vreme potrebno da se konstrui\v se sufiks niz, zatim vreme da se konstrui\v se LCP niz, i kona\v cno, $n$ puta se bira pseudoslu\v cajan podstring du\v zine ta\v cno $100$, pravi se njegova kopija u memoriji, zatim se taj podstring tra\v zi pomo\' cu sufiks niza u glavnom stringu i meri se ukupno vreme. Testirane su sve kombinacije tipa stringa, algoritma za nala\v zenje sufiks niza i du\v zine koja je uzeta iz skupa $\{20000, 40000, 80000, 160000, 320000\}$. Svaki test je ponovljen tri puta i uzeto je najmanje vreme.
 
 \sirsubsection{Rezultati testiranja}
 
-U tabelama u dodatku \sirdodataktabele{} dat je pregled svih rezultata. Najupadljiviji je rezultat koji se ti\v ce konstrukcije sufiks niza kod nasumi\v cnih stringova. Naime, kod tih stringova prvi algoritam ima najmanje vreme rada. Ovo i nije iznena\dj uju\' ce s obzirom na komentar koji je dat u opisu tog algoritma, a ti\v ce se njegove slo\v zenosti kad su vrednosti u LCP nizu male. Pored toga, iako je iste slo\v zenosti kao tre\' ci algoritam, on ima malu skrivenu konstatu. Kod primera sa puno samosli\v cnosti, jasno je uo\v cljivo kvadratno pona\v sanje prvog algoritma, dok je tre\' ci algoritam tro\v si od $1.3$ do $6$ puta manje vremena od drugog.
+U tabelama u dodatku \ref{sirtabele} dat je pregled svih rezultata. Najupadljiviji je rezultat koji se ti\v ce konstrukcije sufiks niza kod nasumi\v cnih stringova. Naime, kod tih stringova prvi algoritam ima najmanje vreme rada. Ovo i nije iznena\dj uju\' ce s obzirom na komentar koji je dat u opisu tog algoritma, a ti\v ce se njegove slo\v zenosti kad su vrednosti u LCP nizu male. Pored toga, iako je iste slo\v zenosti kao tre\' ci algoritam, on ima malu skrivenu konstatu. Kod primera sa puno samosli\v cnosti, jasno je uo\v cljivo kvadratno pona\v sanje prvog algoritma, dok tre\' ci algoritam tro\v si do $6$ puta manje vremena od drugog.
 
-Iako je teoriji algoritam za konstrukciju LCP niza ima linearnu slo\v zenost, vreme konstrukcije raste br\v ze od linearnog zbog izrazito nesekvencijalnog \v sablona memorijskih pristupa ovog algoritma, odnosno, za ve\' ce vrednosti du\v zine, efikasnost ke\v s memorije opada a samim tim i latenca pri pristupu.
+Iako u teoriji algoritam za konstrukciju LCP niza ima linearnu slo\v zenost, vreme konstrukcije raste malo br\v ze od linearnog zbog izrazito nesekvencijalnog \v sablona memorijskih pristupa ovog algoritma, odnosno, za ve\' ce vrednosti du\v zine, efikasnost ke\v s memorije opada a samim tim i latenca pri pristupu raste.
 
 Vremena pretrage stringa se uklapaju u o\v cekivane rezultate. Prime\' cuje se da nasumi\v cni stringovi imaju manja vremena, \v sto je tako\dj e o\v cekivano, s obzirom na to da se ra\v cunanje LCP-a zaustavlja ranije.

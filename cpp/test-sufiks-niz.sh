@@ -2,7 +2,7 @@
 echo -n > sir_rezultat.txt
 for algo in 0 1 2
 do
-	for n in 30000 100000 300000
+	for n in 20000 40000 80000 160000 320000
 	do
 		for tip in 0 1 2 3 4 5 6
 		do

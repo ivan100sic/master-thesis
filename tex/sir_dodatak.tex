@@ -1,5 +1,6 @@
-\section{Dodatak}
-\subsection{Tabelarni prikaz rezultata testiranja}
+\appendix
+\section{Tabelarni prikaz rezultata testiranja}
+\label{sirtabele}
 
 %\begin{enumerate}
 %    \item String koji se sastoji samo od slova $a$,
@@ -15,127 +16,129 @@ U slede\' cih $7$ tabela data su vremena (u sekundama) konstrukcije sufiks niza,
 
 Tip 1:
 
-\begin{tabular}{r|r|r|r}
-                & 30000 & 100000 & 300000 \\
+\begin{tabular}{r|r|r|r|r|r}
+                & 20000 & 40000 & 80000 & 160000 & 320000 \\
 \hline
-$O(n^2 \log n)$ & 7.731 & 99.834 & 1018.851  \\
+$O(n^2 \log n)$ & 1.733 & 7.496 & 31.988 & 136.355 & 584.476  \\
 \hline
-$O(n \log^2 n)$ & 0.060 & 0.250 & 0.928  \\
+$O(n \log^2 n)$ & 0.027 & 0.058 & 0.128 & 0.287 & 0.625  \\
 \hline
-$O(n \log n)$ & 0.010 & 0.041 & 0.156  \\
+$O(n \log n)$ & 0.005 & 0.010 & 0.024 & 0.048 & 0.117  \\
 \end{tabular}
 
 Tip 2:
 
-\begin{tabular}{r|r|r|r}
-                & 30000 & 100000 & 300000 \\
+\begin{tabular}{r|r|r|r|r|r}
+                & 20000 & 40000 & 80000 & 160000 & 320000 \\
 \hline
-$O(n^2 \log n)$ & 0.006& 0.021& 0.072  \\
+$O(n^2 \log n)$ & 0.005 & 0.005 & 0.017 & 0.028 & 0.050  \\
 \hline
-$O(n \log^2 n)$ & 0.038& 0.158& 0.590  \\
+$O(n \log^2 n)$ & 0.018 & 0.042 & 0.089 & 0.202 & 0.461  \\
 \hline
-$O(n \log n)$ & 0.016& 0.076& 0.445  \\
+$O(n \log n)$ & 0.009 & 0.016 & 0.039 & 0.158 & 0.472  \\
 \end{tabular}
 
 Tip 3:
 
-\begin{tabular}{r|r|r|r}
-                & 30000 & 100000 & 300000 \\
+\begin{tabular}{r|r|r|r|r|r}
+                & 20000 & 40000 & 80000 & 160000 & 320000 \\
 \hline
-$O(n^2 \log n)$ & 0.011& 0.045& 0.159  \\
+$O(n^2 \log n)$ & 0.005 & 0.014 & 0.028 & 0.051 & 0.107  \\
 \hline
-$O(n \log^2 n)$ & 0.040& 0.165& 0.609  \\
+$O(n \log^2 n)$ & 0.018 & 0.044 & 0.092 & 0.209 & 0.483  \\
 \hline
-$O(n \log n)$ & 0.015& 0.076& 0.430  \\
+$O(n \log n)$ & 0.004 & 0.012 & 0.038 & 0.144 & 0.412  \\
 \end{tabular}
 
 Tip 4:
 
-\begin{tabular}{r|r|r|r}
-                & 30000 & 100000 & 300000 \\
+\begin{tabular}{r|r|r|r|r|r}
+                & 20000 & 40000 & 80000 & 160000 & 320000 \\
 \hline
-$O(n^2 \log n)$ & 8.810& 135.756& 1387.426  \\
+$O(n^2 \log n)$ & 2.311 & 10.071 & 43.751 & 185.974 & 790.937  \\
 \hline
-$O(n \log^2 n)$ & 0.031& 0.122& 0.433  \\
+$O(n \log^2 n)$ & 0.012 & 0.029 & 0.063 & 0.138 & 0.303  \\
 \hline
-$O(n \log n)$ & 0.010& 0.041& 0.154  \\
+$O(n \log n)$ & 0.004 & 0.010 & 0.025 & 0.047 & 0.109  \\
 \end{tabular}
 
 Tip 5:
 
-\begin{tabular}{r|r|r|r}
-                & 30000 & 100000 & 300000 \\
+\begin{tabular}{r|r|r|r|r|r}
+                & 20000 & 40000 & 80000 & 160000 & 320000 \\
 \hline
-$O(n^2 \log n)$ & 0.164& 1.113& 6.098  \\
+$O(n^2 \log n)$ & 0.043 & 0.128 & 0.398 & 1.167 & 3.514  \\
 \hline
-$O(n \log^2 n)$ & 0.035& 0.146& 0.547  \\
+$O(n \log^2 n)$ & 0.015 & 0.034 & 0.079 & 0.176 & 0.394  \\
 \hline
-$O(n \log n)$ & 0.014& 0.060& 0.289  \\
+$O(n \log n)$ & 0.006 & 0.010 & 0.023 & 0.088 & 0.235  \\
 \end{tabular}
 
 Tip 6:
 
-\begin{tabular}{r|r|r|r}
-                & 30000 & 100000 & 300000 \\
+\begin{tabular}{r|r|r|r|r|r}
+                & 20000 & 40000 & 80000 & 160000 & 320000 \\
 \hline
-$O(n^2 \log n)$ & 0.454& 5.069& 44.347  \\
+$O(n^2 \log n)$ & 0.104 & 0.402 & 1.595 & 6.374 & 25.333  \\
 \hline
-$O(n \log^2 n)$ & 0.048& 0.204& 0.777  \\
+$O(n \log^2 n)$ & 0.021 & 0.049 & 0.109 & 0.241 & 0.558  \\
 \hline
-$O(n \log n)$ & 0.016& 0.067& 0.304  \\
+$O(n \log n)$ & 0.006 & 0.012 & 0.033 & 0.079 & 0.182  \\
 \end{tabular}
 
 Tip 7:
 
-\begin{tabular}{r|r|r|r}
-                & 30000 & 100000 & 300000 \\
+\begin{tabular}{r|r|r|r|r|r}
+                & 20000 & 40000 & 80000 & 160000 & 320000 \\
 \hline
-$O(n^2 \log n)$ & 1.070& 11.642& 105.234  \\
+$O(n^2 \log n)$ & 0.239 & 0.934 & 3.750 & 14.898 & 60.328  \\
 \hline
-$O(n \log^2 n)$ & 0.046& 0.188& 0.706  \\
+$O(n \log^2 n)$ & 0.021 & 0.048 & 0.102 & 0.231 & 0.536  \\
 \hline
-$O(n \log n)$ & 0.014& 0.060& 0.240  \\
+$O(n \log n)$ & 0.005 & 0.012 & 0.029 & 0.067 & 0.154  \\
 \end{tabular}
 
 U slede\' coj tabeli data su vremena konstrukcije LCP niza u milisekundama za svaki tip stringa.
 
-\begin{tabular}{r|r|r|r}
-  & $30000$ & $100000$ & $300000$ \\
+\begin{tabular}{r|r|r|r|r|r}
+                & 20000 & 40000 & 80000 & 160000 & 320000 \\
 \hline
-1 & 0.193 & 0.603 & 1.946  \\
+1 & 0.072 & 0.107 & 0.208 & 0.527 & 1.178  \\
 \hline
-2 & 0.570 & 1.999 & 7.302  \\
+2 & 0.325 & 0.360 & 0.685 & 1.490 & 3.595  \\
 \hline
-3 & 0.572 & 2.066 & 7.188  \\
+3 & 0.184 & 0.400 & 0.900 & 2.056 & 4.234  \\
 \hline
-4 & 0.191 & 0.718 & 2.124  \\
+4 & 0.071 & 0.107 & 0.205 & 0.542 & 1.308  \\
 \hline
-5 & 0.346 & 1.252 & 4.165  \\
+5 & 0.145 & 0.161 & 0.284 & 0.870 & 1.384  \\
 \hline
-6 & 0.561 & 2.955 & 12.041  \\
+6 & 0.092 & 0.249 & 0.717 & 1.824 & 3.598  \\
 \hline
-7 & 0.329 & 1.296 & 4.674  \\
+7 & 0.070 & 0.163 & 0.355 & 1.329 & 1.671  \\
+
 \end{tabular}
 
 U slede\' coj tabeli data su vremena pretrage $n$ stringova du\v zine $100$, u milisekundama, za svaki tip stringa.
 
-\begin{tabular}{r|r|r|r}
-  & $30000$ & $100000$ & $300000$ \\
+\begin{tabular}{r|r|r|r|r|r}
+                & 20000 & 40000 & 80000 & 160000 & 320000 \\
 \hline
-1 & 60.456 & 235.826 & 766.675  \\
+1 & 24.107 & 47.884 & 101.288 & 215.393 & 456.230  \\
 \hline
-2 & 10.629 & 43.840 & 151.584  \\
+2 & 3.876 & 8.240 & 17.704 & 38.519 & 90.870  \\
 \hline
-3 & 15.094 & 63.806 & 223.397  \\
+3 & 5.456 & 11.802 & 25.697 & 57.387 & 128.014  \\
 \hline
-4 & 57.320 & 230.142 & 702.419  \\
+4 & 22.067 & 44.794 & 96.238 & 205.285 & 433.781  \\
 \hline
-5 & 52.554 & 221.837 & 738.287  \\
+5 & 20.031 & 40.832 & 91.493 & 200.748 & 433.977  \\
 \hline
-6 & 38.805 & 157.348 & 532.977  \\
+6 & 12.143 & 27.000 & 60.149 & 131.536 & 284.318  \\
 \hline
-7 & 42.686 & 169.907 & 576.999  \\
+7 & 13.751 & 29.849 & 64.425 & 141.577 & 300.761  \\
 \end{tabular}
 
-\subsection{Implementacija algoritama u jeziku C++}
+\section{Implementacija algoritama u jeziku C++}
+\label{sirkod}
 \lstinputlisting[language=C++, caption={Implementacija}, style=customcpp]{../cpp/sufiks_niz.cpp}

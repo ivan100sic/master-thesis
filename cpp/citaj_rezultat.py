@@ -4,6 +4,8 @@ ks = defaultdict(lambda: +1e30)
 lp = defaultdict(lambda: +1e30)
 sr = defaultdict(lambda: +1e30)
 
+lens = [20000, 40000, 80000, 160000, 320000]
+
 try:
 	while True:
 		t, n, s = map(int, input().split())
@@ -27,9 +29,9 @@ for t in range(7):
 	for s in range(3):
 		print('\\hline')
 		print(['$O(n^2 \\log n)$', '$O(n \\log^2 n)$', '$O(n \\log n)$'][s], end=' & ')
-		for n in [30000, 100000, 300000]:
+		for n in lens:
 			print('%.3f' % ks[t, n, s], end='')
-			if n < 300000:
+			if n < lens[-1]:
 				print(' & ', end='')
 			else:
 				print('  \\\\')
@@ -39,9 +41,9 @@ print()
 for t in range(7):
 	print('\\hline')
 	print(t+1, end=' & ')
-	for n in [30000, 100000, 300000]:
+	for n in lens:
 		print('%.3f' % (lp[t, n] * 1000), end='')
-		if n < 300000:
+		if n < lens[-1]:
 			print(' & ', end='')
 		else:
 			print('  \\\\')
@@ -50,9 +52,9 @@ print()
 for t in range(7):
 	print('\\hline')
 	print(t+1, end=' & ')
-	for n in [30000, 100000, 300000]:
+	for n in lens:
 		print('%.3f' % (sr[t, n] * 1000), end='')
-		if n < 300000:
+		if n < lens[-1]:
 			print(' & ', end='')
 		else:
 			print('  \\\\')
