@@ -47,7 +47,7 @@ Sufiks niz se mo\v ze konstruisati prostim sortiranjem svih sufiksa u vremenskoj
 
 Ozna\v cimo sa $k$ du\v zinu najdu\v zeg stringa koji se javlja vi\v se od jednom u stringu $s$. Nije te\v sko pokazati da, ako se pa\v zljivo implementira, funkcija pore\dj enja dva sufiksa radi u vremenskoj slo\v zenosti $O(k)$, pa se slo\v zenost konstrukcije sufiks niza mo\v ze i bolje proceniti sa $O(kn \log n)$. Kod pojedinih stringova, ovaj algoritam ima jako dobre performanse, u \v sta \' cemo se uveriti pore\dj enjem implementacija.
 
-U dodatku \ref{sirkod} funkcija \texttt{sufiks\_niz\_n2logn} implementira glavni algoritam, dok klasa \texttt{uporedi\_sufikse} implementira pore\dj enje sufiksa i koristi se kao klju\v c za bibliote\v cku funkciju \texttt{sort}.
+U dodatku \ref{sirkod} funkcija \texttt{suffix\_array\_n2logn} implementira glavni algoritam, dok klasa \texttt{suffix\_cmp} implementira pore\dj enje sufiksa i koristi se kao klju\v c za bibliote\v cku funkciju \texttt{sort}.
 
 \sirsubsection{Algoritam slo\v zenosti $O(n \log^2 n)$}
 
@@ -79,7 +79,7 @@ Za kraj, neka je $k = \ceil{\log_2(n)}$. Odavde je $2^k \geq n$. U kontekstu kon
 
 Kako ovaj algoritam ima $O(\log n)$ faza, a svaka faza radi u slo\v zenosti $O(n \log n)$, ukupna vremenska slo\v zenost je $O(n \log^2 n)$. Memorijska slo\v zenost je $O(n \log n)$, ali se mo\v ze smanjiti na $O(n)$ pam\' cenjem samo nizova $C^{(k)}$ prethodne i trenutne faze.
 
-U dodatku \ref{sirkod}, \texttt{sortiraj\_ciklicne\_pomeraje\_nlog2n} je funkcija koja implementira ovaj algoritam za nala\v zenje redosleda cikli\v cnih pomeraja.
+U dodatku \ref{sirkod}, \texttt{sort\_cyclic\_shifts\_nlog2n} je funkcija koja implementira ovaj algoritam za nala\v zenje redosleda cikli\v cnih pomeraja.
 
 \sirsubsection{Algoritam slo\v zenosti $O(n \log n)$}
 
@@ -89,7 +89,7 @@ Mogu\' ce je pojednostaviti prethodni algoritam, odnosno, svesti ga na samo jedn
 
 Kona\v cno re\v senje, odnosno sortiran niz cikli\v cnih pomeraja je upravo niz $p^{(k)}$ za $k = \ceil{\log_2(n)}$.
 
-U dodatku \ref{sirkod}, \texttt{sortiraj\_ciklicne\_pomeraje\_nlogn} je funkcija koja implementira ovaj algoritam za nala\v zenje redosleda cikli\v cnih pomeraja. Funkcija koja nalazi sufiks niz je \texttt{sufiks\_niz\_brzi}. Ona kao parametar prima i funkciju koju \' ce zvati za sortiranje cikli\v cnih pomeraja stringa.
+U dodatku \ref{sirkod}, \texttt{sort\_cyclic\_shifts\_nlogn} je funkcija koja implementira ovaj algoritam za nala\v zenje redosleda cikli\v cnih pomeraja. Funkcija koja nalazi sufiks niz je \texttt{suffix\_array\_fast}. Ona kao parametar prima i funkciju koju \' ce zvati za sortiranje cikli\v cnih pomeraja stringa.
 
 \sirsubsection{LCP niz}
 
@@ -125,7 +125,7 @@ Ukoliko je potrebno tra\v ziti veliki broj stringova, recimo njih $m$ unutar jed
 
 Pomo\' cu sufiks niza realizacija algoritma koji tra\v zi string $t$ du\v zine $d$ u stringu $s$ je krajnje jednostavna. Binarnom pretragom po sufiks nizu tra\v zimo prvu poziciju takvu da je odgovaraju\' ci sufiks leksikografski ve\' ci ili jednak tra\v zenom stringu. Kako se pore\dj enje bilo kog sufiksa i stringa $p$ mo\v ze izvr\v siti u vremenu $O(d)$, slo\v zenost pretrage je $O(d \log n)$.
 
-Funkcija \texttt{trazi} u Dodatku \ref{sirkod} implementira tra\v zenje ove pozicije u sufiks nizu. Uz minimalne izmene mogu\' ce je podr\v zati tra\v zenje opsega koji sadr\v zi sve sufikse \v ciji je prefiks string $p$, ukoliko postoji.
+Funkcija \texttt{find\_substring} u Dodatku \ref{sirkod} implementira tra\v zenje ove pozicije u sufiks nizu. Uz minimalne izmene mogu\' ce je podr\v zati tra\v zenje opsega koji sadr\v zi sve sufikse \v ciji je prefiks string $p$, ukoliko postoji.
 
 \sirsubsubsection{Leksikografski najmanji cikli\v cni pomeraj}
 

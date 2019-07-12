@@ -12,263 +12,255 @@ using namespace chrono;
 
 mt19937 random_gen;
 
-struct stoperica {
-	time_point<high_resolution_clock> pocetak;
+struct stopwatch {
+	time_point<high_resolution_clock> start;
 
-	stoperica() {
-		pocetak = high_resolution_clock::now();
+	stopwatch() {
+		start = high_resolution_clock::now();
 	}
 
-	~stoperica() {
-		duration<double> dur = high_resolution_clock::now() - pocetak;
+	~stopwatch() {
+		duration<double> dur = high_resolution_clock::now() - start;
 		cout << fixed << setprecision(9);
-		cout << "Vreme (s): " << dur.count() << '\n';
+		cout << "Time (s): " << dur.count() << '\n';
 	}
 };
 
-struct uporedi_sufikse {
-	const string& str;
+struct suffix_cmp {
+	const string& s;
 
-	uporedi_sufikse(const string& str) : str(str) {}
+	suffix_cmp(const string& s) : s(s) {}
 
 	bool operator() (int u, int v) const {
-		const int n = str.size();
+		const int n = s.size();
 
 		if (u == v)
 			return false;
-		while (u < n && v < n && str[u] == str[v])
+		while (u < n && v < n && s[u] == s[v])
 			u++, v++;
 
 		if (u == n || v == n)
 			return u > v;
 		else
-			return str[u] < str[v];
+			return s[u] < s[v];
 	}
 };
 
-vector<int> sufiks_niz_n2logn(const string& str) {
-	const int n = str.size();
-	vector<int> sufiks_niz(n);
+vector<int> suffix_array_n2logn(const string& s) {
+	const int n = s.size();
+	vector<int> p(n);
 	for (int i=0; i<n; i++)
-		sufiks_niz[i] = i;
+		p[i] = i;
 
-	sort(sufiks_niz.begin(), sufiks_niz.end(),
-		uporedi_sufikse(str));
-
-	return sufiks_niz;
+	sort(p.begin(), p.end(), suffix_cmp(s));
+	return p;
 }
 
-vector<int> sortiraj_ciklicne_pomeraje_nlog2n(const string& str) {
-	const int n = str.size();
-	const int k = 256; // velicina alfabeta
-	vector<int> klasa(n);
+vector<int> sort_cyclic_shifts_nlog2n(const string& s) {
+	const int n = s.size();
+	const int k = 256; // alphabet size
+	vector<int> c(n);
 
-	// Inicijalizacija
-	for (int i=0; i<n; i++) {
-		klasa[i] = str[i];
-	}
+	// Initialization
+	for (int i=0; i<n; i++)
+		c[i] = s[i];
 
-	// Udvajanje
+	// Pairing
 	for (int h=1; h<n; h*=2) {
-		vector<tuple<int, int, int>> parovi(n);
-		for (int i=0; i<n; i++) {
-			parovi[i] = {klasa[i], klasa[(i+h)%n], i};
-		}
-		sort(parovi.begin(), parovi.end());
+		vector<tuple<int, int, int>> pairs(n);
+		for (int i=0; i<n; i++)
+			pairs[i] = {c[i], c[(i+h)%n], i};
+		sort(pairs.begin(), pairs.end());
 
-		vector<int> nova_klasa(n);
-		nova_klasa[get<2>(parovi[0])] = 0;
-		int broj_klasa = 1;
+		vector<int> cnew(n);
+		cnew[get<2>(pairs[0])] = 0;
+		int numc = 1;
 
 		for (int i=1; i<n; i++) {
-			if (get<0>(parovi[i]) == get<0>(parovi[i-1]) &&
-				get<1>(parovi[i]) == get<1>(parovi[i-1]))
+			if (get<0>(pairs[i]) == get<0>(pairs[i-1]) &&
+				get<1>(pairs[i]) == get<1>(pairs[i-1]))
 			{
-				nova_klasa[get<2>(parovi[i])] = broj_klasa-1;
+				cnew[get<2>(pairs[i])] = numc-1;
 			} else {
-				nova_klasa[get<2>(parovi[i])] = broj_klasa++;
+				cnew[get<2>(pairs[i])] = numc++;
 			}
 		}
 
-		swap(klasa, nova_klasa);
+		swap(c, cnew);
 	}
 
-	vector<int> niz(n);
-	vector<vector<int>> grupe(max(n, k));
-	for (int i=0; i<n; i++) {
-		grupe[klasa[i]].push_back(i);
-	}
-	int kraj = 0;
-	for (const auto& grupa : grupe) {
-		for (int sufiks : grupa) {
-			niz[kraj++] = sufiks;
-		}
-	}
-	return niz;
+	vector<vector<int>> groups(max(n, k));
+	for (int i=0; i<n; i++)
+		groups[c[i]].push_back(i);
+
+	vector<int> p(n);
+	int sz = 0;
+	for (const auto& gr : groups)
+		for (int i : gr)
+			p[sz++] = i;
+	return p;
 }
 
-vector<int> sortiraj_ciklicne_pomeraje_nlogn(const string& str) {
-	const int n = str.size();
+vector<int> sort_cyclic_shifts_nlogn(const string& s) {
+	const int n = s.size();
 	const int k = 256;
-	vector<int> niz(n);
-	vector<int> klasa(n);
-	vector<vector<int>> grupe(max(n, k));
+	vector<int> p(n);
+	vector<int> c(n);
+	vector<vector<int>> groups(max(n, k));
 
-	// Inicijalizacija
+	// Initialization
 	for (int i=0; i<n; i++) {
-		klasa[i] = str[i];
-		grupe[str[i]].push_back(i);
+		c[i] = s[i];
+		groups[s[i]].push_back(i);
 	}
 
-	int kraj = 0;
-	for (auto& grupa : grupe) {
-		for (int sufiks : grupa) {
-			niz[kraj++] = sufiks;
+	int sz = 0;
+	for (auto& gr : groups) {
+		for (int i : gr) {
+			p[sz++] = i;
 		}
-		grupa.clear();
+		gr.clear();
 	}
 
-	// Udvajanje
+	// Pairing
 	for (int h=1; h<n; h*=2) {
-		vector<int> novi_niz(n);
-		vector<int> nova_klasa(n);
+		vector<int> pnew(n);
+		vector<int> cnew(n);
 
 		for (int i=0; i<n; i++) {
-			int sufiks = niz[i];
-			int pomeren = (sufiks+n-h)%n;
-			grupe[klasa[pomeren]].push_back(pomeren);
+			int suff = p[i];
+			int shifted = (suff+n-h)%n;
+			groups[c[shifted]].push_back(shifted);
 		}
 
-		kraj = 0;
-		for (auto& grupa : grupe) {
-			for (int sufiks : grupa) {
-				novi_niz[kraj++] = sufiks;
+		sz = 0;
+		for (auto& gr : groups) {
+			for (int i : gr) {
+				pnew[sz++] = i;
 			}
-			grupa.clear();
+			gr.clear();
 		}
 
-		nova_klasa[novi_niz[0]] = 0;
-		int broj_klasa = 1;
+		cnew[pnew[0]] = 0;
+		int numc = 1;
 
 		for (int i=1; i<n; i++) {
-			int sufiks_sad = novi_niz[i];
-			int sufiks_pre = novi_niz[i-1];
-			if (klasa[sufiks_sad] == klasa[sufiks_pre] &&
-				klasa[(sufiks_sad+h)%n] == klasa[(sufiks_pre+h)%n])
+			int s1 = pnew[i];
+			int s0 = pnew[i-1];
+			if (c[s1] == c[s0] &&
+				c[(s1+h)%n] == c[(s0+h)%n])
 			{
-				nova_klasa[sufiks_sad] = broj_klasa-1;
+				cnew[s1] = numc-1;
 			} else {
-				nova_klasa[sufiks_sad] = broj_klasa++;
+				cnew[s1] = numc++;
 			}
 		}
 
-		swap(klasa, nova_klasa);
-		swap(niz, novi_niz);
+		swap(c, cnew);
+		swap(p, pnew);
 	}
 
-	return niz;
+	return p;
 }
 
 template<class F>
-vector<int> sufiks_niz_brzi(
-	const string& str,
-	F sorter_ciklicnih_pomeraja
+vector<int> suffix_array_fast(
+	const string& s,
+	F cyclic_shifts_sorter
 ) {
-	string prosirenje = str + '\0';
-	auto sortiran = sorter_ciklicnih_pomeraja(prosirenje);
-	sortiran.erase(sortiran.begin());
-	return sortiran;
+	string s_ext = s + '\0';
+	auto p = cyclic_shifts_sorter(s_ext);
+	p.erase(p.begin());
+	return p;
 }
 
-vector<int> nadji_lcp_niz(
-	const string& str,
-	const vector<int>& sufiks_niz
+vector<int> construct_lcp_array(
+	const string& s,
+	const vector<int>& p
 ) {
-	const int n = str.size();
-	vector<int> lcp(n-1);
-	vector<int> rang(n);
+	const int n = s.size();
+	vector<int> q(n-1);
+	vector<int> r(n);
 	
-	for (int i=0; i<n; i++) {
-		rang[sufiks_niz[i]] = i;
-	}
+	for (int i=0; i<n; i++)
+		r[p[i]] = i;
 
 	int k = 0;
 	for (int i=0; i<n; i++) {
-		if (rang[i] != n-1) {
-			int j = sufiks_niz[rang[i] + 1];
-			while (i+k < n && j+k < n && str[i+k] == str[j+k])
+		if (r[i] != n-1) {
+			int j = p[r[i] + 1];
+			while (i+k < n && j+k < n && s[i+k] == s[j+k])
 				k++;
-			lcp[rang[i]] = k;
+			q[r[i]] = k;
 			k = max(0, k-1);
 		} else {
 			k = 0;
 		}
 	}
 
-	return lcp;
+	return q;
 }
 
-string test_primer(int tip, int n) {
-	string str(n, 0);
+string testcase(int type, int n) {
+	string s(n, 0);
 
-	if (tip == 0) {
+	if (type == 0) {
 		for (int i=0; i<n; i++)
-			str[i] = 'a';
-	} else if (tip == 1) {
-		uniform_int_distribution<char> slovo('a', 'z');
+			s[i] = 'a';
+	} else if (type == 1) {
+		uniform_int_distribution<char> letter_gen('a', 'z');
 		for (int i=0; i<n; i++)
-			str[i] = slovo(random_gen);
-	} else if (tip == 2) {
-		uniform_int_distribution<char> slovo('a', 'b');
+			s[i] = letter_gen(random_gen);
+	} else if (type == 2) {
+		uniform_int_distribution<char> letter_gen('a', 'b');
 		for (int i=0; i<n; i++)
-			str[i] = slovo(random_gen);
-	} else if (tip == 3) {
+			s[i] = letter_gen(random_gen);
+	} else if (type == 3) {
 		for (int i=0; i<n; i++)
-			str[i] = 'a' + i%2;
-	} else if (tip == 4) {
+			s[i] = 'a' + i%2;
+	} else if (type == 4) {
 		for (int i=0; i<n; i++)
-			str[i] = 'a';
+			s[i] = 'a';
 		for (int i=0; i*i<n; i++)
-			str[i*i] = 'b';
-	} else if (tip == 5) {
+			s[i*i] = 'b';
+	} else if (type == 5) {
 		for (int i=0; i<n; i++)
-			str[i] = 'a' + bitset<32>(i).count() % 2;
-	} else if (tip == 6) {
+			s[i] = 'a' + bitset<32>(i).count() % 2;
+	} else if (type == 6) {
 		string f0 = "a", f1 = "b";
 		while ((int)f1.size() < n) {
 			string f2 = f0 + f1;
 			swap(f0, f1);
 			swap(f1, f2);
 		}
-		str = f1.substr(0, n);
+		s = f1.substr(0, n);
 	}
 
-	return str;
+	return s;
 }
 
-int trazi(
-	const string& str,
-	const vector<int>& sufiks_niz,
-	const vector<int>& lcp_niz,
-	const string& podstr
+int find_substring(
+	const string& s,
+	const vector<int>& p,
+	const string& substr
 ) {
-	const int n = str.size();
-	const int m = podstr.size();
+	const int n = s.size();
+	const int m = substr.size();
 	int l = 0, r = n-1, o = n;
 
 	while (l < r) {
-		const int sred = (l+r) >> 1;
-		const int j = sufiks_niz[sred];
+		const int mid = (l+r) >> 1;
+		const int j = p[mid];
 		int k = 0;
 
-		while (j+k < n && k < m && str[j+k] == podstr[k])
+		while (j+k < n && k < m && s[j+k] == substr[k])
 			k++;
 		
-		if (k == m || (j+k < n && str[j+k] > podstr[k])) {
-			o = sred;
-			r = sred - 1;
+		if (k == m || (j+k < n && s[j+k] > substr[k])) {
+			o = mid;
+			r = mid - 1;
 		} else {
-			l = sred + 1;
+			l = mid + 1;
 		}
 	}
 
@@ -278,48 +270,46 @@ int trazi(
 int main(int argc, char** argv) {
 	if (argc < 4)
 		return 0;
-	const int tip = stoi(argv[1]);
+
+	const int type = stoi(argv[1]);
 	const int n = stoi(argv[2]);
-	const int sufiks_niz_algoritam = stoi(argv[3]);
+	const int suffix_array_algo = stoi(argv[3]);
+	cout << type << ' ' << n << ' ' << suffix_array_algo << '\n';
 
-	cout << tip << ' ' << n << ' ' << sufiks_niz_algoritam << '\n';
-
-	string str = test_primer(tip, n);
-
-	vector<int> sufiks_niz;
-	vector<int> lcp_niz;
+	string s = testcase(type, n);
+	vector<int> p, q;
 
 	{
-		cout << "Konstrukcija sufiks niza...\n";
-		stoperica st;
-		if (sufiks_niz_algoritam == 0) {
-			sufiks_niz = sufiks_niz_n2logn(str);
-		} else if (sufiks_niz_algoritam == 1) {
-			sufiks_niz = sufiks_niz_brzi(str,
-				sortiraj_ciklicne_pomeraje_nlog2n);
-		} else if (sufiks_niz_algoritam == 2) {
-			sufiks_niz = sufiks_niz_brzi(str,
-				sortiraj_ciklicne_pomeraje_nlogn);
+		cout << "Suffix array construction...\n";
+		stopwatch st;
+		if (suffix_array_algo == 0) {
+			p = suffix_array_n2logn(s);
+		} else if (suffix_array_algo == 1) {
+			p = suffix_array_fast(s,
+				sort_cyclic_shifts_nlog2n);
+		} else if (suffix_array_algo == 2) {
+			p = suffix_array_fast(s,
+				sort_cyclic_shifts_nlogn);
 		}
 	}
 
 	{
-		cout << "Konstrukcija LCP niza...\n";
-		stoperica st;
-		lcp_niz = nadji_lcp_niz(str, sufiks_niz);
+		cout << "LCP array construction...\n";
+		stopwatch st;
+		q = construct_lcp_array(s, p);
 	}
 
 	{
-		cout << "Pretraga nasumicnih podstringova...\n";
-		stoperica st;
+		cout << "Random substring search...\n";
+		stopwatch st;
 
-		const int DUZINA = 100;
-		uniform_int_distribution<int> pozicija(0, n-DUZINA);
+		const int LENGTH = 100;
+		uniform_int_distribution<int> pos_rng(0, n-LENGTH);
 
 		for (int i=0; i<n; i++) {
-			const int j = pozicija(random_gen);
-			const string podstr = str.substr(j, DUZINA);
-			trazi(str, sufiks_niz, lcp_niz, podstr);
+			int j = pos_rng(random_gen);
+			string substr = s.substr(j, LENGTH);
+			find_substring(s, p, substr);
 		}
 	}
 
