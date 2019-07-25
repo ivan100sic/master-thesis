@@ -1,0 +1,1 @@
+g++ -include header.h test.cpp $1 -o test && ./test && rm test
