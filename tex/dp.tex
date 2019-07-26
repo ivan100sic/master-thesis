@@ -1,11 +1,106 @@
 \section{Dinami\v cko programiranje nad stringovima}
 
+Dinami\v cko programiranje je tehnika re\v savanja optimizacionih problema i problema prebrojavanja gde se glavni problem re\v sava tako \v sto se identifikuju sli\v cni potproblemi manje veli\v cine, koji se zatim re\v savaju i \v cija se re\v senja kombinuju u re\v senje glavnog problema. Svaki ovako dobijeni potproblem se re\v sava najvi\v se jedanput, nakon \v cega se njegovo re\v senje pamti u memoriji.
+
+Prvi korak u primeni dinami\v ckog programiranja na re\v savanje nekog problema jeste da se identifikuju \textit{potproblemi} tog problema. Najve\' ca instanca me\dj u svim potproblemima jeste \textit{glavni problem}. Najmanje instance su \textit{trivijalni potproblemi}, koji se ne dele dalje na potprobleme i \v cija re\v senja se dobijaju na neki drugi na\v cin. Zatim je neophodno, za svaki potproblem na\' ci relaciju izme\dj u njega i jednog ili vi\v se manjih potproblema. Ova relacija odnosno re\v senje za potproblem je matemati\v cki izraz ili rezultat nekog jednostavnog algoritma u kojem figuri\v su re\v senja manjih potproblema. Ka\v zemo da potproblem $A$ zavisi od potproblema $B$ ako re\v senje potproblema $B$ figuri\v se u izrazu koji je re\v senje potproblema $A$. Da bismo na\v sli re\v senje nekog potproblema neophodno je da prethodno na\dj emo re\v senja za sve potprobleme od kojih on zavisi.
+
 \subsection{LCP matrica}
+
+Jedna od jednostavnijih primena dinami\v ckog programiranja jeste izra\v cunavanje LCP matrice stringa. $LCP(s, p)$ (od \textit{longest common prefix}) je du\v zina najdu\v zeg zajedni\v cki prefiksa stringova $s,p$.
+
+\begin{dfn}
+LCP matrica za string $s$ du\v zine $n$ je kvadratna matrica $A$ za koju va\v zi $A_{i,j} = LCP(s_{[i,n)}, s_{[j, n)})$.
+\end{dfn}
+
+Ukoliko va\v zi $s_i \not = s_j$, onda je $A_{i,j} = 0$. U suprotnom, posmatrajmo stringove $s_{[i+1,n)}, s_{[j+1,n)}$. Va\v zi da je $p$ njihov zajedni\v cki prefiks ako i samo ako je $s_ip = s_jp$ zajedni\v cki prefiks stringova $s_{[i,n)}, s_{[j,n)}$, odakle dobijamo da je $A_{i,j} = A_{i+1,j+1}+1$, pod uslovom da su indeksi $i+1,j+1$ validni, ina\v ce se radi o praznim podstringovima pa mo\v zemo smatrati da je $A_{i+1,j+1} = 0$ odnosno $A_{i,j} = 1$. Ovo nas dovodi do slede\' ceg, jednostavnog algoritma za ra\v cunanje LCP matrice.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={Implementacija algoritma za nala\v zenje LCP matrice}, style=customcpp]{cpp/lcp-mat.cpp}
+\end{minipage}
+
+Vremenska i memorijska slo\v zenost ovog algoritma je $O(n^2)$.
 
 \subsection{Najdu\v zi zajedni\v cki podniz}
 
+\begin{dfn}
+Podniz stringa $s$ du\v zine $n$ je string $s_{i_0}s_{i_1}\ldots s_{i_{k-1}}$ gde va\v zi $0 \leq s_0 < s_1 < \ldots < i_{k-1} < n$.
+\end{dfn}
+
+Du\v zina najdu\v zeg zajedni\v ckog podniza (LCS, od \textit{longest common subsequence}) dva stringa $s,p$ se mo\v ze koristiti kao mera njihove sli\v cnosti. Preciznije, ukoliko su du\v zine $s,p$ redom $n,m$ a du\v zina njihovog LCS-a je $k$, tada je njihova udaljenost $n+m-2k$, gde se udaljenost odnosi na minimalan broj izmena potrebnih da se od stringa $s$ dobije string $p$, gde su dozvoljene operacije brisanje jednog slova i umetanje jednog slova u string.
+
+Neka je za fiksne stringove $s,p$ du\v zina $n,m$, redom, $d_{i,j}$ du\v zina LCS-a za stringove $s_{[0, i)}, p_{[0, j)}$.
+
+\begin{itemize}
+\item Ako je $i=0$ ili $j=0$, tada je $d_{i,j} = 0$.
+\item U suprotnom, posmatrajmo slova $s_{i-1}$ i $p_{j-1}$. Ukoliko su ona jednaka, tada se svaki zajedni\v cki podniz stringova $s_{[0, i-1)}, p_{[0, j-1)}$ mo\v ze pro\v siriti za karakter $s_{i-1} = p_{j-1}$ tako da se dobije zajedni\v cki podniz stringova $s_{[0, i)}, p_{[0, j)}$. Ina\v ce, svaki zajedni\v cki podniz stringova $s_{[0, i)}, p_{[0, j)}$ je ili zajedni\v cki podniz za $s_{[0, i-1)}, p_{[0, j)}$ ili za $s_{[0, i)}, p_{[0, j-1)}$.
+\end{itemize}
+
+Odavde dobijamo slede\' cu rekurentnu vezu: Ako su $i,j > 0$,
+
+\begin{equation}
+    d_{i,j} = \begin{cases}
+        \max(d_{i-1,j}, d_{i,j-1}) & s_{i-1} \not = p_{j-1} \\
+        \max(d_{i-1,j}, d_{i,j-1}, d_{i-1,j-1} + 1) &  s_{i-1} = p_{j-1} \\
+    \end{cases}
+\end{equation}
+
+Jasno je da je $d_{n,m}$ du\v zina LCS-a za cele stringove $s,p$.
+
+\lstinputlisting[language=C++, title={Implementacija nala\v zenja du\v zine LCS-a}, style=customcpp]{cpp/lcs-len.cpp}
+
+Ako posmatramo $d$ kao matricu, prime\' cujemo da se vrednosti u $i$-toj vrsti mogu izra\v cunati samo na osnovu stringova $s,p$ i vrednosti u $i$-toj i vrsti $i-1$. Ovo nam omogu\' cava da implementiramo algoritam tako da se u svakom trenutku pamte samo poslednje dve vrste.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={Implementacija nala\v zenja du\v zine LCS-a sa $O(m)$ memorije}, style=customcpp]{cpp/lcs-len-mem.cpp}
+\end{minipage}
+
+Ukoliko je potrebno na\' ci ceo podniz a ne samo njegovu du\v zinu, rekonstrukciju radimo kretanjem unazad kroz matricu $d$, uvek idu\' ci ka odgovaraju\' cem polju koje ima najve\' cu vrednost, odnosno, ako smo u polju $i,j$ idemo ka polju od kojeg je $d_{i,j}$ "uzelo" vrednost.
+
+\lstinputlisting[language=C++, title={Implementacija nala\v zenja LCS-a}, style=customcpp]{cpp/lcs-string.cpp}
+
 \subsubsection{Hirschberg-ov algoritam}
 
-\subsubsection{Najdu\v zi palindromski podniz}
+Iako se algoritam koji samo nalazi du\v zinu LCS-a dva stringa su\v stinski ne razlikuje od onog koji nalazi ceo taj podniz, prvi se mo\v ze jednostavno realizovati tako da mu je memorijska slo\v zenost $O(m)$. Hirschberg-ov algoritam nalazi ceo LCS u memorijskoj slo\v zenosti $O(n+m)$ bez \v zrtvovanja vremenske slo\v zenosti.\cite{hirschbergrad} Ideja algoritma je da string $s$ predstavimo kao $s=s_1s_2$ gde $s_1,s_2$ imaju pribli\v zno jednake du\v zine, a da zatim na\dj emo predstavljanje stringa $p=p_1p_2$ takvo da je $|LCS(s_1, p_1)| + |LCS(s_2, p_2)| = |LCS(s, p)|$, odnosno, ako posmatramo LCS za $s,p$ slova iz $s_1$ su uparena ta\v cno sa slovima iz $p_1$ i slova iz $s_2$ su uparena ta\v cno sa slovima iz $p_2$. Znaju\' ci particije ovih stringova, rekurzivno nalazimo $LCS(s_1, p_1)$ i $LCS(s_2, p_2)$ a zatim konkateniramo rezultate.
+
+Opi\v simo prvo pomo\' cni algoritam koji za stringove $s,p$ du\v zina $n,m$ nalazi, za svako $j \in \{0, 1, \ldots, m\}$ vrednost $|LCS(s, p_{[0, j)})|$. Primetimo da je ovaj algoritam identi\v can algoritmu koji nalazi du\v zinu LCS-a u $O(m)$ memorije, osim \v sto vra\' ca ceo vektor a ne samo njegov poslednji element.
+
+\lstinputlisting[language=C++, title={Pomo\' cna funkcija Hirschberg-ovog algoritma}, style=customcpp]{cpp/lcs-vector.cpp}
+
+Na\dj imo ovaj vektor za parove stringova $s_1, p$ i $\overline{s_2}, \overline{p}$, neka su to vektori $v_1, v_2$. Ako je $i \in \{0, 1, \ldots, m\}$, tada je $v_1(i) + v_2(m-i)$ du\v zina LCS-a koji odgovara predstavljanju $p = p_1p_2$ sa $p_1 = p_{[0, i)}, p_2 = p_{[i, m)}$, pa maksimiziranjem prethodnog izraza po $i$ nalazimo tra\v zenu particiju za $p$.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={Implementacija Hirschberg-ovog algoritma}, style=customcpp]{cpp/hirschberg.cpp}
+\end{minipage}
+
+Uze\' cemo da je $s$ du\v zi string. Ukoliko nije, rekurzivno zovemo istu funkciju gde parametri menjaju mesto. Koristimo matemati\v cku indukciju da doka\v zemo da je memorijska slo\v zenost algoritma $O(n+m)$. Indukciju radimo po zbiru $n+m$. Dokaza\' cemo da postoji realan broj $c_2$ takav da algoritam koristi ne vi\v se od $c_2(n+m)$ bajtova memorije. Za $n+m \leq 1$ tvr\dj enje o\v cigledno va\v zi jer nema rekurzivnih poziva. U suprotnom, telo funkcije koristi ne vi\v se od $c_1(n+m)$ bajtova dodatne memorije, dok je kod rekurzivnih poziva zbir du\v zina stringova ne vi\v se od $\frac{n}{2} + m \leq \frac{3}{4}(n+m)$ (ovo va\v zi jer je $m \leq n$), odnosno, ako uzmemo da je $c_2 = 4c_1$, va\v zi da algoritam za du\v zine $n,m$ koristi ne vi\v se od $c_2\cdot \frac{3}{4}(n+m) + c_1(n+m) = 4c_1(n+m) = c_2(n+m)$ memorije, \v cime zavr\v savamo indukcijski korak.
+
+Procenimo sada vremensku slo\v zenost algoritma. Ozna\v cimo sa $H = nm$. Algoritam za ra\v cunanje nizova $v_1, v_2$ koristi $O(H)$ vremena, dok rekurzivni pozivi zajedno imaju veli\v cinu $\frac{n}{2}\cdot m = \frac{H}{2}$, pa vremenska slo\v zenost izra\v zena preko $H$ zadovoljava relaciju $T(H) = O(H) + T(\frac{H}{2})$, pa je na osnovu Master teoreme vremenska slo\v zenost upravo $O(H)$ odnosno $O(nm)$.
+
+\subsection{Najdu\v zi palindromski podniz}
+
+\begin{dfn}
+Za dati string $s$ du\v zine $n$, najdu\v zi palindromski podniz je palindrom najve\' ce du\v zine koji se javlja kao podniz stringa $s$.
+\end{dfn}
+
+Problem nala\v zenja najdu\v zeg palindromskog podniza se efikasno mo\v ze re\v siti pomo\' cu dinami\v ckog programiranja. Na\dj imo du\v zinu najdu\v zeg palindromskog podniza za svaki podstring stringa $s$, preciznije, neka je $d_{l,r}$ za $0 \leq l < r \leq n$ du\v zina najdu\v zeg palindromskog podniza za string $s_{[l,r)}$. Posmatrajmo slede\' ce slu\v cajeve:
+
+\begin{itemize}
+    \item $r-l = 1$. Tada string $s_{[l,r)}$ sadr\v zi jedno slovo pa je $d_{l,r} = 1$.
+    \item $r-l = 2$. Tada string $s_{[l,r)}$ sadr\v zi dva slova, ukoliko su ona jednaka $d_{l,r} = 2$, ina\v ce je $d_{l,r} = 1$.
+    \item $r-l > 2, s_l \not = s_{r-1}$. Svaki palindromski podniz stringa $s_{[l, r)}$ je sigurno sadr\v zan u celosti ili u $s_{[l, r-1)}$ ili u $s_{[l+1, r)}$, pa je $d_{l,r} = \max(d_{l+1,r}, d_{l,r-1})$.
+    \item $r-l > 2, s_l = s_{r-1}$. Svaki palindromski podniz stringa $s_{[l, r)}$ je sigurno sadr\v zan u celosti ili u $s_{[l, r-1)}$ ili u $s_{[l+1, r)}$ ili po\v cinje na poziciji $l$, zavr\v sava se na poziciji $r-1$, a ostatak, koji je tako\dj e palindrom, je u celosti sadr\v zan u $s_{[l+1,r-1)}$ pa je $d_{l,r} = \max(d_{l+1,r}, d_{l,r-1}, d_{l+1,r-1}+2)$.
+\end{itemize}
+
+Re\v senje glavnog problema, odnosno du\v zina najdu\v zeg palindromskog podniza je po definiciji $d_{0,n}$. S\^amo re\v senje se mo\v ze rekonstruisati sli\v cnim postupkom kao kod nala\v zenja LCS-a.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={Implementacija algoritma za nala\v zenje najdu\v zeg palindromskog podniza}, style=customcpp]{cpp/lpalsubseq.cpp}
+\end{minipage}
+
+Vremenska i memorijska slo\v zenost algoritma je $O(n^2)$. Ukoliko je potrebna samo du\v zina, dovoljno je vratiti vrednost $d_{0,n}$ nakon kraja prve spoljne \textit{for} petlje.
 
 \subsection{Levenshtein udaljenost}

@@ -10,7 +10,7 @@ Naivna pretraga re\v sava prethodno opisani problem tako \v sto za svako celo $i
 
 \subsection{Knuth-Morris-Pratt algoritam}
 
-KMP je prvi otkriveni algoritam koji re\v sava problem pretrage stringa u linearnom vremenu, odnosno u slo\v zenosti $O(n+m)$. Da bismo razumeli rad algoritma, defini\v simo slede\' ce pojmove.
+KMP je prvi otkriveni algoritam koji re\v sava problem pretrage stringa u linearnom vremenu, odnosno u slo\v zenosti $O(n+m)$.\cite{kmprad} Da bismo razumeli rad algoritma, defini\v simo slede\' ce pojmove.
 
 \begin{dfn}
 Sufiks-prefiks nepraznog stringa $s$ je svaki string $p$ razli\v cit od $s$, uklju\v cuju\' ci i prazan string, koji je istovremeno i sufiks i prefiks stringa $s$, tj. $s_{[0, |p|)} = s_{[|s|-|p|, |s|)} = p$.
@@ -73,7 +73,7 @@ Za string $s$ du\v zine $n$, Z-niz je niz $z_1, \ldots, z_{n-1}$ gde je $z_i$ du
 
 Z-niz se mo\v ze iskoristiti za pretragu stringova. Ukoliko na\dj emo Z-niz za string $ps$, $i$ je pojavljivanje $p$ u $s$ akko je $z_{i+m} \geq m$.
 
-Z-algoritam je efikasan algoritam za nala\v zenje Z-niza. Ozna\v cimo sa $q$ string za koji nalazimo Z-niz. Algoritam za svako $i$ direktno izra\v cuna $z_i$ poklapanjem slova na pozicijama $z_i, i + z_i$. Klju\v cna ideja je da se prethodno izra\v cunate vrednosti Z-niza mogu iskoristiti da se postavi bolja po\v cetna vrednost za $z_i$, umesto da se svaki put kre\' ce od nule. Naime, neka je $r$ najve\' ca na\dj ena vrednost izraza $j+z_j$ za $j<i$, a neka je pritom $l = j$ za koje se dosti\v ze taj maksimum. Drugim re\v cima, $[l, r)$ je prozor koji odgovara nekom do sada prona\dj enom podstringu koji je jednak nekom prefiksu stringa, i to onom kod kojeg je $r$ najve\' ce. Ukoliko va\v zi $l \leq i < r$, tada znamo da je $q_{[i, r)} = q_{[i-l, r-l)}$. Tako\dj e, va\v zi $q_{[i-l, i-l+z_{i-l})} = q_{[0, z_{i-l})}$ pa, ako ozna\v cimo sa $t_i = \min(z_{i-l}, r-i)$, va\v zi $q_{[i, i+t_i)} = q_{[0, t_i)}$ odnosno $z_i \geq t_i$.
+Z-algoritam je efikasan algoritam za nala\v zenje Z-niza.\cite{zalgoknjiga} Ozna\v cimo sa $q$ string za koji nalazimo Z-niz. Algoritam za svako $i$ direktno izra\v cuna $z_i$ poklapanjem slova na pozicijama $z_i, i + z_i$. Klju\v cna ideja je da se prethodno izra\v cunate vrednosti Z-niza mogu iskoristiti da se postavi bolja po\v cetna vrednost za $z_i$, umesto da se svaki put kre\' ce od nule. Naime, neka je $r$ najve\' ca na\dj ena vrednost izraza $j+z_j$ za $j<i$, a neka je pritom $l = j$ za koje se dosti\v ze taj maksimum. Drugim re\v cima, $[l, r)$ je prozor koji odgovara nekom do sada prona\dj enom podstringu koji je jednak nekom prefiksu stringa, i to onom kod kojeg je $r$ najve\' ce. Ukoliko va\v zi $l \leq i < r$, tada znamo da je $q_{[i, r)} = q_{[i-l, r-l)}$. Tako\dj e, va\v zi $q_{[i-l, i-l+z_{i-l})} = q_{[0, z_{i-l})}$ pa, ako ozna\v cimo sa $t_i = \min(z_{i-l}, r-i)$, va\v zi $q_{[i, i+t_i)} = q_{[0, t_i)}$ odnosno $z_i \geq t_i$.
 
 \lstinputlisting[language=C++, title={Implementacija Z-algoritma za pretragu stringa}, style=customcpp]{cpp/z-algo.cpp}
 
