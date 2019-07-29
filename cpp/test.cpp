@@ -40,6 +40,7 @@ int main() {
 	cout.tie(nullptr);
 	cerr.tie(nullptr);
 
-	string a = "najduzeg zajednickog podniza";
-	cout << lpalsubseq(a) << '\n';
+	string a = "edit";
+	string b = "white";
+	cout << levenshtein(a, b) << '\n';
 }

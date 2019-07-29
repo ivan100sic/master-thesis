@@ -13,3 +13,4 @@ string lcs_string(const string& s, const string& p);
 vector<int> lcs_vector(const string& s, const string& p);
 string hirschberg(const string& s, const string& p);
 string lpalsubseq(const string& s);
+int levenshtein(const string& s, const string& p);
