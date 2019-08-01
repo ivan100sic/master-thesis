@@ -40,7 +40,9 @@ int main() {
 	cout.tie(nullptr);
 	cerr.tie(nullptr);
 
-	string a = "edit";
-	string b = "white";
-	cout << levenshtein(a, b) << '\n';
+	vector<string> P = {"ada", "aca", "a", "da"};
+	string s = "acdadadacaaadcadadaddacda";
+	for (auto [x, y] : aho_main(P, s)) {
+		cout << x << ' ' << y << '\n';
+	}
 }
