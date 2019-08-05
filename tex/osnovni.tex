@@ -6,7 +6,7 @@ Jedan od osnovnih problema pretrage stringova je problem nala\v zenja svih pojav
 
 Naivna pretraga re\v sava prethodno opisani problem tako \v sto za svako celo $i$ iz segmenta $[0,n-m]$ upore\dj uje karakter po karakter stringove $s_{[i, i+m)}$ i $p$, pri \v cemu se odmah zaustavlja ukoliko nai\dj e na dva razli\v cita karaktera. Ovo pore\dj enje ima vremensku slo\v zenost $O(m)$ pa ceo algoritam ima vremensku slo\v zenost $O((n-m)m)$, ova slo\v zenost se dosti\v ze npr. za stringove koji se sastoje samo od slova \texttt{a}.
 
-\lstinputlisting[language=C++, title={Implementacija naivne pretrage}, style=customcpp]{cpp/naivna.cpp}
+\lstinputlisting[language=C++, title={\textit{Implementacija naivne pretrage}}, style=customcpp]{cpp/naivna.cpp}
 
 \subsection{Knuth-Morris-Pratt algoritam}
 
@@ -46,13 +46,13 @@ Prvi korak KMP algoritma je nala\v zenje niza neuspeha za string $p$. Prvo upisu
 
 Posmatrajmo \v sta se de\v sava pri ra\v cunanju $f_i$ za pretposlednji prefiks, du\v zine $8$. U prethodnom koraku smo imali string \texttt{atamata}, kome je najdu\v zi sufiks-prefiks string \texttt{ata}. Ako poku\v samo da dodamo na njega slovo \texttt{t}, ne\' cemo dobiti poklapanje jer je na poziciji $3$ slovo \texttt{m}, zato poku\v savamo sa narednim sufiks-prefiksom odnosno $r = f_3 = 1$. Sada uspe\v sno dodajemo slovo \texttt{t} i upisujemo $r+1 = 2$ u $f_8$.
 
-\lstinputlisting[language=C++, title={Implementacija nala\v zenja niza neuspeha kod KMP algoritma}, style=customcpp]{cpp/kmp-ff.cpp}
+\lstinputlisting[language=C++, title={\textit{Implementacija nala\v zenja niza neuspeha kod KMP algoritma}}, style=customcpp]{cpp/kmp-ff.cpp}
 
-Ocenimo slo\v zenost ovog algoritma. Jasno je da slo\v zenost srazmerna zbiru broju iteracija ove dve petlje. Posmatrajmo vrednost $2i-r$. Nakon svake iteracije \textit{while} petlje imamo da se $r$ smanjuje, jer je $f_r < r$ pa se $2i-r$ pove\' cava. U jednoj iteraciji \textit{for} petlje imamo da se i $i$ i $r$ pove\' cavaju za ta\v cno $1$, pa se $2i-r$ ponovo pove\' cava. Kako je po\v cetna vrednost $2i-3$ jednaka $3$, a va\v zi $2i-r \leq 2m+1$, ukupan broj iteracija, a samim tim i slo\v zenost algoritma je $O(m)$.
+Ocenimo slo\v zenost ovog algoritma. Jasno je da slo\v zenost srazmerna zbiru broja iteracija ove dve petlje. Posmatrajmo vrednost $2i-r$. Nakon svake iteracije \textit{while} petlje imamo da se $r$ smanjuje, jer je $f_r < r$ pa se $2i-r$ pove\' cava. U jednoj iteraciji \textit{for} petlje imamo da se i $i$ i $r$ pove\' cavaju za ta\v cno $1$, pa se $2i-r$ ponovo pove\' cava. Kako je po\v cetna vrednost $2i-3$ jednaka $3$, a va\v zi $2i-r \leq 2m+1$, ukupan broj iteracija, a samim tim i slo\v zenost algoritma je $O(m)$.
 
 Opi\v simo sada glavni algoritam za tra\v zenje stringa. Algoritam za svaki prefiks $i$ stringa $s$ nalazi najdu\v zi sufiks koji je ujedno i prefiks stringa $p$. Ukoliko je du\v zina tog prefiksa jednaka $|p|$, tada dolazi do poklapanja na poziciji $i-|p|$. Neka je ta du\v zina jednaka $r_i$. Za $i=0$ imamo $r_0 = 0$. Za svako $i>0$, kre\' cemo od prefiksa stringa $p$ du\v zine $r_{i-1}$ i proveravamo da li je naredno slovo jednako slovu $s_{i-1}$. Ako jeste, zaustavljamo se i upisujemo du\v zinu na\dj enog prefiksa u $r_i$, u suprotnom, slede\' ci prefiks koji poku\v savamo da produ\v zimo je prefiks du\v zine $f_{r_{i-1}}$. Ovaj postupak ponavljamo sve dok ne do\dj emo do poklapanja ili do fiktivnog prefiksa $-1$, u tom slu\v caju du\v zina poklapanja je $0$. Primetimo da je ovaj deo algoritma veoma sli\v can nala\v zenju niza neuspeha.
 
-\lstinputlisting[language=C++, title={Implementacija glavnog dela KMP algoritma}, style=customcpp]{cpp/kmp-main.cpp}
+\lstinputlisting[language=C++, title={\textit{Implementacija glavnog dela KMP algoritma}}, style=customcpp]{cpp/kmp-main.cpp}
 
 Na potpuno isti na\v cin se ocenjuje slo\v zenost glavnog dela algoritma, posmatranjem vrednosti izraza $2i-r$. Slo\v zenost je $O(n+m)$, zajedno sa prvom fazom, ukupna slo\v zenost je tako\dj e $O(n+m)$.
 
@@ -60,7 +60,7 @@ Cela implementacija algoritma se mo\v ze zna\v cajno pojednostaviti na slede\' c
 
 \noindent
 \begin{minipage}[l]{\textwidth}
-\lstinputlisting[language=C++, title={Pojednostavljena implementacija celog algoritma}, style=customcpp]{cpp/kmp-simple.cpp}
+\lstinputlisting[language=C++, title={\textit{Pojednostavljena implementacija celog algoritma}}, style=customcpp]{cpp/kmp-simple.cpp}
 \end{minipage}
 
 \subsection{Z-algoritam}
@@ -75,7 +75,10 @@ Z-niz se mo\v ze iskoristiti za pretragu stringova. Ukoliko na\dj emo Z-niz za s
 
 Z-algoritam je efikasan algoritam za nala\v zenje Z-niza.\cite{zalgoknjiga} Ozna\v cimo sa $q$ string za koji nalazimo Z-niz. Algoritam za svako $i$ direktno izra\v cuna $z_i$ poklapanjem slova na pozicijama $z_i, i + z_i$. Klju\v cna ideja je da se prethodno izra\v cunate vrednosti Z-niza mogu iskoristiti da se postavi bolja po\v cetna vrednost za $z_i$, umesto da se svaki put kre\' ce od nule. Naime, neka je $r$ najve\' ca na\dj ena vrednost izraza $j+z_j$ za $j<i$, a neka je pritom $l = j$ za koje se dosti\v ze taj maksimum. Drugim re\v cima, $[l, r)$ je prozor koji odgovara nekom do sada prona\dj enom podstringu koji je jednak nekom prefiksu stringa, i to onom kod kojeg je $r$ najve\' ce. Ukoliko va\v zi $l \leq i < r$, tada znamo da je $q_{[i, r)} = q_{[i-l, r-l)}$. Tako\dj e, va\v zi $q_{[i-l, i-l+z_{i-l})} = q_{[0, z_{i-l})}$ pa, ako ozna\v cimo sa $t_i = \min(z_{i-l}, r-i)$, va\v zi $q_{[i, i+t_i)} = q_{[0, t_i)}$ odnosno $z_i \geq t_i$.
 
-\lstinputlisting[language=C++, title={Implementacija Z-algoritma za pretragu stringa}, style=customcpp]{cpp/z-algo.cpp}
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={\textit{Implementacija Z-algoritma za pretragu stringa}}, style=customcpp]{cpp/z-algo.cpp}
+\end{minipage}
 
 Doka\v zimo da ovaj algoritam ima slo\v zenost $O(n+m)$. O\v cigledno, kriti\v cna je unutra\v snja \textit{while} petlja. Dokaza\' cemo da svaka iteracija while petlje odgovara pove\' canju vrednosti promenljive $r$ za bar $1$. Posmatrajmo slede\' ce slu\v cajeve:
 

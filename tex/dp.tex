@@ -16,7 +16,7 @@ Ukoliko va\v zi $s_i \not = s_j$, onda je $A_{i,j} = 0$. U suprotnom, posmatrajm
 
 \noindent
 \begin{minipage}[l]{\textwidth}
-\lstinputlisting[language=C++, title={Implementacija algoritma za nala\v zenje LCP matrice}, style=customcpp]{cpp/lcp-mat.cpp}
+\lstinputlisting[language=C++, title={\textit{Implementacija algoritma za nala\v zenje LCP matrice}}, style=customcpp]{cpp/lcp-mat.cpp}
 \end{minipage}
 
 Vremenska i memorijska slo\v zenost ovog algoritma je $O(n^2)$.
@@ -47,18 +47,18 @@ Odavde dobijamo slede\' cu rekurentnu vezu: Ako su $i,j > 0$,
 
 Jasno je da je $d_{n,m}$ du\v zina LCS-a za cele stringove $s,p$.
 
-\lstinputlisting[language=C++, title={Implementacija nala\v zenja du\v zine LCS-a}, style=customcpp]{cpp/lcs-len.cpp}
+\lstinputlisting[language=C++, title={\textit{Implementacija nala\v zenja du\v zine LCS-a}}, style=customcpp]{cpp/lcs-len.cpp}
 
 Ako posmatramo $d$ kao matricu, prime\' cujemo da se vrednosti u $i$-toj vrsti mogu izra\v cunati samo na osnovu stringova $s,p$ i vrednosti u $i$-toj i vrsti $i-1$. Ovo nam omogu\' cava da implementiramo algoritam tako da se u svakom trenutku pamte samo poslednje dve vrste.
 
 \noindent
 \begin{minipage}[l]{\textwidth}
-\lstinputlisting[language=C++, title={Implementacija nala\v zenja du\v zine LCS-a sa $O(m)$ memorije}, style=customcpp]{cpp/lcs-len-mem.cpp}
+\lstinputlisting[language=C++, title={\textit{Implementacija nala\v zenja du\v zine LCS-a sa $O(m)$ memorije}}, style=customcpp]{cpp/lcs-len-mem.cpp}
 \end{minipage}
 
 Ukoliko je potrebno na\' ci ceo podniz a ne samo njegovu du\v zinu, rekonstrukciju radimo kretanjem unazad kroz matricu $d$, uvek idu\' ci ka odgovaraju\' cem polju koje ima najve\' cu vrednost, odnosno, ako smo u polju $i,j$ idemo ka polju od kojeg je $d_{i,j}$ "uzelo" vrednost.
 
-\lstinputlisting[language=C++, title={Implementacija nala\v zenja LCS-a}, style=customcpp]{cpp/lcs-string.cpp}
+\lstinputlisting[language=C++, title={\textit{Implementacija nala\v zenja LCS-a}}, style=customcpp]{cpp/lcs-string.cpp}
 
 \subsubsection{Hirschberg-ov algoritam}
 
@@ -66,13 +66,13 @@ Iako se algoritam koji samo nalazi du\v zinu LCS-a dva stringa su\v stinski ne r
 
 Opi\v simo prvo pomo\' cni algoritam koji za stringove $s,p$ du\v zina $n,m$ nalazi, za svako $j \in \{0, 1, \ldots, m\}$ vrednost $|LCS(s, p_{[0, j)})|$. Primetimo da je ovaj algoritam identi\v can algoritmu koji nalazi du\v zinu LCS-a u $O(m)$ memorije, osim \v sto vra\' ca ceo vektor a ne samo njegov poslednji element.
 
-\lstinputlisting[language=C++, title={Pomo\' cna funkcija Hirschberg-ovog algoritma}, style=customcpp]{cpp/lcs-vector.cpp}
+\lstinputlisting[language=C++, title={\textit{Pomo\' cna funkcija Hirschberg-ovog algoritma}}, style=customcpp]{cpp/lcs-vector.cpp}
 
 Na\dj imo ovaj vektor za parove stringova $s_1, p$ i $\overline{s_2}, \overline{p}$, neka su to vektori $v_1, v_2$. Ako je $i \in \{0, 1, \ldots, m\}$, tada je $v_1(i) + v_2(m-i)$ du\v zina LCS-a koji odgovara predstavljanju $p = p_1p_2$ sa $p_1 = p_{[0, i)}, p_2 = p_{[i, m)}$, pa maksimiziranjem prethodnog izraza po $i$ nalazimo tra\v zenu particiju za $p$.
 
 \noindent
 \begin{minipage}[l]{\textwidth}
-\lstinputlisting[language=C++, title={Implementacija Hirschberg-ovog algoritma}, style=customcpp]{cpp/hirschberg.cpp}
+\lstinputlisting[language=C++, title={\textit{Implementacija Hirschberg-ovog algoritma}}, style=customcpp]{cpp/hirschberg.cpp}
 \end{minipage}
 
 Uze\' cemo da je $s$ du\v zi string. Ukoliko nije, rekurzivno zovemo istu funkciju gde parametri menjaju mesto. Koristimo matemati\v cku indukciju da doka\v zemo da je memorijska slo\v zenost algoritma $O(n+m)$. Indukciju radimo po zbiru $n+m$. Dokaza\' cemo da postoji realan broj $c_2$ takav da algoritam koristi ne vi\v se od $c_2(n+m)$ bajtova memorije. Za $n+m \leq 1$ tvr\dj enje o\v cigledno va\v zi jer nema rekurzivnih poziva. U suprotnom, telo funkcije koristi ne vi\v se od $c_1(n+m)$ bajtova dodatne memorije, dok je kod rekurzivnih poziva zbir du\v zina stringova ne vi\v se od $\frac{n}{2} + m \leq \frac{3}{4}(n+m)$ (ovo va\v zi jer je $m \leq n$), odnosno, ako uzmemo da je $c_2 = 4c_1$, va\v zi da algoritam za du\v zine $n,m$ koristi ne vi\v se od $c_2\cdot \frac{3}{4}(n+m) + c_1(n+m) = 4c_1(n+m) = c_2(n+m)$ memorije, \v cime zavr\v savamo indukcijski korak.
@@ -98,9 +98,34 @@ Re\v senje glavnog problema, odnosno du\v zina najdu\v zeg palindromskog podniza
 
 \noindent
 \begin{minipage}[l]{\textwidth}
-\lstinputlisting[language=C++, title={Implementacija algoritma za nala\v zenje najdu\v zeg palindromskog podniza}, style=customcpp]{cpp/lpalsubseq.cpp}
+\lstinputlisting[language=C++, title={\textit{Implementacija algoritma za nala\v zenje najdu\v zeg palindromskog podniza}}, style=customcpp]{cpp/lpalsubseq.cpp}
 \end{minipage}
 
 Vremenska i memorijska slo\v zenost algoritma je $O(n^2)$. Ukoliko je potrebna samo du\v zina, dovoljno je vratiti vrednost $d_{0,n}$ nakon kraja prve spoljne \textit{for} petlje.
 
 \subsection{Levenshtein udaljenost}
+
+Defini\v semo pojam udaljenosti izme\dj u stringova na druga\v ciji na\v cin, ta\v cnije, dodavanjem nove operacije -- izmene slova.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\begin{dfn}
+Levenshtein udaljenost izme\dj u stringova $s,p$ je minimalan broj operacija potreban da se string $s$ prevede u string $p$, gde su operacije brisanje slova, umetanje slova i menjanje jednog slova u drugo.
+\end{dfn}
+\end{minipage}
+
+Ovaj problem re\v savamo algoritmom dinami\v ckog programiranja koji je veoma sli\v can prethodno opisanim algoritmu za nala\v zenje LCS-a. Kako je skup operacija na stringovima invertibilan, odnosno, za svaku operaciju postoji inverzna operacija iste te\v zine, svejedno je da li operaciju radimo na stringu $s$ ili na stringu $p$. Ovo zna\v ci da je dovoljno da na\dj emo string $q$ takav da se minimizuje ukupan broj operacija da se oba stringa dovedu do stringa $q$. Tako\dj e primetimo da u tom slu\v caju mo\v zemo u potpunosti da zanemarimo operaciju umetanja slova, jer svako umetnuto slovo u, na primer, string $s$, odgovara nekom slovu u stringu $q$. Ako je to slovo bilo umetnuto i u $p$, onda je ono suvi\v sno i mo\v ze se eliminisati, pri \v cemu se smanjuje broj operacija. U suprotnom, ono je ili nastalo izmenom nekog slova u $p$ ili od nekog slova koje je na po\v cetku bilo u $p$. U oba slu\v caja mo\v zemo jednostavno obrisati to slovo u $p$ i ne dodavati ga u $s$, pri \v cemu se ne pove\' cava broj operacija. Posmatrajmo dva stringa $s,p$ du\v zina $n,m$. Tra\v zimo string $q$ takav da se minimizuje ukupan broj poteza da se i $s$ i $p$ prevedu u $q$, gde su operacije brisanje slova i izmena slova. Neka je $d_{i,j}$ minimalan broj operacija potreban da se stringovi $s_{[0,i)}$ i $p_{[0,j)}$ dovedu do istog stringa, odnosno, to je njihova Levenshtein udaljenost. Nakon svih operacija njima moraju da se poklapaju poslednja dva slova. Ukoliko se u po\v cetku njima poklapaju poslednja dva slova, mo\v zemo samo da re\v simo problem za $s_{[0,i-1)}$ i $p_{[0,j-1)}$. U suprotnom, mo\v zemo da izjedna\v cimo ta dva slova u jednoj operaciji, pri \v cemu ponovo problem svodimo na stringove $s_{[0,i-1)}$ i $p_{[0,j-1)}$ ili mo\v zemo jedno od tih slova obrisati, pri \v cemu svodimo problem na $s_{[0,i-1)}$ i $p_{[0,j)}$ ako bri\v semo iz stringa $s$, ili na $s_{[0,i)}$ i $p_{[0,j-1)}$ ako bri\v semo iz stringa $p$. Jasno je da, ako je $i=0$ ili $j=0$, onda je Levenshtein udaljemost $j$ odnosno $i$. Dolazimo do slede\' ce rekurentne veze:
+
+\begin{equation}
+    d_{i,j} = \begin{cases}
+        i+j & i=0 \vee j=0 \\
+        \min(d_{i-1,j}+1, d_{i,j-1}+1, d_{i-1,j-1}+\delta(s_{i-1} \not = p_{j-1})) & i,j > 0 \\
+    \end{cases}
+\end{equation}
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={\textit{Implementacija algoritma za nala\v zenje Levenshtein udaljenosti}}, style=customcpp]{cpp/levenshtein.cpp}
+\end{minipage}
+
+Kao i kod algoritma za nala\v zenje LCS-a, mogu se primeniti ideje za smanjenje memorijske slo\v zenosti, uklju\v cuju\' ci i Hirschberg-ov algoritam. U svakom slu\v caju, vremenska slo\v zenost je $O(nm)$.
