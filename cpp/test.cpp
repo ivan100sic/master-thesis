@@ -40,9 +40,13 @@ int main() {
 	cout.tie(nullptr);
 	cerr.tie(nullptr);
 
-	vector<string> P = {"ada", "aca", "a", "da"};
-	string s = "acdadadacaaadcadadaddacda";
-	for (auto [x, y] : aho_main(P, s)) {
-		cout << x << ' ' << y << '\n';
-	}
+	string s = "abracadabra.";
+	auto p = sarray_slow(s);
+	cerr << sarray_find(s, p, "abra") << '\n';
+	cerr << sarray_find(s, p, "aba") << '\n';
+	cerr << sarray_find(s, p, "aca") << '\n';
+	cerr << sarray_find(s, p, "zz") << '\n';
+	cerr << sarray_find(s, p, "a") << '\n';
+	cerr << sarray_find(s, p, "aaaa") << '\n';
+	cerr << sarray_find(s, p, "") << '\n';
 }

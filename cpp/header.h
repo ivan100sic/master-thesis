@@ -27,3 +27,11 @@ string aho_node_to_str(aho_node* root, aho_node* tgt);
 aho_node* aho_find(aho_node* root, string p);
 void aho_find_dict(const vector<aho_node*>& q);
 vector<pair<int, int>> aho_main(const vector<string>& P, const string& s);
+#include "sarray-slow-cmp.h"
+vector<int> sarray_slow(const string& s);
+vector<int> scs_fast(const string& s);
+#include "scs-to-sarray.h"
+vector<int> scs_faster(const string& s);
+vector<int> lcp_array(const string& s, const vector<int>& p);
+int sarray_lb(const string& s, const vector<int>& p, const string& t);
+int sarray_find(const string& s, const vector<int>& p, const string& t);
