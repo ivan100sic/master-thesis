@@ -165,4 +165,67 @@ Jasno je da ovaj algoritam radi u slo\v zenosti $O(1)$ ali zato koristi $O(n \lo
 
 \subsection{Sufiks stablo}
 
+Sufiks stablo je struktura podataka koja uop\v stava sufiks niz i usko je povezana sa njim. Da bismo definisali sufiksno stablo, defini\v simo prvo kompresovano prefiksno stablo.
+
+\begin{dfn}
+Kompresovano prefiksno stablo za skup nepraznih stringova $P$ se dobija tako \v sto se u prefiksnom stablu obri\v su svi \v cvorovi vi\v sestrukosti $0$ sa ta\v cno jednim detetom, osim korena, a zatim se dodaju grane koje odgovaraju obrisanim putevima u stablu i imaju labele koje odgovaraju obrisanim putevima.
+\end{dfn}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=75mm]{../img/ztrie1.eps}
+    \caption*{\textit{Kompresovano prefiksno stablo za skup $\{aca,ad,ada,da\}$.}}
+\end{figure}
+
+U primeru sa slike, \v cvor $\delta(ad)$ ne bri\v semo iako on ima jedno dete. Najzad, defini\v simo sufiks stablo.
+
+\begin{dfn}
+Sufiks stablo za string $s$ je kompresovano prefiksno stablo svih nepraznih sufiksa stringa $s$.
+\end{dfn}
+
+Iako na prvi pogled deluje da bi ovakvo stablo zauzimalo previ\v se memorije i iz tog razloga bilo neprakti\v cno, pokazuje se suprotno.
+
+\begin{thm}
+Kompresovano prefiksno stablo od $n$ stringova sadr\v zi najvi\v se $2n$ \v cvorova. 
+\end{thm}
+
+\textit{Dokaz.} Indukcijom po $n$. Za $n=1$ tvr\dj enje o\v cigledno va\v zi. Posmatrajmo stablo za skup stringova $P' = P - p$. Neka je $q$ najdu\v zi prefiks stringa $p$ koji se javlja u $P'$. Ukoliko ne postoji \v cvor $\delta(q)$, put od korena sa labelom $q$ \' ce odgovarati unutra\v snjosti neke grane, pa ovu granu delimo na dve umetanjem novog \v cvora koji \' ce onda biti $\delta(q)$. Zatim, ukoliko je $|q| < |p|$ dodajemo novu granu iz \v cvora $\delta(q)$ ka novom \v cvoru i upisujemo joj labelu $p_{[|q|, |p|)}$. Broj \v cvorova se pove\' cao za najvi\v se $2$, \v sto dokazuje tvr\dj enje. \hfill $\square$
+
+Naizgled, \v cak iako stablo ima mali broj \v cvorova, ukupna du\v zina labela svih grana mo\v ze biti $\Theta(n^2)$, \v sto bi impliciralo veliku memorijsku slo\v zenost. Kod sufiks stabla, sve labele grana su podstringovi stringa $s$ pa umesto stringa labelu mo\v zemo predstaviti kao par $l,r$ koji bi ozna\v cavao da je labela te grane jednaka stringu $s_{[l, r)}$.
+
+Postoje algoritmi koji konstrui\v su sufiks stablo direktno iz datog stringa u linearnom vremenu \cite{suffixtreerad}. U nastavku \' ce biti prezentovan jednostavan algoritam koji na osnovu izra\v cunatih sufiks i LCP nizova konstrui\v se sufiks stablo.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={\textit{Struktura \v cvora sufiks stabla}}, style=customcpp]{cpp/stree_node.h}
+\end{minipage}
+
+Svaki \v cvor sufiks stabla pamti labelu grane koja spaja taj \v cvor i njegovog roditelja, odnosno podstring stringa $s$, pokaziva\v c na svog roditelja kao i pokaziva\v ce na svoju decu. Umesto vi\v sestrukosti pamti se redni broj $id$ takav da je taj \v cvor jednak $\delta(s_{[id,n)})$ ukoliko postoji, ina\v ce $-1$, \v sto odgovara \v cvorovima vi\v sestrukosti $0$. Za koren stabla se ne defini\v se roditelj a brojeve $l,r$ postavljamo na $0$. Iz definicije sufiks stabla zaklju\v cujemo da sve grane koji izlaze iz jednog \v cvora imaju labele kojima se razlikuje prvo slovo, \v sto opravdava izbor mape za \v cuvanje izlaznih grana. Algoritam radi na slede\' ci na\v cin. U leksikografskom redosledu se dodaju sufiksi stringa $s$. Ovaj redosled je odre\dj en sufiks nizom $p$. Prvi string se dodaje kao zasebna grana. Za svaki naredni string, odnosno $i$-ti za $i>0$, va\v zi da je najdu\v zi zajedni\v cki prefiks njega i bilo kog drugog stringa upravo jednak $q_{i-1}$ (Teorema \ref{lcposobina}). Penjemo se od kraja prethodno uba\v cenog sufiksa do dubine $q_{i-1}$ u stablu, mereno po broju slova u labelama. Ukoliko se pozicija na ovoj visini nalazi na sredini grane, delimo tu granu na dva dela. Kona\v cno, ostaje nam da dodamo deo zavr\v sni deo sufiksa du\v zine $(n-p_i)-q_{i-1}$, naravno, samo ako je on neprazan.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={\textit{Implementacija algoritma za konstrukciju sufiks stabla}}, style=customcpp]{cpp/suffix-tree.cpp}
+\end{minipage}
+
+Vremenska slo\v zenost ovog algoritma je $O(n)$. Ovo se mo\v ze dokazati tako \v sto posmatramo vrednost $2i-y$, gde je $y$ dubina \v cvora $curr$ u stablu, merena po broju grana. Svaka iteracija i spoljne \textit{for} i unutra\v snje \textit{while} petlje uve\' cava vrednost ovog izraza za bar $1$, pa je njihov ukupan broj manji od $2n$.
+
+Sufiks stablo omogu\' cava da se na\dj u prvo, poslednje, broj pojavljivanja nekog stringa $t$ unutar stringa $s$ u linearnom vremenu procedurom spu\v stanja sli\v cno kao kod prefiksnog stabla. Kod tra\v zenja svih pojavljivanja stringa korisna je slede\' ca teorema:
+
+\begin{thm}
+Kod sufiksnog stabla ne postoji podstablo koje sadr\v zi vi\v se \v cvorova vi\v sestrukosti $0$ nego \v cvorova vi\v sestrukosti $1$.
+\end{thm}
+
+\textit{Dokaz.} Pretpostavimo suprotno, da podstablo ima $k$ \v cvorova i da \v cvorova vi\v sestrukosti $0$ ima vi\v se od $\frac{k}{2}$. Na osnovu definicije sufiks stabla, svaki takav \v cvor ima bar dvoje dece, pa je ukupan broj dece svih \v cvorova u podstablu ve\' ci od $k$, \v sto je nemogu\' ce, jer je ukupan broj dece svih \v cvorova ta\v cno $k-1$.
+
+Ovo nam omogu\' cava da, za neki string $t$, od pozicije $\delta(t)$, ukoliko postoji, izvr\v simo pretragu u dubinu ili \v sirinu da bismo na\v sli sve \v cvorove vi\v sestrukosti $1$ u podstablu pozicije $\delta(t)$. Ako neki ovakav \v cvor odgovara sufiksu $id$, znamo da je $t = s_{[id, id+|t|)}$ odnosno, $id$ je pozicija jednog pojavljivanja stringa $t$ u stringu $s$. Kako je slo\v zenost pretrage linearna po veli\v cini podstabla, i kako je ukupan broj \v cvorova podstabla ne vi\v se od duplo ve\' ci od broja \v cvorova vi\v sestrukosti $1$, vremenska slo\v zenost algoritma je $O(|t|+k)$, gde je $k$ broj pojavljivanja stringa $t$ u $s$.
+
+Od konstruisanog sufiks stabla se mo\v ze dobiti sufiks niz tra\v zenjem praznog stringa, ili ekvivalentno, pu\v stanjem pretrage u dubinu od korena i pam\' cenjem $id$ vrednosti za sve \v cvorove za koje je $id \not = -1$.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={\textit{Nala\v zenje svih pojavljivanja stringa $t$ u stringu $s$}}, style=customcpp]{cpp/stree-findall.cpp}
+\end{minipage}
+
+\textit{Napomena.} Prikazani kod ne vra\' ca sve pozicije u rastu\' cem, ve\' c u proizvoljnom redosledu.
+
 \subsection{Sufiks automat}
