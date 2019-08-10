@@ -229,3 +229,95 @@ Od konstruisanog sufiks stabla se mo\v ze dobiti sufiks niz tra\v zenjem praznog
 \textit{Napomena.} Prikazani kod ne vra\' ca sve pozicije u rastu\' cem, ve\' c u proizvoljnom redosledu.
 
 \subsection{Sufiks automat}
+
+\subsubsection{Definicija}
+
+Sufiks automat je struktura podataka koja se gradi od datog stringa, a iz koje se mogu izvu\' ci razli\v cite korisne informacije o samom stringu i mo\v ze se koristiti za brzu pretragu podstringova, sli\v cno sufiks nizu i sufiks stablu. Glavna prednost sufiks automata je ta \v sto ima veoma jednostavan algoritam za konstrukciju koji radi u linearnom vremenu.
+
+\begin{dfn}
+Sufiks automat je parcijalni kona\v cni automat sa minimalnim brojem \v cvorova koji prepoznaje sve sufikse stringa $s$.
+\end{dfn}
+
+Parcijalni kona\v cni automat koji raspoznaje skup stringova $S \subseteq \Sigma^*$ je usmeren graf $(V,E)$, gde svaka grana ima labelu koja je slovo iz alfabeta $\Sigma$, zajedno sa specijalnim \v cvorom $t_0 \in V$, i skupom \v cvorova $T \subseteq V$, takav da je $s \in S$ akko postoji put od \v cvora $v_0$ do nekog \v cvora $t \in T$ \v ciji je niz labela $s$, i nijedan \v cvor nema dve izlazne grane sa istom labelom.
+
+Pri odre\dj ivanju oblika sufiks automata, od velike koristi je $endpos$ funkcija. Ispostavi\' ce se da upravo ova funkcija odre\dj uje stanja, odnosno \v cvorove automata. Na dalje, smatrajmo da je $s$ fiksiran string du\v zine $n$ za koji konstrui\v semo sufiks automat.
+
+\begin{dfn}
+Za string $p$, $endpos(p)$ je skup celih brojeva takav da je $i \in endpos(p)$ akko je $|p| \leq i \leq |s|$ i $s_{[i-|p|,i)} = p$.
+\end{dfn}
+
+Drugim re\v cima, $endpos(p)$ je skup svih pojavljivanja stringa $p$ u $s$, gde za poziciju uzimamo desni kraj.
+
+\begin{dfn}
+Za stringove $p_1,p_2$, koji su podstringovi stringa $s$ ka\v zemo da su \textit{endpos}-ekvivalentni ukoliko va\v zi $endpos(p_1) = endpos(p_2)$.
+\end{dfn}
+
+Ukoliko su $p_1,p_2$ \textit{endpos}-ekvivalentni, tada je jedan od njih sufiks drugog. Svaka klasa ekvivalencije se sastoji od nekoliko stringova koji se mogu pore\dj ati u niz takav da je svaki naredni string sufiks prethodnog i ima du\v zinu za jedan manju. Samim tim, za predstavnika klase mo\v zemo uzeti najdu\v zi string te klase. Obrat ovog tvr\dj enja ne va\v zi, ali va\v zi da ako je $p_1$ sufiks stringa $p_2$, da je $endpos(p_2) \subseteq endpos(p_1)$. Tako\dj e, ako $p_1$ nije sufiks od $p_2$ i $p_2$ nije sufiks od $p_1$, tada je $endpos(p_1) \cap endpos(p_2) = \emptyset$. \cite{suffixautomatonrad}
+
+Sufiks automat kao \v cvorove ima sve klase \textit{endpos}-ekvivalencije takve da je njima pridru\v zen \textit{endpos} skup neprazan. Sve izlazne grane nekog \v cvora se odre\dj uju na slede\' ci na\v cin. Neka je $u$ \v cvor automata odnosno jedna klasa ekvivalencije i neka je $p$ bilo koji string klase $u$. Za svako $x \in \Sigma$, ako je $px$ podstring od $s$, onda postoji grana od $u$ do klase koja sadr\v zi $px$. Primetimo da rezultat ne zavisi od izbora stringa $p$ iz klase $u$. Zaista, $endpos(px)$ je skup svih brojeva $i+1$ takvih da je $s_i = x, i \in endpos(p)$, pa grana ide ka klasi koja odgovara vrednosti $endpos(px)$. Ako posmatramo najkra\' ci string klase ekvivalencije $u$, osim klase koja sadr\v zi prazan string, uklanjanjem prvog slova tog stringa dobijamo druga\v ciju klasu ekvivalencije $v$, odnosno klasu koja sadr\v zi prethodni $endpos$ skup kao svoj strogi podskup. Ka\v zemo da postoji sufiks veza od \v cvora $u$ do \v cvora $v$ u automatu. Svi \v cvorovi imaju jedinstvenu izlaznu sufiks vezu, osim \v cvora koji odgovara praznom stringu, i veza uvek ide ka klasama koje sadr\v ze kra\' ce stringove, pa je dobijeni graf sufiks veza stablo.
+
+\subsubsection{Algoritam za konstrukciju}
+
+Opi\v simo algoritam koji konstrui\v se sufiks automat. Pored prethodno opisanih izlaznih grana, svaki \v cvor grafa \' ce pamtiti i du\v zinu najdu\v zeg stringa svoje klase ekvivalencije, kao i sufiks vezu.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={\textit{Struktura \v cvora sufiks automata}}, style=customcpp]{cpp/sautomaton-node.h}
+\end{minipage}
+
+Algoritam radi u iteracijama, dodaju\' ci jedno po jedno slovo stringa $s$. Nakon $k$-te iteracije dobijeni graf odgovara sufiks automatu za string $s_{[0, k)}$. Algoritam po\v cinje inicijalizacijom po\v cetnog \v cvora koji odgovara klasi koja sadr\v zi prazan podstring. Dakle, $len$ se postavlja na $0$, $link$ na \textit{null}-pokaziva\v c, a skup prelaza je prazan. Tako\dj e, u svakom trenutku pamtimo i pokaziva\v c na \v cvor koji odgovara klasi koja sadr\v zi ceo string do tog trenutka, to je \v cvor $last$.
+
+Posmatrajmo promene koje se dese na grafu nakon dodavanja karaktera $s_k$. Sigurno \' ce se javiti nova klasa koja \' ce sadr\v zati ceo string $s_{[0, k+1)}$ i mo\v zda jo\v s neke njegove sufikse. Ta\v cnije, ta klasa \' ce sadr\v zati sve sufikse stringa $s_{[0, k+1)}$ koji se ne javljaju ve\' c u stringu $s_{[0, k)}$. Taj novi \v cvor nazovimo $curr$. Njegova du\v zina je $k+1$, odnosno za jedan ve\' ca nego kod \v cvora $last$. Koji sve \v cvorovi imaju grane koje idu ka \v cvoru $curr$? To su neki od \v cvorova koji odgovaraju stanjima koja sadr\v ze sufikse stringa $s_{[0,k)}$. Podelimo sve ove sufikse u dve grupe, na one koji se javljaju u stringu $s_{[0,k)}$ na takav na\v cin da se neko od tih pojavljivanja mo\v ze produ\v ziti slovom $s_k$ unutar $s_{[0,k)}$, i one kod kojih to ne va\v zi. Jasno je da \' ce na ovaj na\v cin ovi sufiksi biti podeljeni po du\v zini u odnosu na neku granicu. Svim stanjima koja odgovaraju du\v zim sufiksima treba dodati granu sa labelom $s_k$ ka \v cvoru $curr$, dok kra\' ci sufiksi ve\' c imaju takvu granu, i te grane pokazuju na ve\' c postoje\' ce \v cvorove, pa ne treba raditi ni\v sta. Sve ove \v cvorove mo\v zemo obi\' ci tako \v sto krenemo od \v cvora $last$ i kre\' cemo se du\v z sufiks veza.
+
+Neka je $p$ \v cvor na kojem smo se zaustavili. Podsetimo se da sufiks veza iz nekog \v cvora ide ka \v cvoru koji sadr\v zi najdu\v zi sufiks stringa tog \v cvora koji se javlja na vi\v se mesta od njega samog. Za \v cvor $curr$ potrebno je na\' ci string koji je sufiks stringa $s_{[0,k+1)}$ a javlja se jo\v s negde u stringu $s_{[0,k+1)}$, odnosno, koji se javlja negde u $s_{[0,k)}$. Drugim re\v cima, potrebno je prona\' ci najdu\v zi sufiks stringa $s_{[0,k)}$ koji se javlja na nekoj poziciji koja se mo\v ze produ\v ziti slovom $s_k$, a to je upravo \v cvor $p$. Ako se slovo $s_k$ ne javlja nigde u stringu $s_{[0,k)}$, onda \' ce se $p$ zaustaviti na \textit{null} pokaziva\v cu, odnosno, bi\' ce obi\dj eni svi sufiksi, uklju\v cuju\' ci i prazan string.  Tada sufiks veza ide ka korenu automata. U suprotnom, zaustavili smo se zato \v sto $p$ ima izlaznu granu sa labelom $s_k$. Neka ta grana ide ka \v cvoru $q$. Sufiks veza \v cvora $curr$ treba da ide ka \v cvoru \v cija je du\v zina $len(p)+1$. Jasno je da je $len(q) > len(p)$. Ukoliko se ove du\v zine razlikuju za ta\v cno $1$, to zna\v ci da su stringovi iz \v cvora $q$ ta\v cno oni koji su u \v cvoru $p$ a mogu se produ\v ziti za slovo $s_k$. Ovo zna\v ci da sufiks veza iz \v cvora $curr$ treba da pokazuje upravo na $q$.
+
+U suprotnom, klasa \v cvora $q$ se mora podeliti na dve klase, jednu u kojoj su svi stringovi du\v zine $len(p)+1$ i kra\' ci, i sve ostale. Za ovu kra\' cu klasu kreiramo novi \v cvor koji nazivamo $clone$, njegove osobine su iste kao za \v cvor $q$, osim \v sto je $len(clone) = len(p)+1$. Sufiks veze \v cvora $curr$, kao i \v cvora $q$ idu ka \v cvoru $clone$. Me\dj utim, potrebno je uraditi i slede\' ce. Sve grane koje su polazile iz \v cvora $p$ ili njegovih sufiks-predaka a preko kojih se dolazilo do \v cvora $q$ sad treba da pokazuju na \v cvor $clone$. Razlog za to je \v sto \v cvor $q$ sada sadr\v zi samo stringove du\v zine bar $len(p) + 2$, \v sto zna\v ci da svi produ\v zeci slovom $s_k$ iz $p$ i njegovih sufiks-predaka zapravo treba da idu ka \v cvoru $clone$. Ovime smo popravili sve sufiks veze i grane i dobili novi automat za string $s_{[0, k+1)}$.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={\textit{Glavni algoritam za konstrukciju sufiks automata}}, style=customcpp]{cpp/sautomaton.cpp}
+\end{minipage}
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={\textit{Algoritam za pro\v sirenje automata jednim slovom}}, style=customcpp]{cpp/sautomaton-extend.cpp}
+\end{minipage}
+
+Po\v sto svaka ekstenzija kreira najvi\v se dva nova \v cvora, sufiks automat ne mo\v ze imati vi\v se od $2n+1$ \v cvorova. Ova granica se mo\v ze pobolj\v sati na $2n-1$ ako primetimo da prve dve ekstenzije ne mogu da kreiraju klonove.
+
+Mo\v ze se pokazati da je ukupan broj prelaza automata ne vi\v se od $3n-4$ za $n \geq 3$. Vremenska slo\v zenost celog algoritma je $O(n)$, uz pretpostavku da je veli\v cina alfabeta fiksna. \cite{suffixautomatonrad}
+
+Skup stanja $T$ automata koji raspoznaje sufikse stringa $s$ se mo\v ze dobiti tako \v sto nakon poslednje iteracije, po\v cev \v cvora $curr$ kre\' cu\' ci se po sufiks vezama obi\dj emo sve \v cvorove sve do korena, uklju\v cuju\' ci i njega.
+
+\subsubsection{Uop\v stenja i primene}
+
+Ako u \v cvorovima pamtimo dodatne informacije koje se ti\v cu sufiks automata, mo\v zemo re\v siti naizgled nevezane probleme. Zajedni\v cko skoro svim primenama je da koriste dinami\v cko programiranje na stablu sufiks veza, ili na acikli\v cnom grafu prelaza. Za dinami\v cko programiranje na acikli\v cnom grafu nam je neophodan topolo\v ski redosled \v cvorova tog grafa, koji se mo\v ze jednostavno dobiti sortiranjem \v cvorova po vrednosti $len$, \v sto se mo\v ze uraditi i u linearnoj slo\v zenosti \textit{counting sort}-om. Korisno je i to da isti ovaj redosled odgovara i obrnutom topolo\v skom redosledu stabla sufiks veza.
+
+\noindent
+\textbf{Broj razli\v citih podstringova}
+
+Kako svaki podstring odgovara putu od korena stabla do nekog \v cvora, broj razli\v citih podstringova se mo\v ze dobiti i kao broj razli\v citih puteva u acikli\v cnom grafu. Neka je $u$ \v cvor grafa a $N(u)$ skup njegovih suseda. Ako ozna\v cimo sa $d(u)$ broj puteva koji po\v cinju u \v cvoru $u$, onda va\v zi slede\' ca rekurentna veza:
+
+\begin{equation}
+    d(u) = 1 + \sum_{v \in N(u)} d(v)
+\end{equation}
+
+Re\v senje je vrednost $d(root)$. Vrednosti ra\v cunamo u obrnutom topolo\v skom redosledu.
+
+\noindent
+\textbf{Broj pojavljivanja datog stringa}
+
+Za string $p$ nalazimo \v cvor $\delta(p)$. Ukoliko taj \v cvor ne postoji, string $p$ se ne javlja u $s$. U suprotnom, potrebno je na\' ci veli\v cinu skupa $endpos(p)$, odnosno veli\v cinu $endpos$ skupa za \v cvor $u = \delta(p)$. Ove veli\v cine se mogu izra\v cunati nakon konstrukcije automata za sve \v cvorove pomo\' cu dinami\v ckog programiranja na slede\' ci na\v cin.
+
+Posmatrajmo prefiks $s_{[0,k)}$. Ukoliko je $k \in endpos(p)$, postoji put pomo\' cu sufiks veza od \v cvora $\delta(s_{[0,k)})$ do \v cvora $u$. U suprotnom, takav put ne postoji. Dakle, nas zanima koliko razli\v citih \v cvorova koji odgovaraju prefiksima stringa $s$ se nalazi u podstablu stabla sufiks veza u \v cvoru $u$. \v Cvorovi koji odgovaraju prefiksima stringa $s$ su ta\v cno oni \v cvorovi koji nisu klonovi, odnosno koji su kreirani na po\v cetku svake ekstenzije. Podsetimo se da prilikom kloniranja originalnom \v cvoru ostaju svi du\v zi sufiksi, pa string $\delta(s_{[0,k)})$ ne mo\v ze da pre\dj e u klonirani \v cvor. Najzad, neka je $cl(v) = 1$ ako je $v$ klon nekog \v cvora, a $0$ ina\v ce. Broj nekloniranih \v cvorova $d(u)$ u podstablu \v cvora $u$ zadovoljava slede\' cu rekurentnu vezu:
+
+\begin{equation}
+    d(u) = (1 - cl(u)) + \sum_{v, u = suff(v)} d(v)
+\end{equation}
+
+Ovo procesiranje automata ima vremensku slo\v zenost $O(n)$. Broj pojavljivanja stringa $p$ se onda mo\v ze na\'ci u linearnom vremenu po veli\v cini stringa $p$.
+
+\noindent
+\textbf{Sva pojavljivanja datog stringa}
+
+Iskoristi\' cemo prethodno ustanovljenu \v cinjenicu da nas zanimaju samo \v cvorovi u podstablu \v cvora $u$ koji nisu klonovi. Ukoliko pustimo pretragu u dubinu iz \v cvora $u$ i o\v citamo sve vrednosti $len$, dobi\' cemo upravo $endpos$ skup za \v cvor $u$. Umanjenjem svih elemenata rezultata za $|p|$ dobijamo tra\v zeni skup pojavljivanja. Jednostavno se pokazuje da u svakom podstablu stabla sufiks veza nema vi\v se od polovine klonova. Naime, ako je \v cvor $x$ klon, \v cvor \v ciji je on klon ima sufiks vezu upravo ka njemu, pa \' ce biti u njegovom podstablu. Klonovi ne mogu imati svoje klonove, a ostali \v cvorovi ne mogu imati vi\v se od jednog klona, odakle sledi da bar polovina svih \v cvorova bilo kog podstabla \v cine \v cvorovi koji nisu klonovi. Odavde sledi da pretraga u dubinu ima vremensku slo\v zenost $O(k)$, gde je $k$ broj pojavljivanja stringa $p$ u $s$, pa je vremenska slo\v zenost celog algoritma $O(|p|+k)$. Za potrebe pretrage u dubinu po stablu sufiks veza moramo da zapamtimo za svaki \v cvor sve sufiks veze koje ulaze u njega, \v sto mo\v zemo lako uraditi po zavr\v setku konstrukcije automata.

@@ -34,15 +34,72 @@ struct stopwatch {
 	}
 };
 
-int treesize(stree_node* p) {
-	vector<stree_node*> q = {p};
-	size_t qs = 0;
-	while (qs != q.size()) {
-		auto x = q[qs++];
-		for (auto [y, z] : x->next)
-			q.push_back(z);
+struct node {
+	int len;
+	bool clone;
+	node* link;
+	map<char, node*> next;
+	vector<node*> invlinks;
+};
+
+node* sautomaton1(const string& s) {
+	vector<node*> created;
+	node* root = new node {0, false, nullptr, {}, {}};
+	created.push_back(root);
+	auto last = root;
+	for (char x : s) {
+		auto curr = new node {last->len + 1, false, nullptr, {}, {}};
+		created.push_back(curr);
+		auto p = last;
+		for (; p && !p->next.count(x); p = p->link)
+			p->next[x] = curr;
+		if (!p) {
+			curr->link = root;
+		} else {
+			auto q = p->next[x];
+			if (p->len + 1 == q->len) {
+				curr->link = q;
+			} else {
+				node* clone = new node(*q);
+				created.push_back(clone);
+				clone->len = p->len + 1;
+				clone->clone = true;
+				for (; p && p->next[x] == q; p = p->link)
+					p->next[x] = clone;
+				q->link = curr->link = clone;
+			}
+		}
+		last = curr;
 	}
-	return q.size();
+
+	for (node* q : created)
+		if (q->link)
+			q->link->invlinks.push_back(q);
+
+
+	return root;
+}
+
+void dfs(node* root, vector<int>& v) {
+	if (!root->clone)
+		v.push_back(root->len);
+	for (node* y : root->invlinks)
+		dfs(y, v);
+}
+
+vector<int> nadji(node* root, const string& s) {
+	for (char x : s) {
+		if (!root->next.count(x))
+			return {};
+		root = root->next[x];
+	}
+
+	vector<int> v;
+	dfs(root, v);
+	for (int& x : v)
+		x -= s.size();
+	sort(v.begin(), v.end());
+	return v;
 }
 
 int main() {
@@ -51,35 +108,25 @@ int main() {
 	cout.tie(nullptr);
 	cerr.tie(nullptr);
 
-	stopwatch sw;
 	mt19937 eng;
 
-	string s;
-	for (int i=0; i<200000; i++)
-		s += uniform_int_distribution<char>('a', 'b')(eng);
-	cerr << s.size() << '\n';
-	auto p = sarray_scs(s, scs_faster);
-	auto q = lcp_array(s, p);
-	auto t = suffix_tree(s, p, q);
-
-	auto r1 = stree_find_all(t, s, "abbababb");
-
+	string s = "aabaabb", p, q = "waabaabbo";
 	for (int i=0; i<100000; i++) {
-		stree_find_all(t, s, "abbababb");
+		p += s;
+		p += uniform_int_distribution<char>('a', 'z')(eng);
 	}
 
+	auto root = sautomaton1(p);
+	auto v = nadji(root, q);
+	auto w = kmp_simple(p, q);
 
-	auto r2 = kmp_simple(s, "abbababb");
-
-	sort(r1.begin(), r1.end());
-
-	for (int x : r1)
+	for (int x : v)
 		cerr << x << ' ';
 	cerr << '\n';
 
-	for (int x : r2)
+	for (int x : w)
 		cerr << x << ' ';
 	cerr << '\n';
 
-	cerr << (r1 == r2) << '\n';
+	cerr << (v == w) << '\n';
 }

@@ -38,3 +38,6 @@ int sarray_find(const string& s, const vector<int>& p, const string& t);
 #include "stree_node.h"
 stree_node* suffix_tree(const string& s, const vector<int>& p, const vector<int>& q);
 vector<int> stree_find_all(stree_node* root, const string& s, const string& t);
+#include "sautomaton-node.h"
+sautomaton_node* sautomaton_extend(sautomaton_node* root, sautomaton_node* last, char x);
+sautomaton_node* sautomaton(const string& s);
