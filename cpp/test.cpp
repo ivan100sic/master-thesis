@@ -34,34 +34,31 @@ struct stopwatch {
 	}
 };
 
-long prefixhashl(const string& s, long q, long m) {
-	long h = 0;
-	for (char x : s)
-		h = ((__int128_t)h * q + x) % m;
-	return h;
-}
-
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
 	cout.tie(nullptr);
 	cerr.tie(nullptr);
 
-	stopwatch sw;
+	string f = "babbabbaba";
 
-	const long q0 = 314159265;
-	const long M = (1ll << 61) - 1;
-	const int n = 4000;
+	for (auto [x, y] : manacher(f))
+		cerr << x << ' ' << y << '\n';
 
-	int ok = 0;
-	for (int i=0; i<1000; i++) {
-		auto [s, p] = hash_merge(q0+i, M, n);
-		// cerr << s << '\n';
-		// cerr << p << '\n';
-		// cerr << prefixhashl(s, q, M) << '\n';
-		// cerr << prefixhashl(p, q, M) << '\n';
-		if (p.size())
-			ok++;
+	mt19937 eng;
+	int t = 100000;
+	const int n = 40;
+
+	while (t--) {
+		string s(n, 0);
+		for (int i=0; i<n; i++)
+			s[i] = uniform_int_distribution<char>('a', 'b')(eng);
+		auto u = manacher(s);
+		auto v = palin_n2(s);
+		if (u != v) {
+			cerr << s << " error!\n";
+			return 0;
+		}
 	}
-	cerr << ok << "/1000\n";
+		
 }
