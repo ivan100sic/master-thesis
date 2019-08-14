@@ -105,7 +105,7 @@ Najdu\v zi zajedi\v cki prefiks zadovoljava jednu veoma va\v znu osobinu.
 
 \begin{thm}
 \label{lcposobina}
-Neka je $s_1, s_2, s_n$ leksikografski sortiran niz stringova. Neka je $q_i = LCP(s_i, s_{i+1})$. Ako je $i<j$, tada je $LCP(s_i, s_j) = \min\{q_i, q_{i+1}, \ldots, q_{j-1}\}$. \hfill $\square$
+Neka je $s_1, s_2, \ldots, s_n$ leksikografski sortiran niz stringova. Neka je $q_i = LCP(s_i, s_{i+1})$. Ako je $i<j$, tada je $LCP(s_i, s_j) = \min\{q_i, q_{i+1}, \ldots, q_{j-1}\}$. \hfill $\square$
 \end{thm}
 
 Kako se LCP niz konstrui\v se nad sortiranim nizom sufiksa jednog stringa, on se uz odgovaraju\' cu strukturu podataka za nala\v zenje minimuma u podnizu mo\v ze koristiti za odre\dj ivanje najdu\v zeg zajedni\v ckog prefiksa bilo koja dva sufiksa.

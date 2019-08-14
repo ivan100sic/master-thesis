@@ -1,7 +1,203 @@
 \section{He\v siranje}
 
+Za razliku od kriptografskih he\v s funkcija, he\v s funkcije koje se koriste u pretrazi stringova zadovoljavaju odre\dj ene relacije, \v sto omogu\' cava dinami\v cko odr\v zavanje vrednosti he\v s funkcije i nakon izmena stringa, njihovog spajanja ili se\v cenja. U op\v sem slu\v caju, he\v s funkcija je funkcija koja slika skup stringova $\Sigma^*$ u skup celih brojeva iz nekog opsega, naj\v ce\v s\' ce, za neki prirodan broj $M$, taj opseg je $\{0, 1, \ldots, M-1\}$.
+
 \subsection{Rabin-Karp algoritam}
 
-\subsection{Primene}
+Pomo\' cu Rabin-Karp algoritma mogu se prona\' ci sva pojavljivanja jednog stringa u drugom u linearnoj vremenskoj slo\v zenosti, ako se dozvoli mala verovatno\' ca gre\v ske, odnosno \textit{false positive}-a, \v sto zna\v ci da algoritam prepoznaje podstring stringa $s$ kao string $p$ iako to nije slu\v caj.
 
-\subsection{Konstrukcija kolizija}
+Kod ovog algoritma, he\v s funkcija se defini\v se na slede\' ci na\v cin. Neka je $|s| = n$.
+
+\begin{equation}
+    h(s) = \Big(\sum_{i=0}^{n-1} f(s_i)q^{n-i-1}\Big) \mod M
+\end{equation}
+
+Ovde je $q$ ceo broj, $f : \Sigma \rightarrow \{1, \ldots, M-1\}$ je funkcija koja mapira karaktere u brojeve. U praksi, najjednostavnije je uzeti da je $f(c)$ ASCII vrednost karaktera $c$. Druga opcija je da se svim slovima iz $\Sigma$ nasumi\v cno dodele razli\v cite vrednosti $f(c)$.
+
+\begin{thm}
+Prethodno definisana he\v s funkcija zadovoljava jednakost:
+\begin{equation}
+\label{hashjednacina}
+    h(sp) \equiv q^{|p|}h(s)+h(p) \mod M
+\end{equation}
+\end{thm}
+
+\textit{Dokaz.} Neka je $n = |s|, m = |p|$.
+
+\begin{align*}
+     h(sp) & \equiv & \sum_{i=0}^{n+m-1} f((sp)_i)q^{n+m-i-1} \mod M \\
+           & \equiv & \sum_{i=0}^{n-1} f(s_i)q^{n+m-i-1} + \sum_{j=n}^{n+m-1} f(p_{j-n})q^{n+m-j-1} \mod M \\
+           & \equiv & q^m \sum_{i=0}^{n-1} f(s_i)q^{n-i-1} + \sum_{j=0}^{m-1} f(p_{j})q^{m-j-1} \mod M \\
+           & \equiv & q^m h(s) + h(p) \mod M \\
+\end{align*}
+
+Stepen $q^k$ po modulu se mo\v ze brzo izra\v cunati u $O(\log k)$ pomo\' cu binarnog stepenovanja.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={\textit{Binarno stepenovanje}}, style=customcpp]{cpp/modpow.cpp}
+\end{minipage}
+
+Alternativa je da ra\v cunamo sve stepene $q^0, q^1, \ldots, q^k$, zapamtimo ih u niz i po potrebi uzimamo iz tog niza. Za $k$ mo\v zemo uzeti du\v zinu najdu\v zeg stringa koji \v zelimo da obra\dj ujemo. Za broj $M$ se \v cesto uzima veliki prost broj. Za broj $q$ je najbolje uzeti primitivni koren po modulu $M$.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={\textit{Ra\v cunanje svih stepena broja $x$ od $0$ do $k$}}, style=customcpp]{cpp/modpowvec.cpp}
+\end{minipage}
+
+Da bismo mogli efikasno da tra\v zimo he\v s vrednosti podstringova stringa $s$, dovoljno je da izra\v cunamo za svaki prefiks stringa $s$ vrednost $h(s_{[0,i)})$. To se mo\v ze uraditi kori\v s\' cenjem relacije \ref{hashjednacina}.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={\textit{Ra\v cunanje he\v s vrednosti za sve prefikse stringa}}, style=customcpp]{cpp/prefixhash.cpp}
+\end{minipage}
+
+Za izra\v cunavanje $h(s_{[l, r)})$ mo\v zemo iskoristiti relaciju \ref{hashjednacina} primenjenu na stringove $s_{[0,l)}$ i $s_{[l,r)}$.
+
+\begin{equation}
+\label{substringhash}
+    h(s_{[l, r)}) \equiv (h(s_{[0, r)}) - q^{r-l}h(s_{[0, l)})) \mod M
+\end{equation}
+
+Rabin-Karp algoritam nalazi sva pojavljivanja stringa $p$ u stringu $s$ tako \v sto izra\v cuna prefiksne he\v s vrednosti za string $s$. Za string $p$ je dovoljno izra\v cunati samo $h(p)$. Zatim se pomo\' cu relacije \ref{substringhash} nalaze he\v s vrednosti za sve podstringove stringa $s$ odgovaraju\' ce du\v zine, i ove vrednosti se upore\dj uju sa $h(p)$. U slu\v caju poklapanja, postoje dve opcije. Jedna je da se zadovoljimo time da postoji mala verovatno\' ca gre\v ske i da prihvatimo prona\dj enu poziciju kao pojavljivanje stringa $p$. Druga je da za svako potencijalno pojavljivanje proverimo da li se zaista radi o pojavljivanju stringa $p$ u slo\v zenosti $O(m)$ po jednom pojavljivanju. U najgorem slu\v caju, drugi algoritam ima slo\v zenost istu kao naivna pretraga, odnosno $O(nm)$.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={\textit{Rabin-Karp algoritam bez provere poklapanja}}, style=customcpp]{cpp/rabin-karp.cpp}
+\end{minipage}
+
+Pored pretrage podstringova, he\v s funkciju iz Rabin-Karp algoritma mo\v zemo koristiti i za konstrukciju strukture podataka koja \v cuva string, odr\v zava he\v s vrednost za sve svoje podstringove i omogu\' cava izmene stringa na bilo kojoj poziciji. Takva struktura bi bila balansirano binarno stablo, najbolje \textit{splay} stablo ili \textit{treap}, koja bi u svakom \v cvoru \v cuvala he\v s vrednost i broj karaktera u svom podstablu. Sve operacije (se\v cenje, spajanje stabala, provera he\v s vrednosti dela stringa, izmena slova) se mogu implementirati da rade u vremenskoj slo\v zenosti $O(\log n)$, gde je $n$ ukupna du\v zina stringa. 
+
+\subsection{Kolizije}
+
+\subsubsection{Odabir parametara he\v s funkcije}
+
+Posmatrajmo interakciju dva agenta, nazovimo ih Ana i Branko. Ana dizajnira he\v s funkciju, odnosno bira vrednosti $q, M$ dok Branko nalazi razli\v cite stringove $s,p$. Brankov cilj je da se ovi stringovi he\v siraju u istu vrednost, dok je Anin cilj da se to izbegne.
+
+U svakom slu\v caju, ukoliko Branko zna vrednosti $q,M$ koje je Ana izabrala, u najgorem slu\v caju primenom grube sile mo\v ze se na\' ci par razli\v citih stringova $s,p$ koji imaju istu he\v s vrednost. Me\dj utim, ukoliko to nije slu\v caj, odnosno ako Ana bira parametre slu\v cajno bez Brankovog znanja, pokazuje se da je verovatno\' ca kolizije relativno mala.
+
+\begin{thm}
+    Ako je $M$ prost broj, $q$ se uzima slu\v cajno i uniformno iz skupa $\{0, \ldots, M-1\}$ i ako su stringovi $s,p$ du\v zine $n$, tada je verovatno\' ca kolizije ne vi\v se od $\frac{n-1}{p}$.
+\end{thm}
+
+\textit{Dokaz.} Posmatrajmo jednu koliziju, i neka je $Q$ slu\v cajna promenljiva iz koje $q$ uzima vrednost. Sve jednakosti su po modulu $M$.
+
+\begin{gather*}
+h(s) = h(p) \\
+\sum_{i=0}^{n-1}f(s_i)Q^{n-1-i} \equiv  \sum_{i=0}^{n-1}f(p_i)Q^{n-1-i} \\
+\sum_{i=0}^{n-1}(f(s_i)-f(p_i))Q^{n-1-i} \equiv 0 \\
+\end{gather*}
+
+Leva strana je nenula polinom pa promenljivoj $Q$ stepena najvi\v se $n-1$. U polju $\mathbb{F}_M$ nenula polinom stepena do $n-1$ ne mo\v ze imati vi\v se od $n-1$ nula, pa je verovatno\' ca da je $Q$ nula polinoma ne vi\v se od $\frac{n-1}{p}$. \hfill $\square$
+
+Ovaj argument je validan samo ukoliko je $M$ prost broj. Posmatrajmo slu\v caj kada je $M$ stepen dvojke, na primer $M = 2^{64}$. Ovakav odabir je prirodan jer aritmeti\v cke operacije $+,-,\times$ sa \textit{unsigned} tipovima rade po modulu $2^k$, gde je $k$ broj bitova tog tipa. Postoje razli\v citi stringovi koji imaju istu he\v s vrednost bez obzira na to koji broj $q$ je izabran.
+
+Neka je $u(s)$ funkcija koja menja sva pojavljivanja slova $a$ slovom $b$ i obratno, na primer $u(aab) = bba$. Thue-Morse niz\cite{thuemorserad} je definisan na slede\' ci na\v cin: Kre\' cemo od stringa $t_0 = a$. Za svako $i \geq 0$ uzimamo da je $t_{i+1} = t_iu(t_i)$. Prvih nekoliko elemenata su $t_1 = ab$, $t_2 = abba$, $t_3 = abbabaab$. Kako je $t_i$ prefiks stringa $t_{i+1}$, mo\v zemo re\' ci i da se radi o jednoj beskona\v cnoj sekvenci slova iz $\{a,b\}$.
+
+\begin{thm}
+\label{thuemorseosobina}
+Za parno $k$ va\v zi $t_k = t_{k-1}\overline{t_{k-1}}$. Za neparno $k$ va\v zi da je $u(t_{k}) = \overline{t_{k}}$.
+\end{thm}
+
+\textit{Dokaz.} Za $k=1$ tvr\dj enje o\v cigledno va\v zi. Doka\v zimo tvr\dj enje indukcijom po $k$. Ako je $k$ parno, onda je $k-1$ neparno pa po induktivnoj pretpostavci va\v zi $t_k = t_{k-1}u(t_{k-1}) = t_{k-1}\overline{t_{k-1}}$. \v Stavi\v se, $t_k$ je palindrom za parno $k$, jer je $\overline{t_k} = \overline{t_{k-1}\overline{t_{k-1}}} = (\overline{\overline{t_{k-1}}})(\overline{t_{k-1}}) = t_{k-1}\overline{t_{k-1}} = t_k$. Iskoristili smo osobine okretanja stringa $\overline{ab} = (\overline{b})(\overline{a})$ i $\overline{\overline{a}} = a$.
+
+Za $k$ neparno imamo da je $u(t_{k}) = u(t_{k-1}u(t_{k-1})) = u(t_{k-1})u(u(t_{k-1})) = u(t_{k-1})t_{k-1}$. Sa druge strane imamo $\overline{t_k} = \overline{t_{k-1}u(t_{k-1})} = (\overline{u(t_{k-1})})(\overline{t_{k-1}}) = u(\overline{t_{k-1}})\overline{t_{k-1}} = u(t_{k-1})t_{k-1}$. Poslednja jednakost va\v zi jer je $k-1$ parno, pa je $t_{k-1}$ palindrom. \hfill $\square$
+
+\begin{thm}
+Za $M = 2^{64}$, proizvoljno $f$, neparno $q$ i $s = t_{11}$, $h(s) = h(u(s))$.
+\end{thm}
+
+\textit{Dokaz.} Posmatrajmo slede\' ci niz polinoma. Neka je $p_0(x) = 1$, a za $n \geq 0$ je $p_{n+1} = p_n(x)(1-x^{2^n})$. Prvih nekoliko elemenata su:
+
+\begin{align*}
+    p_1(x) & = 1-x \\
+    p_2(x) & = 1-x-x^2+x^3 \\
+    p_3(x) & = 1 - x - x^2 + x^3 - x^4 + x^5 + x^6 - x^7 \\
+\end{align*}
+
+Primetimo da znakovi ispred $x^i$ \v cine upravo Thue-Morse niz. Doka\v zimo prvo da je $p_k(x) \equiv 0$ po modulu $2^\frac{k(k-1)}{2}$, za svako neparno $x$ i $k \geq 1$. Neka je $q_k(x) = (1-x^{2^k})$. Polinom $p_k(x)$ se po definiciji mo\v ze faktorisati kao $q_0(x)q_1(x)\ldots q_{k-1}(x)$.
+
+Doka\v zimo da $2^k$ deli $q_k(x)$ za svako neparno $x$, indukcijom po $k$. Za $k=0$ imamo $q_0(x) = 1-x$, pa tvr\dj enje va\v zi jer je $x$ neparno. Za $k > 0$ imamo da va\v zi $q_k(x) = 1-x^{2^k} = (1-x^{2^{k-1}})(1+x^{2^{k-1}}) = q_{k-1}(x)(1+x^{2^{k-1}})$. Broj $1+x^{2^{k-1}}$ je paran jer je $x$ neparno, a po induktivnoj pretpostavci va\v zi $2^{k-1} | q_{k-1}(x)$, pa $2\cdot 2^{k-1} = 2^k$ deli njihov proizvod.
+
+Odavde sledi da $2^0\cdot2^1\cdot \ldots \cdot 2^{k-1}$ deli $p_k(x)$, odnosno da je $p_k(x) \equiv 0$ po modulu $2^\frac{k(k-1)}{2}$. Kona\v cno, poka\v zimo da je $h(s) = h(u(s))$. Neka je $c = f(a) - f(b)$. Du\v zina stringova je $n = 2048$. Posmatrajmo vrednost $h(s) - h(u(s))$.
+
+\begin{align*}
+h(s) - h(u(s)) & \equiv \sum_{i=0}^{n-1}f(s_i) q^{n-i-1} - \sum_{i=0}^{n-1}f(u(s_i)) q^{n-i-1} \\
+               & \equiv \sum_{i=0}^{n-1}(f(s_i) - f(u(s_i))) q^{n-i-1} \\
+               & \equiv \sum_{i=0}^{n-1}(f(s_{n-1-i}) - f(u(s_{n-1-i}))) q^i \\
+               & \equiv \sum_{i=0}^{n-1}(f(\overline{s}_i) - f(u(\overline{s}_i))) q^i \\
+\end{align*}
+
+Sada koristimo teoremu \ref{thuemorseosobina} za $k=11$.
+
+\begin{align*}
+h(s) - h(u(s)) & \equiv \sum_{i=0}^{n-1}(f(\overline{s}_i) - f(u(\overline{s}_i))) q^i \\
+               & \equiv \sum_{i=0}^{n-1}(f(u(s_i)) - f(s_i)) q^i \\
+\end{align*}
+
+\v Clan $f(u(s_i)) - f(s_i)$ ima vrednost $-c$ ako je $s_i = a$, ina\v ce ima vrednost $c$.  Odavde dobijamo da je $h(s) - h(u(s)) = -c\cdot p_{11}(q)$, po\v sto je $q$ neparno, $p_{11}(q) \equiv 0$ po modulu $2^\frac{11\cdot 12}{2} = 2^{66}$, a samim tim je $0$ i po modulu $M$, pa je $h(s) - h(u(s)) \equiv 0$ tj. $h(s) = h(u(s))$. \hfill $\square$
+
+Napomena: Ukoliko se dozvoli da je $q$ parno, va\v zi\' ce $q^{64} \equiv 0 \mod M$, pa \' ce he\v s funkcija za npr. stringove $a^{65}$ i $ba^{64}$ dati istu vrednost.
+
+\subsubsection{Konstrukcija kolizije}
+
+Opi\v simo sada algoritme pomo\' cu kojih se mogu na\' ci razli\v citi stringovi $s,p$ iste du\v zine $n$ takve da je $h(s) = h(p)$, za neke fiksne vrednosti parametara $q,M$. Pretpostavi\' cemo da je $M$ prost broj, osim ako nije druga\v cije nagla\v seno.
+
+\begin{dfn}
+Multiplikativni red broja $q$ po modulu $M$ je najmanji prirodan broj $r$ takav da je $q^r \equiv 1 \mod M$.
+\end{dfn}
+
+Iz teorije brojeva je poznata \v cinjenica da multiplikativni red broja postoji akko su $q,M$ uzajamno prosti, i va\v zi da $r$ deli $\varphi(M)$, gde je $\varphi$ Ojlerova funkcija.
+
+Ukoliko je multiplikativni red broja $q$ po modulu $M$ mali, mogu\' ce je jednostavno konstruisati koliziju -- uzmimo stringove $a^rb^r$ i $b^ra^r$:
+
+\begin{align*}
+h(a^rb^r) & \equiv q^r \cdot h(a^r) + h(b^r) \\
+          & \equiv h(a^r) + h(b^r) \\
+          & \equiv q^r \cdot h(b^r) + h(a^r) \\
+          & \equiv h(b^ra^r) \\
+\end{align*}
+
+Ukoliko broj $M$ nije ogroman, mo\v ze se na\' ci kolizija prostim generisanjem nasumi\v cnih stringova. Verovatno\' ca nala\v zenja kolizije je oko $\frac12$ za srazmerno mali broj generisanih stringova, njih $\Theta(\sqrt M)$, o \v cemu govori \v cuveni paradoks ro\dj endana \cite{birthdayrad}.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={\textit{Implementacija jednostavnog algoritma za nala\v zenje kolizije}}, style=customcpp]{cpp/antihash-simple.cpp}
+\end{minipage}
+
+Ukoliko je broj $M$ reda veli\v cine $2^{64}$, prethodna tehnika ne\' ce dati zadovoljavaju\' ce rezultate. Naredna tehnika ima dosta bolje performanse, i mo\v ze se primeniti u slu\v caju da je $f$ jednostavna linearna funkcija, na primer ako $f$ vra\' ca ASCII vrednost karaktera. Ta\v cnije, dovoljan uslov je da postoje razli\v citi karakteri $x,y,z \in \Sigma$ takvi da je $f(x)-f(y) = f(y)-f(z)$. Bez gubljenja op\v stosti, uzmimo da je $a,b,c \in \Sigma$ i $f(b) - f(a) = f(c) - f(b)$. Algoritam kao ulazne parametre ima $q,M$, kao i du\v zinu stringa $n$. Algoritam konstrui\v se string koji ima istu he\v s vrednost kao string $b^n$, tako \v sto re\v sava sistem jedna\v cina
+
+\begin{equation}
+    \sum_{i=0}^{n-1} \alpha_i \cdot q^{n-1-i} \equiv 0 \mod M
+\end{equation}
+
+gde su $\alpha_i \in \{-1, 0, 1\}$ nepoznate. Iz ovog re\v senja se jednostavno konstrui\v se string, ako je $\alpha_i = -1,0,1$ redom, onda je $s_i = a,b,c$. Algoritam odr\v zava kolekciju klastera. U po\v cetku postoji $n$ klastera, svaki od njih odgovara jednom vektoru parametara $\alpha$, naime, kod $i$-tog klastera va\v zi $\alpha_j = 1$ ako je $i=j$, a $\alpha_j = 0$ ina\v ce. Nakon ovoga, algoritam spaja klastere koji imaju bliske he\v s vrednosti.
+
+\begin{equation}
+    H(\alpha) = \Big(\sum_{i=0}^{n-1} \alpha_i \cdot q^{n-1-i}\Big) \mod M
+\end{equation}
+
+Cilj je da dobijemo da jedan klaster ima vrednost $0$. Najjednostavniji na\v cin da spajamo klastere jeste da ih sortiramo po $H(\alpha)$, i da zatim spajamo dva po dva tako \v sto njihove parametre $\alpha$, a samim tim i $H$-vrednosti oduzmemo. \v Stavi\v se, radi efikasnosti, ne\' cemo eksplicitno \v cuvati sve parametre $\alpha$ ve\' c \' cemo klastere \v cuvati u obliku binarnog stabla. Tek po zavr\v setku rada iz konkretnog stabla izvla\v cimo vrednosti $\alpha_i$.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={\textit{Struktura \v cvora he\v s klastera}}, style=customcpp]{cpp/hash-cluster.h}
+\end{minipage}
+
+Glavna funkcija kao parametre prima samo brojeve $q,M,n$ i, ukoliko uspe, vra\' ca par stringova $s,p$ du\v zine $n$ koji imaju istu he\v s vrednost. Za razliku od prethodnih, ova implementacija radi sa 64-bitnim brojevima (tip \texttt{long}), dok pri mno\v zenju po modulu koristi tip \texttt{\_\_int128\_t} koji postoji u GCC kompajleru.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={\textit{Glavna funkcija za nala\v zenje he\v s kolizije}}, style=customcpp]{cpp/hash-merge.cpp}
+\end{minipage}
+
+Osloba\dj anje memorije zauzete operatorom \texttt{new} je izostavljeno zbog preglednosti. Nakon konstruisanog stabla koje ima he\v s vrednost $0$, od njega konstrui\v semo string $s$ koriste\' ci slede\' cu rekurzivnu funkciju.
+
+\noindent
+\begin{minipage}[l]{\textwidth}
+\lstinputlisting[language=C++, title={\textit{Funkcija za rekonstrukciju stringa koji odgovara he\v s klasteru}}, style=customcpp]{cpp/hash-collect.cpp}
+\end{minipage}
+
+Funkcija je testirana sa $M = 2^{61}-1$, \v sto je prost broj, $n = 4000$ i za svako $q$ po\v cev od $q_0 = 314159265$ do $q_0+999$. Funkcija je na\v sla koliziju u $801$ od $1000$ scenarija, i ukupno vreme celokupnog izvr\v senja je bilo oko $0.54$ sekunde, odnosno, u proseku oko $0.54$ms po scenariju.
+
+Nije jednostavno proceniti vrednost broja $n$ kod koje je verovatno\' ca uspeha pribli\v zno $\frac12$. Jedna procena\cite{cfantihash} je da se radi o vrednosti $n = 2^{\sqrt{2\log_2(M)}+1}$. Za $M = 2^{61}-1$, ova procena daje vrednost $n \approx 4227$, \v sto se uklapa u empirijski dobijeni rezultat. Vremenska slo\v zenost algoritma je $O(n \log n)$, jer dominira sortiranje u prvoj iteraciji, u svakoj narednoj se broj elemenata prepolovi. Sude\' ci po ovoj proceni, ovaj algoritam je izvodljiv i za vrednosti $M$ reda veli\v cine $2^{256}$ odnosno $10^{77}$, gde je $n \approx 10^7$.

@@ -41,3 +41,11 @@ vector<int> stree_find_all(stree_node* root, const string& s, const string& t);
 #include "sautomaton-node.h"
 sautomaton_node* sautomaton_extend(sautomaton_node* root, sautomaton_node* last, char x);
 sautomaton_node* sautomaton(const string& s);
+int modpow(int x, int k, int m);
+vector<int> modpowvec(int x, int k, int m);
+vector<int> prefixhash(const string& s, int q, int m);
+vector<int> rabin_karp(const string& s, const string& p, int q, int M);
+pair<string, string> birthday1(int q, int M, int n);
+#include "hash-cluster.h"
+void hash_collect(hash_cluster* root, string& s, int sgn);
+pair<string, string> hash_merge(long q, long M, int n);
