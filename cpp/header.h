@@ -51,3 +51,4 @@ void hash_collect(hash_cluster* root, string& s, int sgn);
 pair<string, string> hash_merge(long q, long M, int n);
 vector<pair<int, int>> palin_n2(const string& s);
 vector<pair<int, int>> manacher(const string& s);
+#include "eertree_node.h"
