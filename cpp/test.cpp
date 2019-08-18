@@ -34,31 +34,43 @@ struct stopwatch {
 	}
 };
 
+int count_eertree(const string& s) {
+	auto p = eertree(s);
+	int z = 0;
+	for (auto q : p) {
+		// cerr << "* " << q->len << '\n';
+		while (q->len > 0) {
+			z++;
+			q = q->link;
+			// cerr << "  * " << q->len << '\n';
+		}
+	}
+	return z;
+}
+
+int count_manacher(const string& s) {
+	auto v = manacher(s);
+	int z = 0;
+	for (auto [l, r] : v)
+		z += (r-l+1)/2;
+	return z;
+}
+
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
 	cout.tie(nullptr);
 	cerr.tie(nullptr);
 
-	string f = "babbabbaba";
-
-	for (auto [x, y] : manacher(f))
-		cerr << x << ' ' << y << '\n';
-
 	mt19937 eng;
-	int t = 100000;
-	const int n = 40;
 
-	while (t--) {
-		string s(n, 0);
-		for (int i=0; i<n; i++)
-			s[i] = uniform_int_distribution<char>('a', 'b')(eng);
-		auto u = manacher(s);
-		auto v = palin_n2(s);
-		if (u != v) {
-			cerr << s << " error!\n";
-			return 0;
-		}
+	string s;
+	for (int i=0; i<100000; i++) {
+		s += uniform_int_distribution<char>('a', 'b')(eng);
 	}
-		
+
+	// s = "aabaa";
+
+	cerr << count_eertree(s) << '\n';
+	cerr << count_manacher(s) << '\n';
 }

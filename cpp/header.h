@@ -52,3 +52,4 @@ pair<string, string> hash_merge(long q, long M, int n);
 vector<pair<int, int>> palin_n2(const string& s);
 vector<pair<int, int>> manacher(const string& s);
 #include "eertree_node.h"
+vector<eertree_node*> eertree(const string& s);
