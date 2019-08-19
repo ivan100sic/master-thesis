@@ -23,12 +23,12 @@ Ozna\v cimo sa $g(s)$ du\v zinu najdu\v zeg sufiks-prefiksa stringa $s$. Za praz
 Neka je $s$ neprazan string. Neka je $s' = s_{[0, |s|-1)}$, tada je $g(s) \leq g(s') + 1$.
 \end{thm}
 
-\textit{Dokaz.} Pretpostavimo suprotno, da je $g(s) > g(s') + 1$. Neka je $p$ najdu\v zi sufiks prefiks stringa $s$. Neka je $p' = p[0, |p|-1)$. Tada je $p'$ sufiks-prefiks stringa $s'$, pa je $g(s') \geq |p'| = |p| - 1 = g(s) - 1$, kontradikcija.
+\textit{Dokaz.} Pretpostavimo suprotno, da je $g(s) > g(s') + 1$. Neka je $p$ najdu\v zi sufiks prefiks stringa $s$. Neka je $p' = p_{[0, |p|-1)}$. Tada je $p'$ sufiks-prefiks stringa $s'$, pa je $g(s') \geq |p'| = |p| - 1 = g(s) - 1$, kontradikcija. \hfill $\square$
 
 Ukoliko je $p$ najdu\v zi sufiks-prefiks stringa $s$, tada je i svaki drugi sufiks-prefiks stringa $s$ ujedno i sufiks-prefiks stringa $p$. Ova osobina nam omogu\' cava da opi\v semo sve sufiks-prefikse nekog stringa $s$ kao lanac, gde je svaki naredni string najdu\v zi sufiks-prefiks prethodnog, sve dok se ne do\dj e do praznog stringa.
 
 \begin{dfn}
-Niz neuspeha stringa $s$ je niz $f_0, f_1, \ldots, f_{|s|}$, gde je $f_i = g(s[0, i))$.
+Niz neuspeha stringa $s$ je niz $f_0, f_1, \ldots, f_{|s|}$, gde je $f_i = g(s_{[0, i)})$.
 \end{dfn}
 
 Prvi korak KMP algoritma je nala\v zenje niza neuspeha za string $p$. Prvo upisujemo $f_0 = -1$. Zatim, za svako $i > 0$, tra\v zimo najdu\v zi sufiks-prefiks stringa $p_{[0, i-1)}$ koji se mo\v ze pro\v siriti slovom $p_{i-1}$, odnosno, nalazimo najve\' ci broj $r$ takav da je $r$ du\v zina nekog sufiks-prefiksa stringa $p_{[0, i-1)}$ i va\v zi $p_r = p_{i-1}$. Ukoliko ne na\dj emo takav broj $r$, onda je $f_i = 0$. U suprotnom, po\v sto je $p_{[0, r)} = p_{[i-1-r, i-1)}$ i $p_r = p_{i-1}$ imamo da je $p_{[0, r+1)} = p_{[i-r-1, i)}$, odnosno, $r+1$ je du\v zina jednog sufiks-prefiksa stringa $p_{[0, i)}$. Iz prethodnog razmatranja imamo da je ovo upravo najdu\v zi sufiks-prefiks stringa $p_{[0,i)}$, pa upisujemo $f_i = r+1$. Niz svih sufiks-prefiksa mo\v zemo na\' ci primenom opisane osobine lanca i \v cinjenice da smo u $i$-tom koraku ve\' c izra\v cunali du\v zine najdu\v zih sufiks-prefiksa za sve prefikse stringa $p$ du\v zine manje od $i$.
@@ -73,14 +73,23 @@ Za string $s$ du\v zine $n$, Z-niz je niz $z_1, \ldots, z_{n-1}$ gde je $z_i$ du
 
 Z-niz se mo\v ze iskoristiti za pretragu stringova. Ukoliko na\dj emo Z-niz za string $ps$, $i$ je pojavljivanje $p$ u $s$ akko je $z_{i+m} \geq m$.
 
-Z-algoritam je efikasan algoritam za nala\v zenje Z-niza.\cite{zalgoknjiga} Ozna\v cimo sa $q$ string za koji nalazimo Z-niz. Algoritam za svako $i$ direktno izra\v cuna $z_i$ poklapanjem slova na pozicijama $z_i, i + z_i$. Klju\v cna ideja je da se prethodno izra\v cunate vrednosti Z-niza mogu iskoristiti da se postavi bolja po\v cetna vrednost za $z_i$, umesto da se svaki put kre\' ce od nule. Naime, neka je $r$ najve\' ca na\dj ena vrednost izraza $j+z_j$ za $j<i$, a neka je pritom $l = j$ za koje se dosti\v ze taj maksimum. Drugim re\v cima, $[l, r)$ je prozor koji odgovara nekom do sada prona\dj enom podstringu koji je jednak nekom prefiksu stringa, i to onom kod kojeg je $r$ najve\' ce. Ukoliko va\v zi $l \leq i < r$, tada znamo da je $q_{[i, r)} = q_{[i-l, r-l)}$. Tako\dj e, va\v zi $q_{[i-l, i-l+z_{i-l})} = q_{[0, z_{i-l})}$ pa, ako ozna\v cimo sa $t_i = \min(z_{i-l}, r-i)$, va\v zi $q_{[i, i+t_i)} = q_{[0, t_i)}$ odnosno $z_i \geq t_i$.
+Z-algoritam je efikasan algoritam za nala\v zenje Z-niza.\cite{zalgoknjiga} Ozna\v cimo sa $q$ string za koji nalazimo Z-niz. Algoritam za svako $i$ direktno izra\v cuna $z_i$ poklapanjem slova na pozicijama $z_i, i + z_i$. Klju\v cna ideja je da se prethodno izra\v cunate vrednosti Z-niza mogu iskoristiti da se postavi bolja po\v cetna vrednost za $z_i$, umesto da se svaki put kre\' ce od nule. Naime, neka je $[l,r)$ prozor koji odgovara onom do sada na\dj enom poklapanju sa prefiksom stringa $s$ kod kojeg je $r$ najve\' ce. Drugim re\v cima, $r$ je najve\' ca na\dj ena vrednost izraza $j+z_j$ za $j<i$, a pritom je $l = j$ za koje se dosti\v ze taj maksimum. Ukoliko va\v zi $l \leq i < r$, tada znamo da je $q_{[i, r)} = q_{[i-l, r-l)}$. Tako\dj e, va\v zi $q_{[i-l, i-l+z_{i-l})} = q_{[0, z_{i-l})}$ pa, ako ozna\v cimo sa $t_i = \min(z_{i-l}, r-i)$, va\v zi $q_{[i, i+t_i)} = q_{[0, t_i)}$ odnosno $z_i \geq t_i$.
 
 \noindent
 \begin{minipage}[l]{\textwidth}
 \lstinputlisting[language=C++, title={\textit{Implementacija Z-algoritma za pretragu stringa}}, style=customcpp]{cpp/z-algo.cpp}
 \end{minipage}
 
-Doka\v zimo da ovaj algoritam ima slo\v zenost $O(n+m)$. O\v cigledno, kriti\v cna je unutra\v snja \textit{while} petlja. Dokaza\' cemo da svaka iteracija while petlje odgovara pove\' canju vrednosti promenljive $r$ za bar $1$. Posmatrajmo slede\' ce slu\v cajeve:
+\textit{Primer.} Posmatrajmo string \texttt{anananakananas}, i neka je $i=10$, odnosno, treba da izra\v cunamo vrednost $z_{10}$ tj. najdu\v zi zajedni\v cki prefiks stringova \texttt{anananakananas} i \texttt{anas}. Od svih prozora kojima je levi kraj $l < i$, najve\' ce $r$ ima $[l,r) = [8,13)$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=60mm]{../img/zalgo1.eps}
+\end{figure}
+
+Na osnovu toga \v sto je $s_{[8,13)} = s_{[0,5)}$ prozor imamo da je podstring $s_{[10,13)}$ jednak podstringu $s_{[2,5)}$. Vrednost $z_2$ je jednaka $5$, pa va\v zi da je $s_{[2,7)} = s_{[0,5)}$. Iz druge jednakosti mo\v zemo zaklju\v citi da je $s_{[0,3)} = s_{[2,5)}$, a iz prve da je $s_{[2,5)} = s_{[10,13)}$, pa postavljamo po\v cetnu vrednost $z_{10}$ na $3$. Kako je $s_{13}$ slovo $s$, a $s_3$ slovo $n$, odmah se zaustavljamo, vrednost $z_{10}$ je jednaka $3$.
+
+Doka\v zimo da ovaj algoritam ima slo\v zenost $O(n+m)$. O\v cigledno, kriti\v cna je unutra\v snja \textit{while} petlja. Dokaza\' cemo da svaka iteracija \textit{while} petlje odgovara pove\' canju vrednosti promenljive $r$ za bar $1$. Posmatrajmo slede\' ce slu\v cajeve:
 
 \begin{itemize}
 \item Pre ulaska u \textit{while} petlju va\v zi $i \geq r$. U ovom slu\v caju $z_i$ ima po\v cetnu vrednost nula, na kraju \textit{while} petlje \' ce va\v ziti $i + z_i \geq r$ pa \' ce $r$ dobiti vrednost $i + z_i$, odnosno $r$ \' ce se pove\' cati za barem $z_i$, \v sto je ve\'ce ili jednako od broja iteracija \textit{while} petlje.

@@ -6,7 +6,7 @@ Prefiksno stablo, odnosno \textit{trie} je struktura podataka za \v cuvanje i pr
 
 \begin{dfn}
 \label{triedef}
-Prefiksno stablo za kolekciju stringova $S, s \in \Sigma^*$ je korensko stablo sa minimalnim brojem \v cvorova, kod kojeg za svaki string $s \in S$ postoji put od korena do \v cvora koji ozna\v cavamo sa $\delta(s)$ tako da labele obi\dj enih grana obrazuju string $s$, a u \v cvoru $\delta(s)$ je vi\v sestrukost jednaka broju pojavljivanja stringa $s$ u kolekciji $S$, i kod kojeg izlazne grane svakog \v cvora imaju me\dj usobno razli\v cite labele.
+Prefiksno stablo za kolekciju stringova $S$ iz alfabeta $\Sigma$ je korensko stablo sa minimalnim brojem \v cvorova, kod kojeg za svaki string $s \in S$ postoji put od korena do \v cvora koji ozna\v cavamo sa $\delta(s)$ tako da labele obi\dj enih grana obrazuju string $s$, a u \v cvoru $\delta(s)$ je vi\v sestrukost jednaka broju pojavljivanja stringa $s$ u kolekciji $S$, i kod kojeg izlazne grane svakog \v cvora imaju me\dj usobno razli\v cite labele.
 \end{dfn}
 
 Na osnovu definicije sledi da razli\v citi putevi u stablu koji po\v cinju od istog \v cvora odgovaraju razli\v citim stringovima. Posmatrajmo skup svih prefiksa svih stringova u $S$, neka je to skup $P$. Kako postojanje puta od korena sa labelom $s \in S$ implicira postojanje takvog puta za sve prefikse stringa $s$, va\v zi da \' ce za svaki string $p \in P$ postojati jedinstven \v cvor u stablu. Pokazuje se da je mogu\' ce konstruisati jedinstveno stablo sa ta\v cno $|P|$ \v cvorova koje zadovoljava definiciju \ref{triedef}.
@@ -19,7 +19,7 @@ Na osnovu definicije sledi da razli\v citi putevi u stablu koji po\v cinju od is
 
 \subsubsection{Konstrukcija}
 
-Kao \v sto je prethodno opisano, svaki \v cvor u sebi \v cuva vi\v sestrukost, i tako\dj e \' ce \v cuvati izlazne grane. Grane \' ce biti \v cuvane kao kolekcija parova $(k, v)$, gde \' ce $k$ biti slovo, a $v$ pokaziva\v c na \v cvor do kojeg se dolazi tom granom. Ovo je najjednostavnije uraditi pomo\' cu re\v cnika, \v sto nam omogu\'ca va brzo umetanje nove grane a tako\dj e i brzu pretragu grane sa odre\dj enim slovom.
+Kao \v sto je prethodno opisano, svaki \v cvor u sebi \v cuva vi\v sestrukost, i tako\dj e \' ce \v cuvati izlazne grane. Grane \' ce biti \v cuvane kao kolekcija parova $(k, v)$, gde \' ce $k$ biti slovo, a $v$ pokaziva\v c na \v cvor do kojeg se dolazi tom granom. Ovo je najjednostavnije uraditi pomo\' cu re\v cnika, \v sto nam omogu\'cava brzo umetanje nove grane a tako\dj e i brzu pretragu grane sa odre\dj enim slovom.
 
 \lstinputlisting[language=C++, title={\textit{Struktura \v cvora prefiksnog stabla}}, style=customcpp]{cpp/trie_node.h}
 
@@ -50,7 +50,18 @@ Primetimo da $c=0$ implicira da \v cvor ima bar jednu izlaznu granu.
 \lstinputlisting[language=C++, title={\textit{Algoritam za nala\v zenje lower bound-a za zadati string}}, style=customcpp]{cpp/trie_lb.cpp}
 \end{minipage}
 
-Algoritam je grabljive prirode. Posmatrajmo najdu\v zi zajedni\v cki prefiks stringa $s$ za koji tra\v zimo \textit{lower bound} i nekog stringa iz kolekcije. Ukoliko je taj prefiks jednak celom stringu $s$, potrebno je da na\dj emo najmanji string $q$ dosti\v zan iz \v cvora $\delta(s)$, i da vratimo $sq$. U suprotnom, ako je du\v zina tog zajedni\v ckog prefiksa $i$, biramo najve\' cu poziciju $j \leq i$ takvu da u \v cvoru $\delta(s_{[0, j)})$ postoji izlazna grana \v cija je labela slovo strogo ve\' ce od $s_j$, zatim vra\' camo string $s_{[0,j)}yq$, gde je $y$ to slovo a $q$ najmanji string dosti\v zan iz \v cvora $\delta(s_{[0,j)}y)$. Ukoliko takav indeks ne postoji, ne postoji ni leksikografski ve\' ci ili jednak string, a algoritam vra\' ca prazan string. Ukupna memorijska i vremenska slo\v zenost celog algoritma je $O(n+m)$. gde je $n = |s|$, a $m$ je du\v zina rezulutuju\' ceg stringa.
+Algoritam je grabljive prirode. Posmatrajmo najdu\v zi zajedni\v cki prefiks stringa $s$ za koji tra\v zimo \textit{lower bound} i nekog stringa iz kolekcije. Ukoliko je taj prefiks jednak celom stringu $s$, potrebno je da na\dj emo najmanji string $q$ dosti\v zan iz \v cvora $\delta(s)$, i da vratimo $sq$. U suprotnom, ako je du\v zina tog zajedni\v ckog prefiksa $i$, biramo najve\' cu poziciju $j \leq i$ takvu da u \v cvoru $\delta(s_{[0, j)})$ postoji izlazna grana \v cija je labela slovo strogo ve\' ce od $s_j$, zatim vra\' camo string $s_{[0,j)}yq$, gde je $y$ to slovo a $q$ najmanji string dosti\v zan iz \v cvora $\delta(s_{[0,j)}y)$. Ukoliko takav indeks ne postoji, ne postoji ni leksikografski ve\' ci ili jednak string, a algoritam vra\' ca prazan string.
+
+\textit{Primer.} Neka je kolekcija stringova $\{aba, ada, adc, bu\}$, a tra\v zimo \textit{lower bound} za string $abo$. Prvo tra\v zimo najdu\v zi prefiks stringa $abo$ koji se nalazi u stablu, to je string $ab$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=60mm]{../img/trielb1.eps}
+\end{figure}
+
+Kako nismo do\v sli do kraja celog stringa, vra\' camo se unazad kroz stablo, sve dok ne na\dj emo \v cvor koji ima izlaznu granu sa labelom strogo ve\' com od odgovaraju\' ceg slova u stringu $abo$. Nalazimo takvu granu u \v cvoru $\delta(a)$, a zatim se grabljivim postupkom spu\v stamo sve do nekog \v cvora sa pozitivnom vi\v sestruko\v s\' cu, \v sto je u ovom slu\v caju \v cvor $\delta(ada)$, pa je rezultat upravo string $ada$.
+
+Ukupna memorijska i vremenska slo\v zenost celog algoritma je $O(n+m)$. gde je $n = |s|$, a $m$ je du\v zina rezultuju\' ceg stringa.
 
 \subsection{Aho-Corasick algoritam}
 

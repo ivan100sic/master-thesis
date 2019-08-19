@@ -56,7 +56,7 @@ Za izra\v cunavanje $h(s_{[l, r)})$ mo\v zemo iskoristiti relaciju \ref{hashjedn
 
 \begin{equation}
 \label{substringhash}
-    h(s_{[l, r)}) \equiv (h(s_{[0, r)}) - q^{r-l}h(s_{[0, l)})) \mod M
+    h(s_{[l, r)}) \equiv h(s_{[0, r)}) - q^{r-l}h(s_{[0, l)}) \mod M
 \end{equation}
 
 Rabin-Karp algoritam nalazi sva pojavljivanja stringa $p$ u stringu $s$ tako \v sto izra\v cuna prefiksne he\v s vrednosti za string $s$. Za string $p$ je dovoljno izra\v cunati samo $h(p)$. Zatim se pomo\' cu relacije \ref{substringhash} nalaze he\v s vrednosti za sve podstringove stringa $s$ odgovaraju\' ce du\v zine, i ove vrednosti se upore\dj uju sa $h(p)$. U slu\v caju poklapanja, postoje dve opcije. Jedna je da se zadovoljimo time da postoji mala verovatno\' ca gre\v ske i da prihvatimo prona\dj enu poziciju kao pojavljivanje stringa $p$. Druga je da za svako potencijalno pojavljivanje proverimo da li se zaista radi o pojavljivanju stringa $p$ u slo\v zenosti $O(m)$ po jednom pojavljivanju. U najgorem slu\v caju, drugi algoritam ima slo\v zenost istu kao naivna pretraga, odnosno $O(nm)$.
@@ -77,7 +77,7 @@ Posmatrajmo interakciju dva agenta, nazovimo ih Ana i Branko. Ana dizajnira he\v
 U svakom slu\v caju, ukoliko Branko zna vrednosti $q,M$ koje je Ana izabrala, u najgorem slu\v caju primenom grube sile mo\v ze se na\' ci par razli\v citih stringova $s,p$ koji imaju istu he\v s vrednost. Me\dj utim, ukoliko to nije slu\v caj, odnosno ako Ana bira parametre slu\v cajno bez Brankovog znanja, pokazuje se da je verovatno\' ca kolizije relativno mala.
 
 \begin{thm}
-    Ako je $M$ prost broj, $q$ se uzima slu\v cajno i uniformno iz skupa $\{0, \ldots, M-1\}$ i ako su stringovi $s,p$ du\v zine $n$, tada je verovatno\' ca kolizije ne vi\v se od $\frac{n-1}{p}$.
+    Ako je $M$ prost broj, $q$ se uzima slu\v cajno i uniformno iz skupa $\{0, \ldots, M-1\}$ i ako su stringovi $s,p$ du\v zine $n$, tada je verovatno\' ca kolizije ne vi\v se od $\frac{n-1}{M}$.
 \end{thm}
 
 \textit{Dokaz.} Posmatrajmo jednu koliziju, i neka je $Q$ slu\v cajna promenljiva iz koje $q$ uzima vrednost. Sve jednakosti su po modulu $M$.
@@ -88,7 +88,7 @@ h(s) = h(p) \\
 \sum_{i=0}^{n-1}(f(s_i)-f(p_i))Q^{n-1-i} \equiv 0 \\
 \end{gather*}
 
-Leva strana je nenula polinom pa promenljivoj $Q$ stepena najvi\v se $n-1$. U polju $\mathbb{F}_M$ nenula polinom stepena do $n-1$ ne mo\v ze imati vi\v se od $n-1$ nula, pa je verovatno\' ca da je $Q$ nula polinoma ne vi\v se od $\frac{n-1}{p}$. \hfill $\square$
+Leva strana je nenula polinom pa promenljivoj $Q$ stepena najvi\v se $n-1$. U polju $\mathbb{F}_M$ nenula polinom stepena do $n-1$ ne mo\v ze imati vi\v se od $n-1$ nula, pa je verovatno\' ca da je $Q$ nula polinoma ne vi\v se od $\frac{n-1}{M}$. \hfill $\square$
 
 Ovaj argument je validan samo ukoliko je $M$ prost broj. Posmatrajmo slu\v caj kada je $M$ stepen dvojke, na primer $M = 2^{64}$. Ovakav odabir je prirodan jer aritmeti\v cke operacije $+,-,\times$ sa \textit{unsigned} tipovima rade po modulu $2^k$, gde je $k$ broj bitova tog tipa. Postoje razli\v citi stringovi koji imaju istu he\v s vrednost bez obzira na to koji broj $q$ je izabran.
 
@@ -104,7 +104,7 @@ Za parno $k$ va\v zi $t_k = t_{k-1}\overline{t_{k-1}}$. Za neparno $k$ va\v zi d
 Za $k$ neparno imamo da je $u(t_{k}) = u(t_{k-1}u(t_{k-1})) = u(t_{k-1})u(u(t_{k-1})) = u(t_{k-1})t_{k-1}$. Sa druge strane imamo $\overline{t_k} = \overline{t_{k-1}u(t_{k-1})} = (\overline{u(t_{k-1})})(\overline{t_{k-1}}) = u(\overline{t_{k-1}})\overline{t_{k-1}} = u(t_{k-1})t_{k-1}$. Poslednja jednakost va\v zi jer je $k-1$ parno, pa je $t_{k-1}$ palindrom. \hfill $\square$
 
 \begin{thm}
-Za $M = 2^{64}$, proizvoljno $f$, neparno $q$ i $s = t_{11}$, $h(s) = h(u(s))$.
+Za $M = 2^{w}$, proizvoljno $f$, neparno $q$ i $s = t_z$ za $z = \ceil{\sqrt{2w}}$, $h(s) = h(u(s))$.
 \end{thm}
 
 \textit{Dokaz.} Posmatrajmo slede\' ci niz polinoma. Neka je $p_0(x) = 1$, a za $n \geq 0$ je $p_{n+1} = p_n(x)(1-x^{2^n})$. Prvih nekoliko elemenata su:
@@ -115,11 +115,11 @@ Za $M = 2^{64}$, proizvoljno $f$, neparno $q$ i $s = t_{11}$, $h(s) = h(u(s))$.
     p_3(x) & = 1 - x - x^2 + x^3 - x^4 + x^5 + x^6 - x^7 \\
 \end{align*}
 
-Primetimo da znakovi ispred $x^i$ \v cine upravo Thue-Morse niz. Doka\v zimo prvo da je $p_k(x) \equiv 0$ po modulu $2^\frac{k(k-1)}{2}$, za svako neparno $x$ i $k \geq 1$. Neka je $q_k(x) = (1-x^{2^k})$. Polinom $p_k(x)$ se po definiciji mo\v ze faktorisati kao $q_0(x)q_1(x)\ldots q_{k-1}(x)$.
+Primetimo da znakovi ispred $x^i$ \v cine upravo Thue-Morse niz. Doka\v zimo prvo da je $p_k(x) \equiv 0$ po modulu $2^\frac{k(k+1)}{2}$, za svako neparno $x$ i $k \geq 1$. Neka je $q_k(x) = (1-x^{2^k})$. Polinom $p_k(x)$ se po definiciji mo\v ze faktorisati kao $q_0(x)q_1(x)\ldots q_{k-1}(x)$.
 
-Doka\v zimo da $2^k$ deli $q_k(x)$ za svako neparno $x$, indukcijom po $k$. Za $k=0$ imamo $q_0(x) = 1-x$, pa tvr\dj enje va\v zi jer je $x$ neparno. Za $k > 0$ imamo da va\v zi $q_k(x) = 1-x^{2^k} = (1-x^{2^{k-1}})(1+x^{2^{k-1}}) = q_{k-1}(x)(1+x^{2^{k-1}})$. Broj $1+x^{2^{k-1}}$ je paran jer je $x$ neparno, a po induktivnoj pretpostavci va\v zi $2^{k-1} | q_{k-1}(x)$, pa $2\cdot 2^{k-1} = 2^k$ deli njihov proizvod.
+Doka\v zimo da $2^{k+1}$ deli $q_k(x)$ za svako neparno $x$, indukcijom po $k$. Za $k=0$ imamo $q_0(x) = 1-x$, pa tvr\dj enje va\v zi jer je $x$ neparno. Za $k > 0$ imamo da va\v zi $q_k(x) = 1-x^{2^k} = (1-x^{2^{k-1}})(1+x^{2^{k-1}}) = q_{k-1}(x)(1+x^{2^{k-1}})$. Broj $1+x^{2^{k-1}}$ je paran jer je $x$ neparno, a po induktivnoj pretpostavci va\v zi $2^k | q_{k-1}(x)$, pa $2\cdot 2^k = 2^{k+1}$ deli njihov proizvod.
 
-Odavde sledi da $2^0\cdot2^1\cdot \ldots \cdot 2^{k-1}$ deli $p_k(x)$, odnosno da je $p_k(x) \equiv 0$ po modulu $2^\frac{k(k-1)}{2}$. Kona\v cno, poka\v zimo da je $h(s) = h(u(s))$. Neka je $c = f(a) - f(b)$. Du\v zina stringova je $n = 2048$. Posmatrajmo vrednost $h(s) - h(u(s))$.
+Odavde sledi da $2^1\cdot2^2\cdot \ldots \cdot 2^k$ deli $p_k(x)$, odnosno da je $p_k(x) \equiv 0$ po modulu $2^\frac{k(k+1)}{2}$. Kona\v cno, poka\v zimo da je $h(s) = h(u(s))$. Neka je $c = f(a) - f(b)$. Du\v zina stringova je $n = 2^z$. Posmatrajmo vrednost $h(s) - h(u(s))$.
 
 \begin{align*}
 h(s) - h(u(s)) & \equiv \sum_{i=0}^{n-1}f(s_i) q^{n-i-1} - \sum_{i=0}^{n-1}f(u(s_i)) q^{n-i-1} \\
@@ -128,16 +128,9 @@ h(s) - h(u(s)) & \equiv \sum_{i=0}^{n-1}f(s_i) q^{n-i-1} - \sum_{i=0}^{n-1}f(u(s
                & \equiv \sum_{i=0}^{n-1}(f(\overline{s}_i) - f(u(\overline{s}_i))) q^i \\
 \end{align*}
 
-Sada koristimo teoremu \ref{thuemorseosobina} za $k=11$.
+Na osnovu teoreme \ref{thuemorseosobina} imamo da je ili $s = \overline{s}$ ako je $z$ parno, ili $s = u(s)$ ako je $z$ neparno. Uzmimo da je $z$ parno. Tada \v clan $f(\overline{s_i}) - f(u(\overline{s_i})) = f(s_i) - f(u(s_i))$ ima vrednost $c$ ako je $s_i = a$, ina\v ce ima vrednost $-c$.  Odavde dobijamo da je $h(s) - h(u(s)) \equiv c\cdot p_{z}(q)$, po\v sto je $q$ neparno, $p_{z}(q) \equiv 0$ po modulu $2^\frac{z(z+1)}{2}$, a samim tim je $0$ i po modulu $M$, jer je $\frac{z(z+1)}{2} \geq w$, pa je $h(s) - h(u(s)) \equiv 0$ tj. $h(s) = h(u(s))$. U slu\v caju da je $z$ neparno dobija se da je $h(s) - h(u(s)) \equiv -c\cdot p_{11}(q)$, \v sto je svakako ponovo jednako $0$. \hfill $\square$
 
-\begin{align*}
-h(s) - h(u(s)) & \equiv \sum_{i=0}^{n-1}(f(\overline{s}_i) - f(u(\overline{s}_i))) q^i \\
-               & \equiv \sum_{i=0}^{n-1}(f(u(s_i)) - f(s_i)) q^i \\
-\end{align*}
-
-\v Clan $f(u(s_i)) - f(s_i)$ ima vrednost $-c$ ako je $s_i = a$, ina\v ce ima vrednost $c$.  Odavde dobijamo da je $h(s) - h(u(s)) = -c\cdot p_{11}(q)$, po\v sto je $q$ neparno, $p_{11}(q) \equiv 0$ po modulu $2^\frac{11\cdot 12}{2} = 2^{66}$, a samim tim je $0$ i po modulu $M$, pa je $h(s) - h(u(s)) \equiv 0$ tj. $h(s) = h(u(s))$. \hfill $\square$
-
-Napomena: Ukoliko se dozvoli da je $q$ parno, va\v zi\' ce $q^{64} \equiv 0 \mod M$, pa \' ce he\v s funkcija za npr. stringove $a^{65}$ i $ba^{64}$ dati istu vrednost.
+Napomena: Ukoliko se dozvoli da je $q$ parno, va\v zi\' ce $q^w \equiv 0 \mod M$, pa \' ce he\v s funkcija za npr. stringove $a^{w+1}$ i $ba^{w}$ dati istu vrednost.
 
 \subsubsection{Konstrukcija kolizije}
 

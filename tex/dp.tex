@@ -6,7 +6,7 @@ Prvi korak u primeni dinami\v ckog programiranja na re\v savanje nekog problema 
 
 \subsection{LCP matrica}
 
-Jedna od jednostavnijih primena dinami\v ckog programiranja jeste izra\v cunavanje LCP matrice stringa. $LCP(s, p)$ (od \textit{longest common prefix}) je du\v zina najdu\v zeg zajedni\v cki prefiksa stringova $s,p$.
+Jedna od jednostavnijih primena dinami\v ckog programiranja jeste izra\v cunavanje LCP matrice stringa. $LCP(s, p)$ (od \textit{longest common prefix}) je du\v zina najdu\v zeg zajedni\v ckog prefiksa stringova $s,p$.
 
 \begin{dfn}
 LCP matrica za string $s$ du\v zine $n$ je kvadratna matrica $A$ za koju va\v zi $A_{i,j} = LCP(s_{[i,n)}, s_{[j, n)})$.
@@ -23,13 +23,15 @@ Vremenska i memorijska slo\v zenost ovog algoritma je $O(n^2)$.
 
 \subsection{Najdu\v zi zajedni\v cki podniz}
 
+Da bismo definisali najdu\v zi zajedni\v cki podniz, prvo defini\v simo pojam podniza za string. Va\v zno je ista\' ci da podniz nije isto \v sto i podstring -- podniz ne mora sadr\v zati uzastopne karaktere stringa.
+
 \begin{dfn}
 Podniz stringa $s$ du\v zine $n$ je string $s_{i_0}s_{i_1}\ldots s_{i_{k-1}}$ gde va\v zi $0 \leq s_0 < s_1 < \ldots < i_{k-1} < n$.
 \end{dfn}
 
 Du\v zina najdu\v zeg zajedni\v ckog podniza (LCS, od \textit{longest common subsequence}) dva stringa $s,p$ se mo\v ze koristiti kao mera njihove sli\v cnosti. Preciznije, ukoliko su du\v zine $s,p$ redom $n,m$ a du\v zina njihovog LCS-a je $k$, tada je njihova udaljenost $n+m-2k$, gde se udaljenost odnosi na minimalan broj izmena potrebnih da se od stringa $s$ dobije string $p$, gde su dozvoljene operacije brisanje jednog slova i umetanje jednog slova u string.
 
-Neka je za fiksne stringove $s,p$ du\v zina $n,m$, redom, $d_{i,j}$ du\v zina LCS-a za stringove $s_{[0, i)}, p_{[0, j)}$.
+Neka je za fiksne stringove $s,p$ du\v zina $n,m$, redom, $d_{i,j}$ du\v zina LCS-a za stringove $s_{[0, i)}, p_{[0, j)}$. Da bismo na\v sli rekurentnu vezu za $d_{i,j}$, razmotrimo slede\' ce slu\v cajeve:
 
 \begin{itemize}
 \item Ako je $i=0$ ili $j=0$, tada je $d_{i,j} = 0$.
@@ -58,11 +60,14 @@ Ako posmatramo $d$ kao matricu, prime\' cujemo da se vrednosti u $i$-toj vrsti m
 
 Ukoliko je potrebno na\' ci ceo podniz a ne samo njegovu du\v zinu, rekonstrukciju radimo kretanjem unazad kroz matricu $d$, uvek idu\' ci ka odgovaraju\' cem polju koje ima najve\' cu vrednost, odnosno, ako smo u polju $i,j$ idemo ka polju od kojeg je $d_{i,j}$ "uzelo" vrednost.
 
+\noindent
+\begin{minipage}[l]{\textwidth}
 \lstinputlisting[language=C++, title={\textit{Implementacija nala\v zenja LCS-a}}, style=customcpp]{cpp/lcs-string.cpp}
+\end{minipage}
 
 \subsubsection{Hirschberg-ov algoritam}
 
-Iako se algoritam koji samo nalazi du\v zinu LCS-a dva stringa su\v stinski ne razlikuje od onog koji nalazi ceo taj podniz, prvi se mo\v ze jednostavno realizovati tako da mu je memorijska slo\v zenost $O(m)$. Hirschberg-ov algoritam nalazi ceo LCS u memorijskoj slo\v zenosti $O(n+m)$ bez \v zrtvovanja vremenske slo\v zenosti.\cite{hirschbergrad} Ideja algoritma je da string $s$ predstavimo kao $s=s_1s_2$ gde $s_1,s_2$ imaju pribli\v zno jednake du\v zine, a da zatim na\dj emo predstavljanje stringa $p=p_1p_2$ takvo da je $|LCS(s_1, p_1)| + |LCS(s_2, p_2)| = |LCS(s, p)|$, odnosno, ako posmatramo LCS za $s,p$ slova iz $s_1$ su uparena ta\v cno sa slovima iz $p_1$ i slova iz $s_2$ su uparena ta\v cno sa slovima iz $p_2$. Znaju\' ci particije ovih stringova, rekurzivno nalazimo $LCS(s_1, p_1)$ i $LCS(s_2, p_2)$ a zatim konkateniramo rezultate.
+Iako se algoritam koji samo nalazi du\v zinu LCS-a dva stringa su\v stinski ne razlikuje od onog koji nalazi ceo taj podniz, prvi se mo\v ze jednostavno realizovati tako da mu je memorijska slo\v zenost $O(m)$. Hirschberg-ov algoritam nalazi ceo LCS u memorijskoj slo\v zenosti $O(n+m)$ bez \v zrtvovanja vremenske slo\v zenosti.\cite{hirschbergrad} Ideja algoritma je da string $s$ predstavimo kao $s=s_1s_2$ gde $s_1,s_2$ imaju pribli\v zno jednake du\v zine, a da zatim na\dj emo predstavljanje stringa $p=p_1p_2$ takvo da je $|LCS(s_1, p_1)| + |LCS(s_2, p_2)| = |LCS(s, p)|$, odnosno, ako posmatramo LCS za $s,p$ slova iz $s_1$ su uparena ta\v cno sa slovima iz $p_1$ i slova iz $s_2$ su uparena ta\v cno sa slovima iz $p_2$. Znaju\' ci particije ovih stringova, rekurzivno nalazimo $LCS(s_1, p_1)$ i $LCS(s_2, p_2)$ a zatim nadovezujemo rezultate.
 
 Opi\v simo prvo pomo\' cni algoritam koji za stringove $s,p$ du\v zina $n,m$ nalazi, za svako $j \in \{0, 1, \ldots, m\}$ vrednost $|LCS(s, p_{[0, j)})|$. Primetimo da je ovaj algoritam identi\v can algoritmu koji nalazi du\v zinu LCS-a u $O(m)$ memorije, osim \v sto vra\' ca ceo vektor a ne samo njegov poslednji element.
 
@@ -77,7 +82,7 @@ Na\dj imo ovaj vektor za parove stringova $s_1, p$ i $\overline{s_2}, \overline{
 
 Uze\' cemo da je $s$ du\v zi string. Ukoliko nije, rekurzivno zovemo istu funkciju gde parametri menjaju mesto. Koristimo matemati\v cku indukciju da doka\v zemo da je memorijska slo\v zenost algoritma $O(n+m)$. Indukciju radimo po zbiru $n+m$. Dokaza\' cemo da postoji realan broj $c_2$ takav da algoritam koristi ne vi\v se od $c_2(n+m)$ bajtova memorije. Za $n+m \leq 1$ tvr\dj enje o\v cigledno va\v zi jer nema rekurzivnih poziva. U suprotnom, telo funkcije koristi ne vi\v se od $c_1(n+m)$ bajtova dodatne memorije, dok je kod rekurzivnih poziva zbir du\v zina stringova ne vi\v se od $\frac{n}{2} + m \leq \frac{3}{4}(n+m)$ (ovo va\v zi jer je $m \leq n$), odnosno, ako uzmemo da je $c_2 = 4c_1$, va\v zi da algoritam za du\v zine $n,m$ koristi ne vi\v se od $c_2\cdot \frac{3}{4}(n+m) + c_1(n+m) = 4c_1(n+m) = c_2(n+m)$ memorije, \v cime zavr\v savamo indukcijski korak.
 
-Procenimo sada vremensku slo\v zenost algoritma. Ozna\v cimo sa $H = nm$. Algoritam za ra\v cunanje nizova $v_1, v_2$ koristi $O(H)$ vremena, dok rekurzivni pozivi zajedno imaju veli\v cinu $\frac{n}{2}\cdot m = \frac{H}{2}$, pa vremenska slo\v zenost izra\v zena preko $H$ zadovoljava relaciju $T(H) = O(H) + T(\frac{H}{2})$, pa je na osnovu Master teoreme vremenska slo\v zenost upravo $O(H)$ odnosno $O(nm)$.
+Procenimo sada vremensku slo\v zenost algoritma. Ozna\v cimo sa $H = nm$. Algoritam za ra\v cunanje nizova $v_1, v_2$ koristi $O(H)$ vremena, dok rekurzivni pozivi zajedno imaju veli\v cinu $\frac{n}{2}\cdot m = \frac{H}{2}$, pa vremenska slo\v zenost izra\v zena preko $H$ zadovoljava relaciju $T(H) = O(H) + T(\frac{H}{2})$. Ako uzmemo da algoritam za ra\v cunanje nizova ima ne vi\v se od $c_1H$ elementarnih koraka za neku konstantu $c_1$, lako se mo\v ze pokazati da va\v zi $T(H) \leq 2c_1H$, pa je $T(H) = O(H)$ odnosno $O(nm)$.
 
 \subsection{Najdu\v zi palindromski podniz}
 
@@ -114,7 +119,7 @@ Levenshtein udaljenost izme\dj u stringova $s,p$ je minimalan broj operacija pot
 \end{dfn}
 \end{minipage}
 
-Ovaj problem re\v savamo algoritmom dinami\v ckog programiranja koji je veoma sli\v can prethodno opisanim algoritmu za nala\v zenje LCS-a. Kako je skup operacija na stringovima invertibilan, odnosno, za svaku operaciju postoji inverzna operacija iste te\v zine, svejedno je da li operaciju radimo na stringu $s$ ili na stringu $p$. Ovo zna\v ci da je dovoljno da na\dj emo string $q$ takav da se minimizuje ukupan broj operacija da se oba stringa dovedu do stringa $q$. Tako\dj e primetimo da u tom slu\v caju mo\v zemo u potpunosti da zanemarimo operaciju umetanja slova, jer svako umetnuto slovo u, na primer, string $s$, odgovara nekom slovu u stringu $q$. Ako je to slovo bilo umetnuto i u $p$, onda je ono suvi\v sno i mo\v ze se eliminisati, pri \v cemu se smanjuje broj operacija. U suprotnom, ono je ili nastalo izmenom nekog slova u $p$ ili od nekog slova koje je na po\v cetku bilo u $p$. U oba slu\v caja mo\v zemo jednostavno obrisati to slovo u $p$ i ne dodavati ga u $s$, pri \v cemu se ne pove\' cava broj operacija. Posmatrajmo dva stringa $s,p$ du\v zina $n,m$. Tra\v zimo string $q$ takav da se minimizuje ukupan broj poteza da se i $s$ i $p$ prevedu u $q$, gde su operacije brisanje slova i izmena slova. Neka je $d_{i,j}$ minimalan broj operacija potreban da se stringovi $s_{[0,i)}$ i $p_{[0,j)}$ dovedu do istog stringa, odnosno, to je njihova Levenshtein udaljenost. Nakon svih operacija njima moraju da se poklapaju poslednja dva slova. Ukoliko se u po\v cetku njima poklapaju poslednja dva slova, mo\v zemo samo da re\v simo problem za $s_{[0,i-1)}$ i $p_{[0,j-1)}$. U suprotnom, mo\v zemo da izjedna\v cimo ta dva slova u jednoj operaciji, pri \v cemu ponovo problem svodimo na stringove $s_{[0,i-1)}$ i $p_{[0,j-1)}$ ili mo\v zemo jedno od tih slova obrisati, pri \v cemu svodimo problem na $s_{[0,i-1)}$ i $p_{[0,j)}$ ako bri\v semo iz stringa $s$, ili na $s_{[0,i)}$ i $p_{[0,j-1)}$ ako bri\v semo iz stringa $p$. Jasno je da, ako je $i=0$ ili $j=0$, onda je Levenshtein udaljemost $j$ odnosno $i$. Dolazimo do slede\' ce rekurentne veze:
+Ovaj problem re\v savamo algoritmom dinami\v ckog programiranja koji je veoma sli\v can prethodno opisanim algoritmu za nala\v zenje LCS-a. Kako je skup operacija na stringovima invertibilan, odnosno, za svaku operaciju postoji inverzna operacija iste te\v zine, svejedno je da li operaciju radimo na stringu $s$ ili na stringu $p$. Ovo zna\v ci da je dovoljno da na\dj emo string $q$ takav da se minimizuje ukupan broj operacija da se oba stringa dovedu do stringa $q$. Tako\dj e primetimo da u tom slu\v caju mo\v zemo u potpunosti da zanemarimo operaciju umetanja slova, jer svako umetnuto slovo u, na primer, string $s$, odgovara nekom slovu u stringu $q$. Ako je to slovo bilo umetnuto i u $p$, onda je ono suvi\v sno i mo\v ze se eliminisati, pri \v cemu se smanjuje broj operacija. U suprotnom, ono je ili nastalo izmenom nekog slova u $p$ ili od nekog slova koje je na po\v cetku bilo u $p$. U oba slu\v caja mo\v zemo jednostavno obrisati to slovo u $p$ i ne dodavati ga u $s$, pri \v cemu se ne pove\' cava broj operacija. Posmatrajmo dva stringa $s,p$ du\v zina $n,m$. Tra\v zimo string $q$ takav da se minimizuje ukupan broj poteza da se i $s$ i $p$ prevedu u $q$, gde su operacije brisanje slova i izmena slova. Neka je $d_{i,j}$ minimalan broj operacija potreban da se stringovi $s_{[0,i)}$ i $p_{[0,j)}$ dovedu do istog stringa, odnosno, to je njihova Levenshtein udaljenost. Nakon svih operacija njima moraju da se poklapaju poslednja slova. Ukoliko se u po\v cetku njima poklapaju poslednja slova, mo\v zemo samo da re\v simo problem za $s_{[0,i-1)}$ i $p_{[0,j-1)}$. U suprotnom, mo\v zemo da izjedna\v cimo ta dva slova u jednoj operaciji, pri \v cemu ponovo problem svodimo na stringove $s_{[0,i-1)}$ i $p_{[0,j-1)}$ ili mo\v zemo jedno od tih slova obrisati, pri \v cemu svodimo problem na $s_{[0,i-1)}$ i $p_{[0,j)}$ ako bri\v semo iz stringa $s$, ili na $s_{[0,i)}$ i $p_{[0,j-1)}$ ako bri\v semo iz stringa $p$. Jasno je da, ako je $i=0$ ili $j=0$, onda je Levenshtein udaljemost $j$ odnosno $i$. Dolazimo do slede\' ce rekurentne veze:
 
 \begin{equation}
     d_{i,j} = \begin{cases}
@@ -122,6 +127,8 @@ Ovaj problem re\v savamo algoritmom dinami\v ckog programiranja koji je veoma sl
         \min(d_{i-1,j}+1, d_{i,j-1}+1, d_{i-1,j-1}+\delta(s_{i-1} \not = p_{j-1})) & i,j > 0 \\
     \end{cases}
 \end{equation}
+
+\textit{Napomena.} Sa $\delta(x)$ ozna\v cavamo funkciju logi\v cke promenljive koja vra\' ca $1$ ukoliko $x$ ima vrednost $\top$, a $0$ ako ima vrednost $\bot$.
 
 \noindent
 \begin{minipage}[l]{\textwidth}
