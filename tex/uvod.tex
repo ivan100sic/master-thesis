@@ -11,11 +11,9 @@ Ovakvu $n$-torku mo\v zemo kra\' ce zapisati sa $s$, a njenu du\v zinu (broj ele
 
 \begin{dfn}
 Ako je $\Sigma$ alfabet, onda je
-
 $$
     \Sigma^+ = \bigcup_{n=1}^{\infty} \Sigma^n
 $$
-
 skup svih nepraznih re\v ci nad alfabetom $\Sigma$.
 \end{dfn}
 
@@ -64,10 +62,11 @@ Za string $s$ ka\v zemo da je leksikografski manji od stringa $p$ ukoliko postoj
 \end{dfn}
 
 \begin{thm}
-Leksikografsko pore\dj enje je totalno ure\dj enje skupa $\Sigma^*$. \hfill $\square$
+Leksikografsko pore\dj enje je totalno ure\dj enje skupa $\Sigma^*$.
 \end{thm}
 
 \begin{dfn}
+\label{orddef}
 Za svako $x \in \Sigma$, $Ord(x)$ je broj elemenata skupa $\Sigma$ koji su strogo manji od $x$.
 \end{dfn}
  
@@ -88,5 +87,15 @@ Skup $\Theta(g)$ defini\v semo kao skup svih funkcija $f$ za koje va\v zi da pos
 Za algoritam \v ciji je ulazni parametar $n$, \v sto mo\v ze biti broj elemenata niza, broj vrsta matrice, broj \v cvorova grafa, itd. ka\v zemo da ima vremensku slo\v zenost $\Theta(g(n))$ odnosno $O(g(n))$ ako je $f$, gde je $f(n)$ broj elementarnih koraka tokom izvr\v senja algoritma, u skupu $\Theta(g)$ odnosno $O(g)$. Sli\v cno defini\v semo memorijsku slo\v zenost preko broja iskori\v s\' cenih elementarnih memorijskih lokacija.
 
 \subsection{Implementacije algoritama}
+\label{konfiguracija}
 
-Za sve implementacije bi\' ce kori\v s\' cen programski jezik C++, kompajler GCC, verzija 9.1.0. Verzija standarda jezika bi\' ce C++17. Radi jednostavnosti, kodovi \' ce biti dati bez \texttt{main} funkcije, \texttt{\#include} direktiva i naredbe \texttt{using namespace std;}. Pretpostavlja se da su uklju\v cene sve standardne biblioteke, \v sto se kod GCC-a mo\v ze posti\' ci sa \texttt{\#include <bits/stdc++.h>}.
+Za sve implementacije bi\' ce kori\v s\' cen programski jezik C++, kompajler GCC, verzija 9.1.0. Verzija standarda jezika bi\' ce C++17. Konfiguracija sistema na kojem su testirani kodovi je slede\' ca:
+
+\begin{itemize}
+    \item Procesor: AMD Ryzen 7 2700X,
+    \item RAM: DDR4, 2666 MHz, 2 modula od po 8 GiB,
+    \item OS: Ubuntu 16.04 LTS,
+    \item Linux kernel verzija: \texttt{4.15.0-58-generic}.
+\end{itemize}
+
+Radi jednostavnosti, kodovi \' ce biti dati bez \texttt{main} funkcije, \texttt{\#include} direktiva i naredbe \texttt{using namespace std;}. Pretpostavlja se da su uklju\v cene sve standardne biblioteke, \v sto se kod GCC-a mo\v ze posti\' ci pretprocesorskom naredbom \texttt{\#include <bits/stdc++.h>}.

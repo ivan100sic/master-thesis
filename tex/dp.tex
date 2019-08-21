@@ -39,7 +39,6 @@ Neka je za fiksne stringove $s,p$ du\v zina $n,m$, redom, $d_{i,j}$ du\v zina LC
 \end{itemize}
 
 Odavde dobijamo slede\' cu rekurentnu vezu: Ako su $i,j > 0$,
-
 \begin{equation}
     d_{i,j} = \begin{cases}
         \max(d_{i-1,j}, d_{i,j-1}) & s_{i-1} \not = p_{j-1} \\
@@ -120,7 +119,6 @@ Levenshtein udaljenost izme\dj u stringova $s,p$ je minimalan broj operacija pot
 \end{minipage}
 
 Ovaj problem re\v savamo algoritmom dinami\v ckog programiranja koji je veoma sli\v can prethodno opisanim algoritmu za nala\v zenje LCS-a. Kako je skup operacija na stringovima invertibilan, odnosno, za svaku operaciju postoji inverzna operacija iste te\v zine, svejedno je da li operaciju radimo na stringu $s$ ili na stringu $p$. Ovo zna\v ci da je dovoljno da na\dj emo string $q$ takav da se minimizuje ukupan broj operacija da se oba stringa dovedu do stringa $q$. Tako\dj e primetimo da u tom slu\v caju mo\v zemo u potpunosti da zanemarimo operaciju umetanja slova, jer svako umetnuto slovo u, na primer, string $s$, odgovara nekom slovu u stringu $q$. Ako je to slovo bilo umetnuto i u $p$, onda je ono suvi\v sno i mo\v ze se eliminisati, pri \v cemu se smanjuje broj operacija. U suprotnom, ono je ili nastalo izmenom nekog slova u $p$ ili od nekog slova koje je na po\v cetku bilo u $p$. U oba slu\v caja mo\v zemo jednostavno obrisati to slovo u $p$ i ne dodavati ga u $s$, pri \v cemu se ne pove\' cava broj operacija. Posmatrajmo dva stringa $s,p$ du\v zina $n,m$. Tra\v zimo string $q$ takav da se minimizuje ukupan broj poteza da se i $s$ i $p$ prevedu u $q$, gde su operacije brisanje slova i izmena slova. Neka je $d_{i,j}$ minimalan broj operacija potreban da se stringovi $s_{[0,i)}$ i $p_{[0,j)}$ dovedu do istog stringa, odnosno, to je njihova Levenshtein udaljenost. Nakon svih operacija njima moraju da se poklapaju poslednja slova. Ukoliko se u po\v cetku njima poklapaju poslednja slova, mo\v zemo samo da re\v simo problem za $s_{[0,i-1)}$ i $p_{[0,j-1)}$. U suprotnom, mo\v zemo da izjedna\v cimo ta dva slova u jednoj operaciji, pri \v cemu ponovo problem svodimo na stringove $s_{[0,i-1)}$ i $p_{[0,j-1)}$ ili mo\v zemo jedno od tih slova obrisati, pri \v cemu svodimo problem na $s_{[0,i-1)}$ i $p_{[0,j)}$ ako bri\v semo iz stringa $s$, ili na $s_{[0,i)}$ i $p_{[0,j-1)}$ ako bri\v semo iz stringa $p$. Jasno je da, ako je $i=0$ ili $j=0$, onda je Levenshtein udaljemost $j$ odnosno $i$. Dolazimo do slede\' ce rekurentne veze:
-
 \begin{equation}
     d_{i,j} = \begin{cases}
         i+j & i=0 \vee j=0 \\

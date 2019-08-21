@@ -11,7 +11,6 @@ Sufiks niz za string $s$ du\v zine $|s| = n$ je niz $p$ koji se sastoji od $n$ r
 \end{dfn}
 
 Za svaki string postoji jedinstven sufiks niz, zato \v sto je leksikografsko ure\dj enje totalno a ne postoje dva jednaka sufiksa. Primera radi, na\dj imo sufiks niz za string \texttt{banana}. Ozna\v cimo sa $u_i$ string $s_{[i,n)}$. Svi sufiksi ovog stringa su:
-
 \begin{center}
 \begin{tabular}{cl}
     $u_0$ & \texttt{banana} \\
@@ -22,9 +21,7 @@ Za svaki string postoji jedinstven sufiks niz, zato \v sto je leksikografsko ure
     $u_5$ & \texttt{a} \\
 \end{tabular}
 \end{center}
-
 Sortiranjem dobijamo niz sufiksa:
-
 \begin{center}
 \begin{tabular}{cl}
     $u_5$ & \texttt{a} \\
@@ -35,7 +32,6 @@ Sortiranjem dobijamo niz sufiksa:
     $u_2$ & \texttt{nana} \\
 \end{tabular}
 \end{center}
-
 Sortirani niz sufiksa je $u_5, u_3, u_1, u_0, u_4, u_2$, pa je sufiks niz $p = (5,3,1,0,4,2)$.
 
 \subsubsection{Konstrukcija}
@@ -63,7 +59,7 @@ Ozna\v cimo sa $k$ du\v zinu najdu\v zeg stringa koji se javlja vi\v se od jedno
 Algoritmi dati u nastavku efikasno re\v savaju problem nala\v zenja sortiranog niza svih cikli\v cnih pomeraja stringa. Prvo \' cemo pokazati kako se problem nala\v zenja sufiks niza svodi na sortiranje svih cikli\v cnih pomeraja stringa. Neka je $s \in \Sigma^+$. Pro\v sirimo alfabet $\Sigma$ dodavanjem novog simbola, koji \' cemo ozna\v citi sa $\$$ koji je po ure\dj enju manji od svih simbola iz $\Sigma$. Tada je $s' = s\$ \in (\Sigma \cup \{\$\})^+$. Neka je $n = |s|, n' = n+1 = |s'|$. Posmatrajmo sve cikli\v cne pomeraje stringa $s'$. Po\v sto se karakter $\$$ javlja samo jednom u stringu $s'$, svi ovi stringovi su razli\v citi pa postoji jedinstven leksikografski poredak. Leksikografski najmanji pomeraj bi\' ce $n'-1$, jer je taj pomeraj jedini koji po\v cinje karakterom $\$$ koji je po definiciji manji od svih ostalih.
 
 \begin{thm}
-Ako su $i,j$ proizvoljni cikli\v cni pomeraji stringa $s'$ razli\v citi od $n'-1$, tada va\v zi $s'_{[i, i+n')} < s'_{[j, j+n')}$ akko je $s_{[i, n)} < s_{[j, n)}$. \hfill $\square$
+Ako su $i,j$ proizvoljni cikli\v cni pomeraji stringa $s'$ razli\v citi od $n'-1$, tada va\v zi $s'_{[i, i+n')} < s'_{[j, j+n')}$ akko je $s_{[i, n)} < s_{[j, n)}$.
 \end{thm}
 
 Odavde sledi da ako je niz $q_0, q_1, \ldots, q_n$ sortiran niz cikli\v cnih pomeraja stringa $s'$ tada je niz $p_i = q_{i+1}, i \in \{0, \ldots, n-1\}$ sufiks niz stringa $s$.
@@ -73,9 +69,9 @@ Odavde sledi da ako je niz $q_0, q_1, \ldots, q_n$ sortiran niz cikli\v cnih pom
 \lstinputlisting[language=C++, title={\textit{Svo\dj enje konstrukcije sufiks niza na sortiranje cikli\v cnih pomeraja}}, style=customcpp]{cpp/scs-to-sarray.h}
 \end{minipage}
 
-Kona\v cno, opi\v simo algoritam za sortiranje cikli\v cnih pomeraja stringa $s$ du\v zine $n$. Za svako $k \in \{0, 1, \ldots, \ceil{\log_2(n)} \}$ na\dj imo poredak svih cikli\v cnih podstringova du\v zine $2^k$. Ovaj poredak \' cemo opisati nizom celih brojeva $C^{(k)}$, gde stringu $s_{[i, i+2^k)}$ pridru\v zujemo broj $C^{(k)}_i$ na takav na\v cin da, ako su podstringovima $s_{[i, i+2^k)}$ i $s_{[j, j+2^k)}$ pridru\v zeni isti brojevi, tada su oni jednaki, a ako je jednom pridru\v zen manji broj, tada je taj podstring leksikografski manji. Za $k=0$, mo\v zemo jednostavno postaviti $C^{(0)}_i = \text{Ord}(s_i)$.
+Kona\v cno, opi\v simo algoritam za sortiranje cikli\v cnih pomeraja stringa $s$ du\v zine $n$. Za svako $k \in \{0, 1, \ldots, \ceil{\log_2(n)} \}$ na\dj imo poredak svih cikli\v cnih podstringova du\v zine $2^k$. Ovaj poredak \' cemo opisati nizom celih brojeva $C^{(k)}$, gde stringu $s_{[i, i+2^k)}$ pridru\v zujemo broj $C^{(k)}_i$ na takav na\v cin da, ako su podstringovima $s_{[i, i+2^k)}$ i $s_{[j, j+2^k)}$ pridru\v zeni isti brojevi, tada su oni jednaki, a ako je jednom pridru\v zen manji broj, tada je taj podstring leksikografski manji. Za $k=0$, mo\v zemo jednostavno postaviti $C^{(0)}_i = \text{Ord}(s_i)$ (videti Definiciju \ref{orddef}).
 
-Neka je $k>0$. Na\v s cilj je da odredimo niz $C^{(k)}$ u vremenskoj slo\v zenosti $O(n \log n)$. Posmatrajmo podstringove $s_{[i, i+2^k)}$ i $s_{[j, j+2^k)}$ i posmatrajmo ure\dj ene parove $u_i = (C^{(k-1)}_i, C^{(k-1)}_{(i+2^{k-1}) \mod n })$ i $u_j = (C^{(k-1)}_j, C^{(k-1)}_{(j+2^{k-1}) \mod n })$. Tada je poredak ovih podstringova jednak poretku parova $u_i, u_j$. Ako za svaki cikli\v cni podstring odredimo ovaj ure\dj eni par, zatim sve dobijene parove sortiramo, a zatim ovim parovima dodelimo ordinalne vrednosti, dobi\' cemo upravo niz $C^{(k)}$. Ovo se mo\v ze jednostavno izvesti bilo kojim algoritmom za sortiranje koji radi u slo\v zenosti $O(n \log n)$.
+Neka je $k>0$. Na\v s cilj je da odredimo niz $C^{(k)}$ u vremenskoj slo\v zenosti $O(n \log n)$. Posmatrajmo podstringove $s_{[i, i+2^k)}$ i $s_{[j, j+2^k)}$ i posmatrajmo ure\dj ene parove $u_i = (C^{(k-1)}_i, C^{(k-1)}_{(i+2^{k-1}) \mod n })$ i $u_j = (C^{(k-1)}_j, C^{(k-1)}_{(j+2^{k-1}) \mod n })$. Tada je poredak ovih podstringova jednak poretku parova $u_i, u_j$. Ako za svaki cikli\v cni podstring odredimo ovaj ure\dj eni par, zatim sve dobijene parove sortiramo, a zatim ovim parovima dodelimo vrednosti na osnovu njihove pozicije u sortiranom nizu, gde jednakim parovima dodeljujemo jednake vrednosti, dobi\' cemo upravo niz $C^{(k)}$. Ovo se mo\v ze jednostavno izvesti bilo kojim algoritmom za sortiranje koji radi u slo\v zenosti $O(n \log n)$.
 
 Za kraj, neka je $k = \ceil{\log_2(n)}$. Odavde je $2^k \geq n$. U kontekstu konstrukcije sufiks niza, nijedna dva cikli\v cna pomeraja du\v zine $2^k$ ne\' ce biti jednaka, pa \' ce niz $C^{(k)}$ sadr\v zati razli\v cite brojeve. Odavde sortiran niz cikli\v cnih pomeraja mo\v zemo na\' ci kao inverznu permutaciju niza $C^{(k)}$. Va\v zno je napomenuti da \' ce poredak podstringova du\v zine $2^k$ biti jednak poretku podstringova du\v zine $n$, zato \v sto du\v zina najdu\v zeg zajedni\v ckog prefiksa za bilo koja dva razli\v cita podstringa (bilo koje du\v zine) iznosi $n-1$, upravo jer postoji karakter $\$$ koji se javlja samo jednom u stringu.
 
@@ -99,13 +95,15 @@ Kona\v cno re\v senje, odnosno sortiran niz cikli\v cnih pomeraja je upravo niz 
 
 \subsubsection{LCP niz}
 
+Podsetimo se da je $LCP(s,p)$ (od \textit{longest common prefix}) du\v zina najdu\v zeg zajedni\v ckog prefiksa stringova $s,p$.
+
 Niz najdu\v zih zajedni\v ckih prefiksa (\textit{longest common prefix}) je niz koji se \v cesto zajedno koristi sa sufiks nizom. Za string $s$ du\v zine $n$, \v ciji je sufiks niz $p_0, p_1, \ldots, p_{n-1}$, LCP niz se sastoji od nenegativnih celih brojeva $q_0, q_1, \ldots, q_{n-2}$, gde $q_i$ ozna\v cava du\v zinu najdu\v zeg zajedni\v ckog prefiksa stringova $s_{[p_i, n)}$ i $s_{[p_{i+1}, n)}$.
 
 Najdu\v zi zajedi\v cki prefiks zadovoljava jednu veoma va\v znu osobinu.
 
 \begin{thm}
 \label{lcposobina}
-Neka je $s_1, s_2, \ldots, s_n$ leksikografski sortiran niz stringova. Neka je $q_i = LCP(s_i, s_{i+1})$. Ako je $i<j$, tada je $LCP(s_i, s_j) = \min\{q_i, q_{i+1}, \ldots, q_{j-1}\}$. \hfill $\square$
+Neka je $s_1, s_2, \ldots, s_n$ leksikografski sortiran niz stringova. Neka je $q_i = LCP(s_i, s_{i+1})$. Ako je $i<j$, tada je $LCP(s_i, s_j) = \min\{q_i, q_{i+1}, \ldots, q_{j-1}\}$. 
 \end{thm}
 
 Kako se LCP niz konstrui\v se nad sortiranim nizom sufiksa jednog stringa, on se uz odgovaraju\' cu strukturu podataka za nala\v zenje minimuma u podnizu mo\v ze koristiti za odre\dj ivanje najdu\v zeg zajedni\v ckog prefiksa bilo koja dva sufiksa.
@@ -114,7 +112,7 @@ Pre nego \v sto opi\v semo algoritam za konstrukciju LCP niza, doka\v zimo slede
 
 \begin{thm}
 \label{lcpalgoteorema}
-Neka je $s$ string du\v zine $n$, \v ciji je sufiks niz $p_0, \ldots, p_{n-1}$, LCP niz $q_0, \ldots, q_{n-2}$. Defini\v semo $r = p^{-1}$ odnosno, $p_{r_i} = i$. Neka je $s_{[i, n)}$ njegov sufiks takav da je $i>0$ i $p_{n-1} \not = i, i-1$. Tada je $q_{r_i} \geq q_{r_{i-1}} - 1$.
+Neka je $s$ string du\v zine $n$, \v ciji je sufiks niz $p_0, \ldots, p_{n-1}$, LCP niz $q_0, \ldots, q_{n-2}$. Defini\v semo $r = p^{-1}$ odnosno, $p_{r_i} = i$. Neka je $s_{[i, n)}$ sufiks takav da je $i>0$ i $p_{n-1} \not = i, i-1$. Tada je $q_{r_i} \geq q_{r_{i-1}} - 1$.
 \end{thm}
 
 \textit{Dokaz:} Uvedimo oznake $i' = i-1$, $j = p_{r_i + 1}$, $j' = p_{r_{i'} + 1}$. Drugim re\v cima, sufiks $i'$ je onaj koji prethodi $i$, odnosno ima du\v zinu za $1$ ve\' cu. $j$ je sufiks koji se nalazi odmah posle $i$ u sufiks nizu. Sli\v cno, $j'$ je sufiks koji se nalazi odmah posle $i'$ u sufiks nizu.  Ukoliko je $q_{r_{i'}} \leq 1$, onda tvr\dj enje o\v cigledno va\v zi, jer je $q_{r_i} \geq 0$. Neka je $q_{r_{i'}} \geq 2$. Po\v sto je $j'$ posle $i'$ u sufiks nizu va\v zi $s_{[j', n)} > s_{[i', n)}$ a po\v sto je $q_{r_{i'}} \geq 1$ va\v zi $s_{i'} = s_{j'}$. Ako odbacimo prvi karakter sufiksa $i'$ i $j'$ ponovo dobijamo sufikse, $i'+1, j'+1$ i va\v zi $s_{[j'+1, n)} > s_{[i'+1, n)}$, odnosno $s_{[j'+1, n)} > s_{[i, n)}$ ili ekvivalentno $r_{j'+1} > r_i$. Du\v zina najdu\v zeg zajedni\v ckog prefiksa za $i'+1, j'+1$ je $q_{r_{i'}} - 1$. Na osnovu teoreme \ref{lcposobina} imamo da je $q_{r_{i'}} - 1 = LCP(s_{[i, n)}, s_{[j'+1, n)}) = \min\{ q_{r_i}, q_{r_i+1}, \ldots, q_{r_{j'+1}-1} \}$ odnosno $q_{r_{i'}} - 1 \leq q_{r_i}$ \hfill $\square$.
@@ -215,7 +213,7 @@ Sufiks stablo omogu\' cava da se na\dj u prvo, poslednje, broj pojavljivanja nek
 Kod sufiksnog stabla ne postoji podstablo koje sadr\v zi vi\v se \v cvorova vi\v sestrukosti $0$ nego \v cvorova vi\v sestrukosti $1$.
 \end{thm}
 
-\textit{Dokaz.} Pretpostavimo suprotno, da podstablo ima $k$ \v cvorova i da \v cvorova vi\v sestrukosti $0$ ima vi\v se od $\frac{k}{2}$. Na osnovu definicije sufiks stabla, svaki takav \v cvor ima bar dvoje dece, pa je ukupan broj dece svih \v cvorova u podstablu ve\' ci od $k$, \v sto je nemogu\' ce, jer je ukupan broj dece svih \v cvorova ta\v cno $k-1$. \hfill $\square$
+\textit{Dokaz.} Pretpostavimo suprotno, da podstablo ima $k$ \v cvorova i da \v cvorova vi\v sestrukosti $0$ ima vi\v se od $\frac{k}{2}$. Po definiciji sufiks stabla, svaki takav \v cvor ima bar dvoje dece, pa je ukupan broj dece svih \v cvorova u podstablu ve\' ci od $k$, \v sto je nemogu\' ce, jer je ukupan broj dece svih \v cvorova ta\v cno $k-1$. \hfill $\square$
 
 Ovo nam omogu\' cava da, za neki string $t$, od pozicije $\delta(t)$, ukoliko postoji, izvr\v simo pretragu u dubinu ili \v sirinu da bismo na\v sli sve \v cvorove vi\v sestrukosti $1$ u podstablu pozicije $\delta(t)$. Ako neki ovakav \v cvor odgovara sufiksu $id$, znamo da je $t = s_{[id, id+|t|)}$ odnosno, $id$ je pozicija jednog pojavljivanja stringa $t$ u stringu $s$. Kako je slo\v zenost pretrage linearna po veli\v cini podstabla, i kako je ukupan broj \v cvorova podstabla ne vi\v se od duplo ve\' ci od broja \v cvorova vi\v sestrukosti $1$, vremenska slo\v zenost algoritma je $O(|t|+k)$, gde je $k$ broj pojavljivanja stringa $t$ u $s$.
 
