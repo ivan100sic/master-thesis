@@ -13,7 +13,7 @@ Na osnovu definicije sledi da razli\v citi putevi u stablu koji po\v cinju od is
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=60mm]{../img/trie1.eps}
+    \includegraphics[width=55mm]{../img/trie1.eps}
     \caption*{\textit{Prefiksno stablo za kolekciju $\{aca,ada,a,da\}$.}}
 \end{figure}
 
@@ -56,7 +56,8 @@ Algoritam je grabljive prirode. Posmatrajmo najdu\v zi zajedni\v cki prefiks str
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=60mm]{../img/trielb1.eps}
+    \includegraphics[width=55mm]{../img/trielb1.eps}
+    \caption*{\textit{Ilustracija primera rada algoritma za nala\v zenje lower bound-a}}
 \end{figure}
 
 Kako nismo do\v sli do kraja celog stringa, vra\' camo se unazad kroz stablo, sve dok ne na\dj emo \v cvor koji ima izlaznu granu sa labelom strogo ve\' com od odgovaraju\' ceg slova u stringu $abo$. Nalazimo takvu granu u \v cvoru $\delta(a)$, a zatim se grabljivim postupkom spu\v stamo sve do nekog \v cvora sa pozitivnom vi\v sestruko\v s\' cu, \v sto je u ovom slu\v caju \v cvor $\delta(ada)$, pa je rezultat upravo string $ada$.
@@ -96,7 +97,7 @@ Funkcija vra\' ca niz svih \v cvorova stabla $q = q_0, q_1, \ldots, q_{k-1}$. Ni
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=75mm]{../img/aho1.eps}
+    \includegraphics[width=70mm]{../img/aho1.eps}
     \caption*{\textit{Sufiks veze za prefiksno stablo za kolekciju $\{aca,ada,a,da\}$.}}
 \end{figure}
 

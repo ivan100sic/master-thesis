@@ -6,7 +6,7 @@ Za razliku od kriptografskih he\v s funkcija, he\v s funkcije koje se koriste u 
 
 Pomo\' cu Rabin-Karp algoritma mogu se prona\' ci sva pojavljivanja jednog stringa u drugom u linearnoj vremenskoj slo\v zenosti, ako se dozvoli mala verovatno\' ca gre\v ske, odnosno \textit{false positive}-a, \v sto zna\v ci da algoritam prepoznaje podstring stringa $s$ kao string $p$ iako to nije slu\v caj.
 
-Kod ovog algoritma, he\v s funkcija se defini\v se na slede\' ci na\v cin. Neka je $|s| = n$.
+Kod ovog algoritma, he\v s funkcija se defini\v se na slede\' ci na\v cin. Neka je $|s| = n$. Tada je:
 
 \begin{equation}
     h(s) = \Big(\sum_{i=0}^{n-1} f(s_i)q^{n-i-1}\Big) \mod M
@@ -25,9 +25,9 @@ Prethodno definisana he\v s funkcija zadovoljava jednakost:
 \textit{Dokaz.} Neka je $n = |s|, m = |p|$.
 
 \begin{align*}
-     h(sp) & \equiv & \sum_{i=0}^{n+m-1} f((sp)_i)q^{n+m-i-1} \mod M \\
-           & \equiv & \sum_{i=0}^{n-1} f(s_i)q^{n+m-i-1} + \sum_{j=n}^{n+m-1} f(p_{j-n})q^{n+m-j-1} \mod M \\
-           & \equiv & q^m \sum_{i=0}^{n-1} f(s_i)q^{n-i-1} + \sum_{j=0}^{m-1} f(p_{j})q^{m-j-1} \mod M \\
+     h(sp) & \equiv \sum_{i=0}^{n+m-1} f((sp)_i)q^{n+m-i-1} & \mod M \\
+           & \equiv \sum_{i=0}^{n-1} f(s_i)q^{n+m-i-1} + \sum_{j=n}^{n+m-1} f(p_{j-n})q^{n+m-j-1} & \mod M \\
+           & \equiv q^m \sum_{i=0}^{n-1} f(s_i)q^{n-i-1} + \sum_{j=0}^{m-1} f(p_{j})q^{m-j-1} & \mod M \\
 \end{align*}
 
 Poslednji izraz je jednak $q^m h(s) + h(p)$ po modulu $M$, \v cime smo dokazali tra\v zenu jednakost. \hfill $\square$
@@ -81,13 +81,24 @@ U svakom slu\v caju, ukoliko Branko zna vrednosti $q,M$ koje je Ana izabrala, u 
     Ako je $M$ prost broj, $q$ se uzima slu\v cajno i uniformno iz skupa $\{0, \ldots, M-1\}$ i ako su stringovi $s,p$ du\v zine $n$, tada je verovatno\' ca kolizije ne vi\v se od $\frac{n-1}{M}$.
 \end{thm}
 
-\textit{Dokaz.} Posmatrajmo jednu koliziju, i neka je $Q$ slu\v cajna promenljiva iz koje $q$ uzima vrednost. Sve jednakosti su po modulu $M$.
+\textit{Dokaz.} Posmatrajmo jednu koliziju, i neka je $Q$ slu\v cajna promenljiva iz koje $q$ uzima vrednost. Sve jednakosti su po modulu $M$. Iz
+$$
+h(s) = h(p)
+$$
+sledi
+$$
+\sum_{i=0}^{n-1}f(s_i)Q^{n-1-i} \equiv  \sum_{i=0}^{n-1}f(p_i)Q^{n-1-i}
+$$
+odnosno
+$$
+\sum_{i=0}^{n-1}(f(s_i)-f(p_i))Q^{n-1-i} \equiv 0
+$$
 
-\begin{gather*}
-h(s) = h(p) \\
-\sum_{i=0}^{n-1}f(s_i)Q^{n-1-i} \equiv  \sum_{i=0}^{n-1}f(p_i)Q^{n-1-i} \\
-\sum_{i=0}^{n-1}(f(s_i)-f(p_i))Q^{n-1-i} \equiv 0 \\
-\end{gather*}
+% \begin{gather*}
+% h(s) = h(p) \\
+% \sum_{i=0}^{n-1}f(s_i)Q^{n-1-i} \equiv  \sum_{i=0}^{n-1}f(p_i)Q^{n-1-i} \\
+% \sum_{i=0}^{n-1}(f(s_i)-f(p_i))Q^{n-1-i} \equiv 0 \\
+% \end{gather*}
 
 Leva strana je nenula polinom pa promenljivoj $Q$ stepena najvi\v se $n-1$. U polju $\mathbb{F}_M$ (kona\v cno polje reda $M$) nenula polinom stepena do $n-1$ ne mo\v ze imati vi\v se od $n-1$ nula, pa je verovatno\' ca da je $Q$ nula polinoma ne vi\v se od $\frac{n-1}{M}$. \hfill $\square$
 
@@ -163,7 +174,7 @@ Ukoliko je broj $M$ reda veli\v cine $2^{64}$, prethodna tehnika ne\' ce dati za
 \begin{equation}
     \sum_{i=0}^{n-1} \alpha_i \cdot q^{n-1-i} \equiv 0 \mod M
 \end{equation}
-gde su $\alpha_i \in \{-1, 0, 1\}$ nepoznate. Iz ovog re\v senja se jednostavno konstrui\v se string, ako je $\alpha_i = -1,0,1$ redom, onda je $s_i = a,b,c$. Algoritam odr\v zava kolekciju klastera. Svaki klaster odgovara jednom vektoru parametara $\alpha$. U po\v cetku postoji $n$ klastera, kod $i$-tog klastera va\v zi $\alpha_j = 1$ ako je $i=j$, a $\alpha_j = 0$ ina\v ce. Za dva klastera ka\v zemo da su disjunktni ako su skupovi pozicija gde ova dva klastera imaju nenula vrednosti disjunktni.
+gde su $\alpha_i \in \{-1, 0, 1\}$ nepoznate. Iz ovog re\v senja se jednostavno konstrui\v se string, ako je $\alpha_i = -1,0,1$ redom, onda je $s_i = a,b,c$. Algoritam odr\v zava kolekciju klastera. Svaki klaster odgovara jednom vektoru parametara $\alpha$. U po\v cetku postoji $n$ klastera, kod $i$-tog klastera va\v zi $\alpha^{(i)}_j = 1$ ako je $i=j$, a $\alpha^{(i)}_j = 0$ ina\v ce. Za dva klastera ka\v zemo da su disjunktni ako su skupovi pozicija gde ova dva klastera imaju nenula vrednosti disjunktni.
 
 Dva disjunktna klastera sa nizovima parametara $\alpha'$ i $\alpha''$ se mogu spojiti u jedan novi klaster $\alpha$ tako \v sto se ovi nizovi oduzmu, odnosno, tako \v sto postavimo $\alpha_i = \alpha'_i - \alpha''_i$. Po\v sto su klasteri disjunktni va\v zi\' ce $\alpha_i \in \{-1, 0, 1\}$. Ako nakon spajanja klastera $\alpha'$ i $\alpha''$ njih izbacimo iz kolekcije a ubacimo $\alpha$, i dalje \' ce svaka dva klastera u kolekciji biti disjunktna, zato \v sto su u po\v cetku svaka dva klastera disjunktna a skup nenula pozicija za $\alpha$ je jednak uniji tih skupova za $\alpha'$ i $\alpha''$.
 

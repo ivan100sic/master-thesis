@@ -73,7 +73,7 @@ Za string $s$ du\v zine $n$, Z-niz je niz $z_1, \ldots, z_{n-1}$ gde je $z_i$ du
 
 Z-niz se mo\v ze iskoristiti za pretragu stringova. Ukoliko na\dj emo Z-niz za string $ps$, $i$ je pojavljivanje $p$ u $s$ akko je $z_{i+m} \geq m$.
 
-Z-algoritam je efikasan algoritam za nala\v zenje Z-niza.\cite{zalgoknjiga} Ozna\v cimo sa $q$ string za koji nalazimo Z-niz. Algoritam za svako $i$ direktno izra\v cuna $z_i$ poklapanjem slova na pozicijama $z_i, i + z_i$. Klju\v cna ideja je da se prethodno izra\v cunate vrednosti Z-niza mogu iskoristiti da se postavi bolja po\v cetna vrednost za $z_i$, umesto da se svaki put kre\' ce od nule. Naime, neka je $[l,r)$ prozor koji odgovara onom do sada na\dj enom poklapanju sa prefiksom stringa $s$ kod kojeg je $r$ najve\' ce. Drugim re\v cima, $r$ je najve\' ca na\dj ena vrednost izraza $j+z_j$ za $j<i$, a pritom je $l = j$ za koje se dosti\v ze taj maksimum. Ukoliko va\v zi $l \leq i < r$, tada znamo da je $q_{[i, r)} = q_{[i-l, r-l)}$. Tako\dj e, va\v zi $q_{[i-l, i-l+z_{i-l})} = q_{[0, z_{i-l})}$ pa, ako ozna\v cimo sa $t_i = \min(z_{i-l}, r-i)$, va\v zi $q_{[i, i+t_i)} = q_{[0, t_i)}$ odnosno $z_i \geq t_i$.
+Z-algoritam je efikasan algoritam za nala\v zenje Z-niza.\cite{zalgoknjiga} Ozna\v cimo sa $q$ string za koji nalazimo Z-niz. Klju\v cna ideja je da se prethodno izra\v cunate vrednosti Z-niza mogu iskoristiti da se postavi bolja po\v cetna vrednost za $z_i$, umesto da se svaki put kre\' ce od nule. Naime, neka je $[l,r)$ prozor koji odgovara onom do sada na\dj enom poklapanju sa prefiksom stringa $s$ kod kojeg je $r$ najve\' ce. Drugim re\v cima, $r$ je najve\' ca na\dj ena vrednost izraza $j+z_j$ za $j<i$, a pritom je $l = j$ za koje se dosti\v ze taj maksimum. Ukoliko va\v zi $l \leq i < r$, tada znamo da je $q_{[i, r)} = q_{[i-l, r-l)}$. Tako\dj e, va\v zi $q_{[i-l, i-l+z_{i-l})} = q_{[0, z_{i-l})}$ pa, ako ozna\v cimo sa $z'_i = \min(z_{i-l}, r-i)$, va\v zi $q_{[i, i+z'_i)} = q_{[0, z'_i)}$ odnosno $z_i \geq z'_i$. Algoritam postavlja po\v cetnu vrednost $z_i = z'_i$. Zatim, dokle god se slova na pozicijama $z_i$ i $i + z_i$ poklapaju i nije dostignut kraj stringa, $z_i$ se pove\' cava za $1$.
 
 \noindent
 \begin{minipage}[l]{\textwidth}
@@ -84,7 +84,8 @@ Z-algoritam je efikasan algoritam za nala\v zenje Z-niza.\cite{zalgoknjiga} Ozna
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=60mm]{../img/zalgo1.eps}
+    \includegraphics[width=40mm]{../img/zalgo1.eps}
+    \caption*{\textit{Ilustracija prozora kod Z-algoritma}}
 \end{figure}
 
 Na osnovu toga \v sto je $s_{[8,13)} = s_{[0,5)}$ prozor imamo da je podstring $s_{[10,13)}$ jednak podstringu $s_{[2,5)}$. Vrednost $z_2$ je jednaka $5$, pa va\v zi da je $s_{[2,7)} = s_{[0,5)}$. Iz druge jednakosti mo\v zemo zaklju\v citi da je $s_{[0,3)} = s_{[2,5)}$, a iz prve da je $s_{[2,5)} = s_{[10,13)}$, pa postavljamo po\v cetnu vrednost $z_{10}$ na $3$. Kako je $s_{13}$ slovo $s$, a $s_3$ slovo $n$, odmah se zaustavljamo, vrednost $z_{10}$ je jednaka $3$.

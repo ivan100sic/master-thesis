@@ -71,7 +71,7 @@ Odavde sledi da ako je niz $q_0, q_1, \ldots, q_n$ sortiran niz cikli\v cnih pom
 
 Kona\v cno, opi\v simo algoritam za sortiranje cikli\v cnih pomeraja stringa $s$ du\v zine $n$. Za svako $k \in \{0, 1, \ldots, \ceil{\log_2(n)} \}$ na\dj imo poredak svih cikli\v cnih podstringova du\v zine $2^k$. Ovaj poredak \' cemo opisati nizom celih brojeva $C^{(k)}$, gde stringu $s_{[i, i+2^k)}$ pridru\v zujemo broj $C^{(k)}_i$ na takav na\v cin da, ako su podstringovima $s_{[i, i+2^k)}$ i $s_{[j, j+2^k)}$ pridru\v zeni isti brojevi, tada su oni jednaki, a ako je jednom pridru\v zen manji broj, tada je taj podstring leksikografski manji. Za $k=0$, mo\v zemo jednostavno postaviti $C^{(0)}_i = \text{Ord}(s_i)$ (videti Definiciju \ref{orddef}).
 
-Neka je $k>0$. Na\v s cilj je da odredimo niz $C^{(k)}$ u vremenskoj slo\v zenosti $O(n \log n)$. Posmatrajmo podstringove $s_{[i, i+2^k)}$ i $s_{[j, j+2^k)}$ i posmatrajmo ure\dj ene parove $u_i = (C^{(k-1)}_i, C^{(k-1)}_{(i+2^{k-1}) \mod n })$ i $u_j = (C^{(k-1)}_j, C^{(k-1)}_{(j+2^{k-1}) \mod n })$. Tada je poredak ovih podstringova jednak poretku parova $u_i, u_j$. Ako za svaki cikli\v cni podstring odredimo ovaj ure\dj eni par, zatim sve dobijene parove sortiramo, a zatim ovim parovima dodelimo vrednosti na osnovu njihove pozicije u sortiranom nizu, gde jednakim parovima dodeljujemo jednake vrednosti, dobi\' cemo upravo niz $C^{(k)}$. Ovo se mo\v ze jednostavno izvesti bilo kojim algoritmom za sortiranje koji radi u slo\v zenosti $O(n \log n)$.
+Neka je $k>0$. Na\v s cilj je da odredimo niz $C^{(k)}$ u vremenskoj slo\v zenosti $O(n \log n)$. Posmatrajmo podstringove $s_{[i, i+2^k)}$ i $s_{[j, j+2^k)}$ i posmatrajmo ure\dj ene parove $u_i = (C^{(k-1)}_i, C^{(k-1)}_{(i+2^{k-1}) \mod n })$ i $u_j = (C^{(k-1)}_j, C^{(k-1)}_{(j+2^{k-1}) \mod n })$. Tada je poredak ovih podstringova jednak poretku parova $u_i, u_j$. Ako za svaki cikli\v cni podstring odredimo ovaj ure\dj eni par, zatim sve dobijene parove sortiramo, a zatim ovim parovima dodelimo vrednosti na osnovu njihove pozicije u sortiranom nizu, gde jednakim parovima dodeljujemo jednake vrednosti, dobi\' cemo upravo niz $C^{(k)}$. Formalno, paru $u_i$ dodeljujemo vrednost koja je jednaka veli\v cini skupa $\{u_j | u_j < u_i, 0 \leq j < n\}$. Ovo se mo\v ze jednostavno izvesti bilo kojim algoritmom za sortiranje koji radi u slo\v zenosti $O(n \log n)$.
 
 Za kraj, neka je $k = \ceil{\log_2(n)}$. Odavde je $2^k \geq n$. U kontekstu konstrukcije sufiks niza, nijedna dva cikli\v cna pomeraja du\v zine $2^k$ ne\' ce biti jednaka, pa \' ce niz $C^{(k)}$ sadr\v zati razli\v cite brojeve. Odavde sortiran niz cikli\v cnih pomeraja mo\v zemo na\' ci kao inverznu permutaciju niza $C^{(k)}$. Va\v zno je napomenuti da \' ce poredak podstringova du\v zine $2^k$ biti jednak poretku podstringova du\v zine $n$, zato \v sto du\v zina najdu\v zeg zajedni\v ckog prefiksa za bilo koja dva razli\v cita podstringa (bilo koje du\v zine) iznosi $n-1$, upravo jer postoji karakter $\$$ koji se javlja samo jednom u stringu.
 
@@ -171,7 +171,7 @@ Kompresovano prefiksno stablo za skup nepraznih stringova $P$ se dobija tako \v 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=75mm]{../img/ztrie1.eps}
+    \includegraphics[width=50mm]{../img/ztrie1.eps}
     \caption*{\textit{Kompresovano prefiksno stablo za skup $\{aca,ad,ada,da\}$.}}
 \end{figure}
 

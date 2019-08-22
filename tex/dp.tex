@@ -122,11 +122,11 @@ Ovaj problem re\v savamo algoritmom dinami\v ckog programiranja koji je veoma sl
 \begin{equation}
     d_{i,j} = \begin{cases}
         i+j & i=0 \vee j=0 \\
-        \min(d_{i-1,j}+1, d_{i,j-1}+1, d_{i-1,j-1}+\delta(s_{i-1} \not = p_{j-1})) & i,j > 0 \\
+        \min(d_{i-1,j}+1, d_{i,j-1}+1, d_{i-1,j-1}+\tau(s_{i-1} \not = p_{j-1})) & i,j > 0 \\
     \end{cases}
 \end{equation}
 
-\textit{Napomena.} Sa $\delta(x)$ ozna\v cavamo funkciju logi\v cke promenljive koja vra\' ca $1$ ukoliko $x$ ima vrednost $\top$, a $0$ ako ima vrednost $\bot$.
+\textit{Napomena.} Sa $\tau(x)$ ozna\v cavamo funkciju logi\v cke promenljive koja vra\' ca $1$ ukoliko $x$ ima vrednost $\top$, a $0$ ako ima vrednost $\bot$.
 
 \noindent
 \begin{minipage}[l]{\textwidth}

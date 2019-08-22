@@ -29,6 +29,16 @@ Manacher-ov algoritam koristi ideju vrlo sli\v cnu Z-algoritmu. Za svaku pozicij
 \lstinputlisting[language=C++, title={\textit{Manacher-ov algoritam}}, style=customcpp]{cpp/manacher.cpp}
 \end{minipage}
 
+\noindent \textbf{Primer.} Ilustracije radi, zanemarimo uba\v cene karaktere $\$$, odnosno, radimo samo sa neparnim palindromima. Posmatrajmo string \texttt{xabcbazyzabcbazyap} i neka je $i=11$, kao na slici. Do ovog trenutka palindromski prozor sa najve\' cim desnim krajem je prozor $[l,r] = [1,13]$. Ovaj palindromski prozor reflektuje sve svoje podstringove, pa se podstring sa centrom u $r-l+i$ reflektuje u podstring sa centrom u $i$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=50mm]{../img/manacher1.eps}
+    \caption*{\textit{Ilustracija Manacher-ovog algoritma}}
+\end{figure}
+
+Svaki palindrom koji je u celosti sadr\v zan u nekom palindromskom prozoru \' ce se ponovo reflektovati u palindrom, \v sto nam ovde omogu\' cava da za palindromski centar $i$ postavimo donju granicu vrednosti $z_i' = 2$. Nakon postavljanja ove po\v cetne vrednosti poku\v savamo da pro\v sirimo palindrom. Ispostavlja se da se palindrom sa ovim centrom mo\v ze pro\v siriti za jo\v s dva slova, odnosno, va\v zi\' ce $z_i = 4$.
+
 Dokaz da ovaj algoritam ima vremensku slo\v zenost $O(n)$ je sli\v can dokazu kod Z-algoritma. Doka\v zimo da se vrednost $r$ pove\' ca za bar jedan u svakoj iteraciji \textit{while} petlje. U slu\v caju da je $i + q_i' < r$, \textit{while} petlja \' ce izvr\v siti ta\v cno $0$ iteracija po\v sto je $q_i = q_i'$. U suprotnom bismo dobili, na osnovu refleksije unutar palindroma $s_{[l,r]}$ da se palindrom sa centrom u $r+l-i$ tako\dj e mo\v ze pro\v siriti za bar jedno slovo, \v sto je nemogu\' ce jer je njegova vrednost ta\v cno izra\v cunata. Drugi slu\v caj je kad je $i + q_i' \geq r$, tada \' ce, u slu\v caju da se palindrom sa centrom u $i$ pro\v siri sa $k$ iteracija \textit{while} petlje, za isto toliko pove\' cati vrednost $r$. 
 
 \subsection{Palindromsko stablo}
@@ -50,6 +60,22 @@ Glavni algoritam \' ce, pored tra\v zenog stabla, na\' ci i \v cvor koji odgovar
 \begin{minipage}[l]{\textwidth}
 \lstinputlisting[language=C++, title={\textit{Algoritam za konstrukciju palindromskog stabla}}, style=customcpp]{cpp/eertree.cpp}
 \end{minipage}
+
+\noindent \textbf{Primer.} Neka je string $s$ za koji pravimo palindromsko stablo jednak \texttt{aabaa}. Posmatrajmo \v sta se de\v sava u trenutku kada je $i=4$, odnosno, dodajemo poslednje slovo stringa. Do tog trenutka bi\' ce prona\dj ena $4$ neprazna palindromska podstringa, to su $a,b,aa,aba$. Sufiks veze za $a$ i $b$ idu ka \v cvoru $\epsilon$, dok sufiks veze za $aa$ i $aba$ idu ka \v cvoru $a$. Podsetimo se da izlazne grane uvek idu od \v cvora $t$ ka \v cvoru $xtx$ za neki palindrom $t$ i slovo $x$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=50mm]{../img/eertree1.eps}
+    \caption*{\textit{Palindromsko stablo za string aaba}}
+\end{figure}
+
+Sada dodajemo slovo $a$ na kraj stringa. Prethodni najdu\v zi sufiks palindrom je bio $aba$, i njegovo pojavljivanje se mo\v ze produ\v ziti sa obe strane slovom $a$, pa je za $i+1=5$ najdu\v zi sufiks palindrom $aabaa$. Izlazna grana sa labelom $a$ iz \v cvora $aba$ ne postoji, pa dodajemo novi \v cvor. Sada je potrebno odrediti sufiks vezu za ovaj \v cvor. Kre\' cemo od sufiks veze \v cvora $aba$, \v sto je \v cvor $a$ i tra\v zimo palindrom \v cije se pojavljivanje kao sufiks stringa $s_{[0,i)}$ mo\v ze pro\v siriti sa obe strane slovom $a$. Prvi takav \v cvor je \v cvor $\epsilon$, pa sufiks veza ide ka \v cvoru $a\epsilon a$ odnosno $aa$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=50mm]{../img/eertree2.eps}
+    \caption*{\textit{Palindromsko stablo za string aabaa}}
+\end{figure}
 
 Vremenska slo\v zenost algoritma je $O(n)$. To se mo\v ze dokazati ako posmatramo vrednost $5i-len(t)- len(link(t))$. U svakoj iteraciji neke od \textit{while} ili \textit{for} petlji se ova vrednost pove\' cava. Za \textit{while} petlje je to o\v cigledno. Za \textit{for} petlju primetimo da, ukoliko je najdu\v zi sufiks palindrom nekog stringa imao du\v zinu $l$, ako se doda jedno slovo na kraj stringa, ta du\v zina mo\v ze postati najvi\v se $l+2$, i isto va\v zi za du\v zinu drugog najdu\v zeg sufiks palindroma (tj. sufiks veze), pa se $len(t)- len(link(t))$ pove\' cava za najvi\v se $4$, a $5i$ se pove\'cava za ta\v cno $5$. Kako je po\v cetna vrednost izraza $1$, a na kraju ne prelazi $5n$, ukupan broj izvr\v senja svih petlji je $5n$, pa algoritam ima vremensku slo\v zenost $O(n)$. 
 

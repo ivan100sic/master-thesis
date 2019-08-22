@@ -5,10 +5,10 @@ vector<node*> eertree(const string& s) {
 	node* eps = new node {0, eta, {}};
 	vector<node*> p(n+1);
 	p[0] = eps;
-	for (int i=1; i<=n; i++) {
-		char c = s[i-1];
-		node* t = p[i-1];
-		while (i-t->len < 2 || s[i-t->len-2] != c)
+	for (int i=0; i<n; i++) {
+		char c = s[i];
+		node* t = p[i];
+		while (i-t->len < 1 || s[i-t->len-1] != c)
 			t = t->link;
 		if (t->next.count(c)) {
 			t = t->next[c];
@@ -18,12 +18,12 @@ vector<node*> eertree(const string& s) {
 			if (!q) {
 				t->link = eps;
 			} else {
-				while (s[i-q->len-2] != c)
+				while (s[i-q->len-1] != c)
 					q = q->link;
 				t->link = q->next[c];
 			}
 		}
-		p[i] = t;
+		p[i+1] = t;
 	}
 	return p;
 }
